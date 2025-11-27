@@ -3,130 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aditya V Jain | Product Lead & AI Strategist</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@500;700;900&display=swap" rel="stylesheet">
-    
+    <title>Aditya Jain | Bridging AI Potential and Business Reality</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Lora:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    
-    <style>
-        .site-header, header, #masthead { display: none !important; }
-        /* Ensure prompt storage is hidden */
-        .prompt-storage { display: none; }
-    </style>
 </head>
 <body>
+    <header>
+        <div class="container">
+            <h1 class="logo">Aditya Jain</h1>
+            <nav>
+                <a href="#insights-library">Insight Library</a>
+                <a href="#ai-lab">The AI Lab</a>
+                <a href="Aditya Jain CV Sep 25.pdf" target="_blank">CV</a>
+                <a href="mailto:aditya1384@gmail.com">Contact</a>
+            </nav>
+        </div>
+    </header>
 
-<div class="lab-container">
-
-    <div class="terminal-header">
-        <span class="terminal-text"><span class="terminal-prompt">&gt;</span> adityavj.com</span><span class="cursor"></span>
-    </div>
-
-    <div class="lab-hero">
-        <div class="hero-text">
-            <h1 class="hero-name">Aditya V Jain</h1>
-            <div class="hero-tagline">
-                Product Lead at Google. Prev at Snapdeal, Amazon, Shaadi.com. IIM-K Visiting Faculty.
-                <strong>Arming Business Leaders with Practical AI Strategy.</strong>
+    <main>
+        <section class="hero-section">
+            <div class="container">
+                <h2>Bridging the Gap Between AI Potential and Business Reality</h2>
+                <p>Welcome.</p>
+                <p>The challenge today isn't just understanding emerging technologies—it's implementing them effectively to drive growth.</p>
+                <p>As a Visiting Faculty at IIM Kozhikode and a Product Lead at Google, I leverage 18+ years of experience (including Amazon and Snapdeal) to demystify the intersection of technology and business leadership. My sessions are designed to equip you with the frameworks needed to navigate complexity and achieve tangible results.</p>
+                <p>This site is an extension of our classroom. Explore the materials below, drawn from frontline experience scaling AI/ML systems, driving monetization, and impacting ARR.</p>
             </div>
-            <div class="btn-group">
-                <a href="#book" class="btn btn-primary">Book Session</a>
-                <a href="#resources" class="btn btn-outline">Explore AI Tools</a>
+        </section>
+
+        <section id="insights-library" class="library-section">
+            <div class="container">
+                <h3>The Insight Library</h3>
+
+                <div class="filters" id="filters-container">
+                    <button class="filter-btn active" data-filter="all">All Resources</button>
+                    <button class="filter-btn" data-filter="recent">Recently Delivered</button>
+                    <button class="filter-btn" data-filter="ai">AI for Business Leaders</button>
+                    <button class="filter-btn" data-filter="product">Product Strategy</button>
+                    <button class="filter-btn" data-filter="frameworks">Execution Frameworks</button>
+                </div>
+
+                <div id="resource-grid" class="resource-grid">
+                    </div>
             </div>
-            <div class="social-row">
-                <a href="https://www.linkedin.com/in/aditya-jain-8895181/" target="_blank" class="social-link">LinkedIn</a>
-                <a href="https://github.com/adityavikramjain" target="_blank" class="social-link">GitHub</a>
-                <a href="mailto:aditya1384@gmail.com" class="social-link">Email</a>
+        </section>
+
+        <section id="ai-lab" class="ai-lab-section">
+            <div class="container">
+                <h3>The AI Lab</h3>
+                <p>Tools designed to move beyond theoretical discussion and accelerate strategic implementation.</p>
+
+                <div class="lab-tools">
+                    <div class="lab-tool">
+                        <h4>Ideation Engine (Socratic Analyzer)</h4>
+                        <p><strong>Outcome:</strong> Transform nascent ideas into resilient business strategies through structured analysis, axiom deconstruction, and ecosystem mapping. Validate concepts before committing resources.</p>
+                        <a href="#" class="lab-link">Explore the Engine →</a>
+                    </div>
+                     <div class="lab-tool">
+                        <h4>Strategy Analyzer</h4>
+                        <p><strong>Outcome:</strong> Evaluate the robustness of your current product strategy against potential market disruptions. Identify competitive vulnerabilities before implementation.</p>
+                        <a href="#" class="lab-link">Explore the Analyzer →</a>
+                    </div>
+                </div>
             </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container cta-footer">
+            <h4>Ready to Implement?</h4>
+            <p>These frameworks are powerful, but context matters. Let's discuss customizing these strategies for your team’s specific challenges.</p>
+            <a href="mailto:aditya1384@gmail.com?subject=Customized Workshop Inquiry" class="cta-button">Explore Customized Workshops</a>
         </div>
-        <div class="hero-visual">
-            <div class="flux-blob"></div>
+        <div class="container copyright">
+            <p>Aditya Jain | aditya1384@gmail.com | +91-9986590180</p>
         </div>
-    </div>
+    </footer>
 
-    <div class="lab-section-header">
-        <h2 class="lab-title">Academic Sessions</h2>
-    </div>
-
-    <div class="filter-container">
-        <div class="filter-bar">
-            <button class="filter-button active" data-filter="all" data-target="sessions">All</button>
-            <button class="filter-button" data-filter="Sales" data-target="sessions">Sales</button>
-            <button class="filter-button" data-filter="Marketing" data-target="sessions">Marketing</button>
-            <button class="filter-button" data-filter="Product Management" data-target="sessions">Product Management</button>
-            <button class="filter-button" data-filter="Customer Experience" data-target="sessions">Customer Experience</button>
-            <button class="filter-button" data-filter="AI" data-target="sessions">AI</button>
-        </div>
-        <div class="filter-count" id="sessions-count"></div>
-    </div>
-
-    <div class="grid-wrapper" id="sessions-wrapper">
-        <div id="sessions-grid" class="course-grid"></div>
-        
-        <button class="show-more-button hidden" data-target="sessions">
-            <span class="show-more-text">Show More</span>
-            <span class="show-less-text" style="display:none;">Show Less</span>
-        </button>
-    </div>
-
-    <div id="resources" class="lab-section-header">
-        <h2 class="lab-title">The AI Lab</h2>
-    </div>
-
-    <div class="filter-container">
-        <div class="filter-bar">
-            <button class="filter-button active" data-filter="all" data-target="resources">All</button>
-            <button class="filter-button" data-filter="Sales" data-target="resources">Sales</button>
-            <button class="filter-button" data-filter="Marketing" data-target="resources">Marketing</button>
-            <button class="filter-button" data-filter="Product Management" data-target="resources">Product Management</button>
-            <button class="filter-button" data-filter="Customer Experience" data-target="resources">Customer Experience</button>
-            <button class="filter-button" data-filter="AI" data-target="resources">AI</button>
-            <button class="filter-button" data-filter="Research with AI" data-target="resources">Research with AI</button>
-        </div>
-        <div class="filter-count" id="resources-count"></div>
-    </div>
-
-    <div class="grid-wrapper" id="resources-wrapper">
-        <div id="resources-grid" class="course-grid"></div>
-        
-        <div id="prompt-storage-container"></div>
-
-        <button class="show-more-button hidden" data-target="resources">
-            <span class="show-more-text">Show More</span>
-            <span class="show-less-text" style="display:none;">Show Less</span>
-        </button>
-    </div>
-
-    <div class="lab-section-header">
-        <h2 class="lab-title">Build Notes & Writings</h2>
-    </div>
-    <div id="writings-grid" class="course-grid"></div>
-
-    <div id="book" class="booking-bar">
-        <h3>Ready to Accelerate?</h3>
-        <p>Book a 1:1 mentorship session or schedule a custom workshop for your team. Let's transform your AI strategy into competitive advantage.</p>
-        <a href="https://calendly.com/adityavj" target="_blank" class="btn btn-primary">Check Availability</a>
-    </div>
-
-    <div id="modal-overlay" class="modal-overlay">
-        <div id="modal-container" class="modal-container">
-            <div class="modal-header">
-                <h3 id="modal-title"></h3>
-                <button class="modal-close">&times;</button>
-            </div>
-            <div class="modal-body" id="modal-body"></div>
-            <div class="modal-footer" id="modal-footer"></div>
-        </div>
-    </div>
-
-    <div id="toast" class="toast"></div>
-
-</div>
-
-<script src="script.js"></script>
-
+    <script src="data.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
