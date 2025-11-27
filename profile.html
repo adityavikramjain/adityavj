@@ -4,86 +4,43 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Aditya V Jain — Profile</title>
-
-  <!-- Use the existing site stylesheet -->
   <link rel="stylesheet" href="style.css">
-
-  <!-- small page-specific styles and micro-animations that complement style.css variables -->
   <style>
-    :root {
-      --accent: var(--electric-orange);
-      --bg: transparent;
-    }
-
-    /* container tweaks so the profile page is visually focused */
-    .profile-wrap { padding: 48px 20px 120px; max-width: 1100px; margin: 0 auto; }
-    .profile-hero { display:flex; gap:36px; align-items:center; margin-bottom:36px; }
+    /* Light edits to keep look consistent while simplifying layout */
+    .profile-wrap { padding: 48px 20px 120px; max-width: 1000px; margin: 0 auto; }
+    .profile-hero { display:flex; gap:36px; align-items:center; margin-bottom:28px; }
     @media (max-width:968px) { .profile-hero { flex-direction:column; text-align:center; } }
 
-    .profile-photo {
-      width:190px; height:190px; border-radius:20px;
-      border:4px solid var(--charcoal); overflow:hidden; flex: 0 0 190px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-      transform: translateY(0); transition: transform .45s var(--ease-elastic);
-    }
-    .profile-photo:hover { transform: translateY(-8px) rotate(-1deg); }
+    .profile-photo { width:170px; height:170px; border-radius:18px; border:3px solid var(--charcoal); overflow:hidden; box-shadow:0 18px 36px rgba(0,0,0,0.06); transition: transform .45s var(--ease-elastic); }
+    .profile-photo:hover{ transform: translateY(-6px) rotate(-0.6deg); }
 
-    .profile-name { font-size: clamp(2.2rem, 4.2vw, 3.4rem); margin:0; font-weight:800; }
-    .profile-role { font-size:1.05rem; color:var(--soft-grey); margin-top:8px; }
+    .profile-name { font-size:clamp(2rem, 3.6vw, 3rem); margin:0; font-weight:800; }
+    .profile-role { font-size:1rem; color:var(--soft-grey); margin-top:8px; }
 
-    .profile-badges { margin-top:18px; display:flex; gap:10px; flex-wrap:wrap; }
-    .badge { padding:8px 12px; border-radius:999px; font-weight:700; font-size:.85rem; background: rgba(255,69,0,0.08); color:var(--electric-orange); border:1px solid rgba(255,69,0,0.06); }
+    .elevator { margin-top:14px; color:var(--charcoal); line-height:1.5; max-width:68ch; }
+    .badges { margin-top:16px; display:flex; gap:10px; flex-wrap:wrap; }
 
-    /* Elevator / highlight strip */
-    .highlight-strip {
-      display:flex; gap:18px; align-items:center; margin: 28px 0;
-      background: linear-gradient(90deg, rgba(255,69,0,0.03), rgba(255,69,0,0.01));
-      padding:14px 18px; border-radius:12px; border:1px solid rgba(255,69,0,0.06);
-      box-shadow: 0 8px 28px rgba(255,69,0,0.04);
-    }
-    .highlight { font-weight:700; color:var(--charcoal); }
+    /* timeline simplified */
+    .timeline { margin-top:28px; display:flex; flex-direction:column; gap:12px; }
+    .tl-item { padding:18px; border-radius:12px; background: #fff; border-left:4px solid var(--electric-orange); box-shadow:0 10px 22px rgba(0,0,0,0.03); transition: transform .28s ease; }
+    .tl-item:hover{ transform: translateY(-6px); }
+    .tl-head { display:flex; gap:12px; align-items:center; font-weight:800; color:var(--charcoal); }
+    .tl-meta { margin-left:auto; font-weight:700; color:var(--soft-grey); font-size:.9rem; }
 
-    /* Timeline */
-    .timeline { margin-top:36px; display:grid; gap:18px; }
-    .tl-item {
-      background: white; border-radius:12px; padding:18px; border-left:4px solid var(--electric-orange);
-      display:flex; flex-direction:column; gap:8px; transition: transform .32s var(--ease-smooth), box-shadow .32s var(--ease-smooth);
-      opacity:0; transform: translateY(18px);
-    }
-    .tl-item.visible { opacity:1; transform: translateY(0); }
-    .tl-meta { display:flex; gap:12px; align-items:center; color:var(--soft-grey); font-weight:600; }
-    .tl-role { font-size:1.15rem; font-weight:700; color:var(--charcoal); }
-    .tl-desc { color:var(--soft-grey); line-height:1.6; margin-top:6px; }
+    /* course cards condensed */
+    .course-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:16px; margin-top:18px; }
+    .course-card { padding:14px; border-radius:12px; background:linear-gradient(180deg,#fff,#fff); box-shadow:0 6px 18px rgba(0,0,0,0.04); }
+    .course-tag { font-size:.75rem; font-weight:800; color:var(--electric-orange); margin-bottom:8px; display:inline-block; }
 
-    /* Micro-animated stats */
-    .stats { display:flex; gap:22px; margin-top:28px; flex-wrap:wrap; }
-    .stat { background:transparent; padding:14px 18px; border-radius:12px; min-width:140px; text-align:center; }
-    .stat .num { font-size:1.6rem; font-weight:800; color:var(--electric-orange); display:block; }
-    .stat .label { font-size:0.95rem; color:var(--soft-grey); margin-top:6px; }
+    .cta-bar { margin-top:36px; display:flex; gap:18px; align-items:center; justify-content:space-between; padding:18px; border-radius:12px; background:linear-gradient(135deg,#fff7f3,#ffffff); border:1px solid rgba(255,69,0,0.04); }
+    @media (max-width:680px){ .cta-bar{ flex-direction:column; text-align:center; } }
 
-    /* CTA */
-    .cta-bar { margin-top:48px; display:flex; gap:18px; align-items:center; justify-content:space-between; padding:22px; border-radius:14px; background:linear-gradient(135deg,#FFF8F6, #FFFFFF); border:1px solid rgba(255,69,0,0.06); box-shadow: 0 20px 50px rgba(255,69,0,0.04); }
-    @media (max-width:680px) { .cta-bar { flex-direction:column; text-align:center; } }
-
-    /* small animation for link underline */
-    .link-underline { position:relative; display:inline-block; color:var(--charcoal); font-weight:700; text-decoration:none; }
-    .link-underline::after { content:''; position:absolute; left:0; bottom:-4px; width:0; height:3px; background:var(--electric-orange); border-radius:4px; transition: width .35s var(--ease-smooth); }
-    .link-underline:hover::after { width:100%; }
-
-    /* subtle floating micro-animations on elements */
-    .float-up { animation: floatUp 6s ease-in-out infinite; }
-    @keyframes floatUp { 0% { transform: translateY(0);} 50%{ transform: translateY(-6px);} 100%{ transform: translateY(0);} }
-
-    /* small utilities */
-    .muted { color:var(--soft-grey); font-size:.95rem; }
-    a.btn-sm { padding:10px 18px; border-radius:10px; font-weight:700; text-decoration:none; }
+    .muted { color:var(--soft-grey); }
   </style>
 </head>
 <body>
-
   <div class="lab-container profile-wrap">
 
-    <!-- terminal header (matches home) -->
     <div class="terminal-header" style="opacity:1; animation:none;">
       <span class="terminal-text"><span class="terminal-prompt">&gt;</span> adityavj.com / profile</span><span class="cursor"></span>
     </div>
@@ -92,220 +49,160 @@
     <section class="profile-hero">
       <div style="flex:1 1 60%;">
         <h1 class="profile-name">Aditya V Jain</h1>
-        <div class="profile-role">Product Lead, AI Strategist & Visiting Faculty — IIM Kozhikode</div>
+        <div class="profile-role">Product Leader • AI Strategist • Visiting Faculty (IIM Kozhikode)</div>
 
-        <div class="profile-badges" aria-hidden="true">
-          <span class="badge">18+ years</span>
-          <span class="badge">Google • Search, Maps, Workspace</span>
-          <span class="badge">Executive Education</span>
-          <span class="badge">Product + AI</span>
+        <div class="badges" aria-hidden="true">
+          <span class="badge">18+ years experience</span>
+          <span class="badge">Enterprise & consumer products</span>
+          <span class="badge">Executive education & workshops</span>
         </div>
 
-        <div class="highlight-strip">
-          <div style="flex:1">
-            <div class="muted">Focus</div>
-            <div class="highlight">Bridging technical product strategy with hands-on, implementable AI workflows for executives.</div>
-          </div>
-          <div style="display:flex; gap:10px; align-items:center;">
-            <a class="btn btn-primary" href="https://calendly.com/adityavj" target="_blank" rel="noopener">Book a 1:1</a>
-            <a class="btn btn-outline" href="#contact">Contact</a>
-          </div>
-        </div>
+        <p class="elevator">
+          I help senior teams convert AI and product strategy into measurable outcomes — faster experimentation cycles, clearer investment cases, and repeatable adoption plans. I run executive programs and bespoke workshops that give leaders practical playbooks to deploy AI responsibly and at scale.
+        </p>
 
-        <div class="muted" style="margin-top:12px;">
-          Short bio — I design product strategy and AI adoption plans for large-scale consumer products and teach executives how to turn AI into measurable customer outcomes. (Google, Snapdeal, Amazon, Shaadi.com; IIM-K Visiting Faculty).
+        <div style="margin-top:14px;">
+          <a class="btn btn-primary" href="https://calendly.com/adityavj" target="_blank" rel="noopener">Book a 1:1</a>
+          <a class="btn btn-outline" href="#contact" style="margin-left:10px;">Contact</a>
         </div>
       </div>
 
-      <!-- visual -->
-      <div style="flex:0 0 220px; display:flex; align-items:center; justify-content:center;">
-        <!-- use same flux-blob visual approach so it integrates with site -->
-        <div class="profile-photo flux-blob float-up" aria-hidden="true"
-             style="background-image: url('https://adityavj.com/wp-content/uploads/2025/11/1758735414614-1.png'); background-size:cover; background-position:center;">
-        </div>
+      <div style="flex:0 0 200px; display:flex; align-items:center; justify-content:center;">
+        <div class="profile-photo" style="background-image: url('https://adityavj.com/wp-content/uploads/2025/11/1758735414614-1.png'); background-size:cover; background-position:center;"></div>
       </div>
     </section>
 
-    <!-- QUICK STATS -->
-    <div class="stats" aria-hidden="true">
-      <div class="stat">
-        <span class="num" data-target="18">0</span>
-        <span class="label">Years — Product & Strategy</span>
-      </div>
-      <div class="stat">
-        <span class="num" data-target="3">0</span>
-        <span class="label">Companies — Google, Snapdeal, Amazon + more</span>
-      </div>
-      <div class="stat">
-        <span class="num" data-target="10">0</span>
-        <span class="label">+ Executive programs taught</span>
-      </div>
+    <!-- QUICK HIGHLIGHTS -->
+    <div style="display:flex; gap:20px; margin-top:18px; align-items:center; flex-wrap:wrap;">
+      <div class="muted"><strong>Focus:</strong> Product strategy, AI adoption & executive enablement</div>
+      <div class="muted">• IIM-K Visiting Faculty</div>
+      <div class="muted">• Available for workshops & advisory</div>
     </div>
 
-    <!-- EXPERIENCE TIMELINE -->
-    <div style="margin-top:40px;">
-      <div class="lab-section-header" style="margin-top:0;">
-        <h2 class="lab-title">Highlighted Experience</h2>
-      </div>
+    <!-- TIMELINE (high-level) -->
+    <div style="margin-top:36px;">
+      <h2 class="lab-title">Professional timeline — high-level</h2>
 
       <div class="timeline" id="timeline">
-        <!-- Timeline items pulled from the CV contents -->
-        <article class="tl-item" data-when="2021–Present" data-company="Google">
-          <div class="tl-meta"><strong class="muted">Nov 2021 – Present</strong><span style="margin-left:auto;" class="muted">GOOGLE</span></div>
-          <div class="tl-role">Product Lead — Workspace, Search, Maps</div>
-          <div class="tl-desc">
-            Driving growth & trust strategies for billion-user products. Led India strategy for Lens & Voice; built Content Trust platform & Human-Machine-Intelligence metric to improve moderation productivity and content quality. (See projects: Shared Inbox flow; ex-employee data archiving; monitoring systems at scale.)
+        <div class="tl-item">
+          <div class="tl-head">
+            Product Lead — Google
+            <div class="tl-meta">Nov 2021 — Present</div>
           </div>
-        </article>
-
-        <article class="tl-item" data-when="2018–2021" data-company="Snapdeal">
-          <div class="tl-meta"><strong class="muted">Jul 2018 – Nov 2021</strong><span style="margin-left:auto;" class="muted">SNAPDEAL</span></div>
-          <div class="tl-role">Senior Director of Product — Ads, Pricing, Platform</div>
-          <div class="tl-desc">
-            Led ads & monetization, pricing tools and seller experience. Increased ad-monetized order share by +10% and built a reverse auction pricing tool driving +16% conversion uplift. Reworked seller onboarding — conversion to first listing +105%.
+          <div class="muted" style="margin-top:8px;">
+            Lead product & AI strategy to improve relevance, trust and large-scale ML operations across Search & Maps. Built cross-functional programs that reduced customer friction and improved model governance.
           </div>
-        </article>
-
-        <article class="tl-item" data-when="2016–2018" data-company="CRISIL">
-          <div class="tl-meta"><strong class="muted">Mar 2016 – Mar 2018</strong><span style="margin-left:auto;" class="muted">CRISIL</span></div>
-          <div class="tl-role">Head of Product & Tech — SMEFirst.com</div>
-          <div class="tl-desc">
-            Built and launched the SMEFirst MVP in 6 months; launched zero-touch credit scoring & certification products for banks and NBFCs. Recognised as a role model for rapid product delivery.
-          </div>
-        </article>
-
-        <article class="tl-item" data-when="2012–2014" data-company="Amazon">
-          <div class="tl-meta"><strong class="muted">Oct 2012 – Feb 2014</strong><span style="margin-left:auto;" class="muted">AMAZON</span></div>
-          <div class="tl-role">Senior Product Manager — Appstore</div>
-          <div class="tl-desc">
-            Reduced approval times and closed the version gap with Google Play via hybrid automation and testing, improving developer velocity and app availability.
-          </div>
-        </article>
-
-        <article class="tl-item" data-when="2010–2012" data-company="Shaadi.com">
-          <div class="tl-meta"><strong class="muted">Feb 2010 – Oct 2012</strong><span style="margin-left:auto;" class="muted">SHAADI.COM</span></div>
-          <div class="tl-role">Senior Product Manager</div>
-          <div class="tl-desc">
-            Improved signup → profile conversion by 60% and launched Android deep-linking that accelerated app growth; built the first profile moderation framework.
-          </div>
-        </article>
-      </div>
-    </div>
-
-    <!-- TEACHING & EXEC EDUCATION -->
-    <div style="margin-top:40px;">
-      <div class="lab-section-header">
-        <h2 class="lab-title">Executive Education & Teaching</h2>
-      </div>
-
-      <div class="course-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px,1fr));">
-        <div class="course-card">
-          <div class="course-tag">AI for Business</div>
-          <a class="course-link">AI for Business — Customer Experience & Strategy</a>
-          <div class="course-desc">Modules delivered include customer-facing AI use cases (Visual/Voice Search), measurable KPIs for AI projects, and adoption strategies for leadership teams.</div>
-          <div class="course-footer">Available for in-company workshops & open MDPs</div>
         </div>
 
-        <div class="course-card">
-          <div class="course-tag">Product Strategy</div>
-          <a class="course-link">Product Management — From Discovery to Scale</a>
-          <div class="course-desc">Frameworks: JTBD, rapid experimentation, service design and GTM playbooks focused on executive decision making and measurable outcomes.</div>
-          <div class="course-footer">Custom modules for leadership cohorts</div>
+        <div class="tl-item">
+          <div class="tl-head">
+            Senior Director — Snapdeal
+            <div class="tl-meta">Jul 2018 — Nov 2021</div>
+          </div>
+          <div class="muted" style="margin-top:8px;">
+            Headed monetization and platform initiatives — focused on measurable revenue uplift, seller experience, and building scalable pricing tools for marketplace growth.
+          </div>
         </div>
 
-        <div class="course-card">
-          <div class="course-tag">Research with AI</div>
-          <a class="course-link">Practical AI Research for Business</a>
-          <div class="course-desc">How to structure product research using LLMs and data pipelines, build measurable pilots and communicate ROI to stakeholders.</div>
-          <div class="course-footer">Hands-on sessions with templates</div>
+        <div class="tl-item">
+          <div class="tl-head">
+            Head of Product & Tech — CRISIL / SMEFirst
+            <div class="tl-meta">Mar 2016 — Mar 2018</div>
+          </div>
+          <div class="muted" style="margin-top:8px;">
+            Launched product-led credit and certification services for SMEs; scaled go-to-market and partnerships with banks and NBFCs.
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-head">
+            Senior Product Manager — Amazon Appstore
+            <div class="tl-meta">Oct 2012 — Feb 2014</div>
+          </div>
+          <div class="muted" style="margin-top:8px;">
+            Improved developer velocity and platform availability through process and automation improvements.
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-head">
+            Senior Product Manager — Shaadi.com
+            <div class="tl-meta">Feb 2010 — Oct 2012</div>
+          </div>
+          <div class="muted" style="margin-top:8px;">
+            Focused on conversion-led product improvements and user trust systems to scale engagement and growth.
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- CTA BAR -->
-    <div class="cta-bar" style="margin-top:40px;">
-      <div style="flex:1; min-width:300px;">
-        <div style="font-weight:800; font-size:1.25rem; color:var(--charcoal);">Want a custom workshop or 1:1 guidance?</div>
-        <div class="muted" style="margin-top:6px;">Available for short workshops, half-day strategy sprints and tailored executive programs.</div>
+    <!-- EXEC EDUCATION -->
+    <div style="margin-top:36px;">
+      <h2 class="lab-title">Executive education & workshops</h2>
+      <div class="course-grid" style="margin-top:12px;">
+        <div class="course-card">
+          <div class="course-tag">AI FOR BUSINESS</div>
+          <div style="font-weight:800; margin-bottom:6px;">AI for Business — Strategy & Use Cases</div>
+          <div class="muted">A practical playbook for executives to prioritise AI opportunities, build pilots with measurable KPIs, and create an adoption roadmap.</div>
+          <div style="margin-top:10px; font-weight:700; color:var(--electric-orange)">Format: workshop / half-day / custom</div>
+        </div>
+
+        <div class="course-card">
+          <div class="course-tag">PRODUCT STRATEGY</div>
+          <div style="font-weight:800; margin-bottom:6px;">Product Leadership — From Discovery to Scale</div>
+          <div class="muted">Frameworks and decision heuristics for rapid discovery, prioritisation and scaling — aimed at senior leaders and GTM teams.</div>
+          <div style="margin-top:10px; font-weight:700; color:var(--electric-orange)">Format: in-company module / executive program</div>
+        </div>
+
+        <div class="course-card">
+          <div class="course-tag">RESEARCH WITH AI</div>
+          <div style="font-weight:800; margin-bottom:6px;">Practical AI Research for Product Teams</div>
+          <div class="muted">How to structure research with LLMs and data pipelines, run pilots and quantify ROI for stakeholders.</div>
+          <div style="margin-top:10px; font-weight:700; color:var(--electric-orange)">Format: hands-on sessions</div>
+        </div>
       </div>
-      <div style="display:flex; gap:12px; align-items:center;">
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-bar">
+      <div>
+        <div style="font-weight:800; font-size:1.05rem; color:var(--charcoal);">Custom workshop or advisory?</div>
+        <div class="muted" style="margin-top:6px;">Short workshops, half-day strategy sprints, and bespoke executive modules.</div>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center;">
         <a class="btn btn-primary" href="https://calendly.com/adityavj" target="_blank" rel="noopener">Book a session</a>
         <a class="btn btn-outline" href="mailto:aditya1384@gmail.com">Email me</a>
-        <a class="btn btn-sm" href="Aditya%20Jain%20CV%20Sep%2025.pdf" target="_blank" rel="noopener" style="border:1px solid rgba(0,0,0,0.06);">Download CV</a>
+        <a class="btn btn-sm" href="Aditya%20Jain%20CV%20Sep%2025.pdf" target="_blank" rel="noopener">Download CV</a>
       </div>
     </div>
 
-    <!-- FOOTER / CONTACT -->
-    <footer id="contact" style="margin-top:54px; text-align:center; color:var(--soft-grey);">
-      <div style="margin-bottom:12px;">Connect</div>
+    <!-- footer contact -->
+    <footer id="contact" style="margin-top:46px; text-align:center; color:var(--soft-grey);">
+      <div style="margin-bottom:8px;">Connect</div>
       <div style="display:flex; gap:18px; justify-content:center; align-items:center; flex-wrap:wrap;">
         <a class="social-link" href="https://www.linkedin.com/in/aditya-jain-8895181/" target="_blank" rel="noopener">LinkedIn</a>
         <a class="social-link" href="mailto:aditya1384@gmail.com">Email</a>
         <a class="social-link" href="https://adityavj.com" target="_blank" rel="noopener">adityavj.com</a>
       </div>
-      <div style="margin-top:18px; font-size:.9rem;">IIM Kozhikode PGP ’08 • NSIT Delhi B.E. ’05</div>
+      <div style="margin-top:14px; font-size:.9rem;">IIM Kozhikode PGP ’08 • NSIT Delhi B.E. ’05</div>
     </footer>
 
   </div>
 
-  <!-- Inline script: reveal animations, counters, slight interactions -->
   <script>
-    // reveal timeline items on scroll (intersection observer)
+    // reveal timeline items softly
     (function(){
       const items = document.querySelectorAll('.tl-item');
       const io = new IntersectionObserver((entries)=>{
         entries.forEach(e=>{
-          if(e.isIntersecting){
-            e.target.classList.add('visible');
-            io.unobserve(e.target);
-          }
+          if(e.isIntersecting){ e.target.style.opacity = 1; e.target.style.transform = 'none'; io.unobserve(e.target); }
         });
-      }, {threshold: 0.12});
-      items.forEach(i=>io.observe(i));
-    })();
-
-    // count-up animation for stats
-    (function(){
-      function animateCount(el, to, duration=1400){
-        let start = 0, startTime = null;
-        const step = (ts)=>{
-          if(!startTime) startTime = ts;
-          const progress = Math.min((ts - startTime) / duration, 1);
-          const val = Math.floor(progress * (to - start) + start);
-          el.textContent = val;
-          if(progress < 1) requestAnimationFrame(step);
-          else el.textContent = to;
-        };
-        requestAnimationFrame(step);
-      }
-      const nums = document.querySelectorAll('.num');
-      const obs = new IntersectionObserver((entries)=>{
-        entries.forEach(en=>{
-          if(en.isIntersecting){
-            animateCount(en.target, parseInt(en.target.getAttribute('data-target') || '0', 10) || 0);
-            obs.unobserve(en.target);
-          }
-        });
-      }, {threshold:0.6});
-      nums.forEach(n=>obs.observe(n));
-    })();
-
-    // small smooth-scroll for anchor buttons
-    document.querySelectorAll('a[href^="#"]').forEach(a=>{
-      a.addEventListener('click', (e)=>{
-        const href = a.getAttribute('href');
-        if(href.length>1 && document.querySelector(href)){
-          e.preventDefault();
-          document.querySelector(href).scrollIntoView({behavior:'smooth', block:'start'});
-        }
+      }, {threshold:0.12});
+      items.forEach(i=>{
+        i.style.opacity = 0; i.style.transform = 'translateY(10px)';
+        io.observe(i);
       });
-    });
-
-    // accessible keyboard focus for CTA buttons
-    document.querySelectorAll('.btn, .btn-outline').forEach(b=>{
-      b.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') b.click(); });
-    });
+    })();
   </script>
-
 </body>
 </html>
