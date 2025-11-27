@@ -3,53 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aditya Jain | Bridging AI Potential and Business Reality</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Lora:wght@400;700&display=swap" rel="stylesheet">
+    <title>Aditya Jain | Portfolio & Insights</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <div class="container">
+    <div class="layout-container">
+        <header class="site-header">
             <h1 class="logo">Aditya Jain</h1>
-            <nav>
-                <a href="#insights-library">Insight Library</a>
-                <a href="#ai-lab">The AI Lab</a>
+            <nav class="main-nav">
+                <a href="#introduction">Intro</a>
+                <a href="#insights-library">Library</a>
+                <a href="#ai-lab">AI Lab</a>
                 <a href="Aditya Jain CV Sep 25.pdf" target="_blank">CV</a>
                 <a href="mailto:aditya1384@gmail.com">Contact</a>
             </nav>
-        </div>
-    </header>
+        </header>
 
-    <main>
-        <section class="hero-section">
-            <div class="container">
+        <main>
+            <section id="introduction" class="introduction-section">
                 <h2>Bridging the Gap Between AI Potential and Business Reality</h2>
                 <p>Welcome.</p>
                 <p>The challenge today isn't just understanding emerging technologies—it's implementing them effectively to drive growth.</p>
                 <p>As a Visiting Faculty at IIM Kozhikode and a Product Lead at Google, I leverage 18+ years of experience (including Amazon and Snapdeal) to demystify the intersection of technology and business leadership. My sessions are designed to equip you with the frameworks needed to navigate complexity and achieve tangible results.</p>
                 <p>This site is an extension of our classroom. Explore the materials below, drawn from frontline experience scaling AI/ML systems, driving monetization, and impacting ARR.</p>
-            </div>
-        </section>
+            </section>
 
-        <section id="insights-library" class="library-section">
-            <div class="container">
+            <section id="insights-library" class="library-section">
                 <h3>The Insight Library</h3>
 
                 <div class="filters" id="filters-container">
-                    <button class="filter-btn active" data-filter="all">All Resources</button>
+                    <button class="filter-btn active" data-filter="all">All</button>
                     <button class="filter-btn" data-filter="recent">Recently Delivered</button>
-                    <button class="filter-btn" data-filter="ai">AI for Business Leaders</button>
+                    <button class="filter-btn" data-filter="ai">AI Leadership</button>
                     <button class="filter-btn" data-filter="product">Product Strategy</button>
-                    <button class="filter-btn" data-filter="frameworks">Execution Frameworks</button>
+                    <button class="filter-btn" data-filter="frameworks">Frameworks</button>
                 </div>
 
                 <div id="resource-grid" class="resource-grid">
-                    </div>
-            </div>
-        </section>
+                    <p>Loading resources...</p>
+                </div>
+            </section>
 
-        <section id="ai-lab" class="ai-lab-section">
-            <div class="container">
+            <section id="ai-lab" class="ai-lab-section">
                 <h3>The AI Lab</h3>
                 <p>Tools designed to move beyond theoretical discussion and accelerate strategic implementation.</p>
 
@@ -59,28 +54,26 @@
                         <p><strong>Outcome:</strong> Transform nascent ideas into resilient business strategies through structured analysis, axiom deconstruction, and ecosystem mapping. Validate concepts before committing resources.</p>
                         <a href="#" class="lab-link">Explore the Engine →</a>
                     </div>
-                     <div class="lab-tool">
+                        <div class="lab-tool">
                         <h4>Strategy Analyzer</h4>
                         <p><strong>Outcome:</strong> Evaluate the robustness of your current product strategy against potential market disruptions. Identify competitive vulnerabilities before implementation.</p>
                         <a href="#" class="lab-link">Explore the Analyzer →</a>
                     </div>
                 </div>
-            </div>
-        </section>
-    </main>
+            </section>
 
-    <footer>
-        <div class="container cta-footer">
-            <h4>Ready to Implement?</h4>
-            <p>These frameworks are powerful, but context matters. Let's discuss customizing these strategies for your team’s specific challenges.</p>
-            <a href="mailto:aditya1384@gmail.com?subject=Customized Workshop Inquiry" class="cta-button">Explore Customized Workshops</a>
-        </div>
-        <div class="container copyright">
+            <section id="contact" class="cta-section">
+                <h4>Ready to Implement?</h4>
+                <p>These frameworks are powerful, but context matters. Let's discuss customizing these strategies for your team’s specific challenges.</p>
+                <a href="mailto:aditya1384@gmail.com?subject=Customized Workshop Inquiry" class="cta-button">Explore Customized Workshops</a>
+            </section>
+        </main>
+
+        <footer class="site-footer">
             <p>Aditya Jain | aditya1384@gmail.com | +91-9986590180</p>
-        </div>
-    </footer>
+        </footer>
+    </div>
 
-    <script src="data.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
