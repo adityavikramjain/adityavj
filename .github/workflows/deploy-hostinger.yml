@@ -1,0 +1,99 @@
+name: Deploy to Hostinger
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:  # Allows manual trigger from GitHub UI
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Create deployment archive
+        run: |
+          timestamp=$(date +%Y%m%d_%H%M%S)
+          zip -r adityavj_${timestamp}.zip index.html style.css script.js data.json
+          echo "ARCHIVE_NAME=adityavj_${timestamp}.zip" >> $GITHUB_ENV
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Deploy to Hostinger
+        env:
+          HOSTINGER_API_TOKEN: ${{ secrets.HOSTINGER_API_TOKEN }}
+        run: |
+          # Install Hostinger CLI if available, or use curl
+          # Since the MCP server uses npx, we'll use a Node.js approach
+          
+          cat > deploy.js << 'DEPLOY_SCRIPT'
+          const https = require('https');
+          const fs = require('fs');
+          const FormData = require('form-data');
+          
+          const archivePath = process.env.ARCHIVE_NAME;
+          const apiToken = process.env.HOSTINGER_API_TOKEN;
+          const domain = 'adityavj.com';
+          
+          console.log(`Deploying ${archivePath} to ${domain}...`);
+          
+          const form = new FormData();
+          form.append('archive', fs.createReadStream(archivePath));
+          form.append('domain', domain);
+          
+          const options = {
+            method: 'POST',
+            hostname: 'api.hostinger.com',
+            path: '/api/hosting/v1/static-website/deploy',
+            headers: {
+              'Authorization': `Bearer ${apiToken}`,
+              ...form.getHeaders()
+            }
+          };
+          
+          const req = https.request(options, (res) => {
+            let data = '';
+            
+            res.on('data', (chunk) => {
+              data += chunk;
+            });
+            
+            res.on('end', () => {
+              console.log('Response status:', res.statusCode);
+              console.log('Response body:', data);
+              
+              if (res.statusCode >= 200 && res.statusCode < 300) {
+                console.log('✅ Deployment successful!');
+                process.exit(0);
+              } else {
+                console.error('❌ Deployment failed');
+                process.exit(1);
+              }
+            });
+          });
+          
+          req.on('error', (error) => {
+            console.error('Error:', error);
+            process.exit(1);
+          });
+          
+          form.pipe(req);
+          DEPLOY_SCRIPT
+          
+          # Install form-data dependency
+          npm install form-data
+          
+          # Run deployment script
+          node deploy.js
+      
+      - name: Deployment Summary
+        if: success()
+        run: |
+          echo "🚀 Successfully deployed to https://adityavj.com"
+          echo "📦 Archive: ${{ env.ARCHIVE_NAME }}"
+          echo "⏰ Deployed at: $(date)"
