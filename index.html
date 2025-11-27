@@ -7,13 +7,12 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css">
     
     <style>
         .site-header, header, #masthead { display: none !important; }
-        /* Ensure prompt storage is hidden */
         .prompt-storage { display: none; }
     </style>
 </head>
@@ -21,20 +20,23 @@
 
 <div class="lab-container">
 
+    <!-- Terminal Header -->
     <div class="terminal-header">
         <span class="terminal-text"><span class="terminal-prompt">&gt;</span> adityavj.com</span><span class="cursor"></span>
     </div>
 
+    <!-- Hero Section -->
     <div class="lab-hero">
         <div class="hero-text">
             <h1 class="hero-name">Aditya V Jain</h1>
             <div class="hero-tagline">
-                Product Lead at Google. Prev at Snapdeal, Amazon, Shaadi.com. IIM-K Visiting Faculty.
-                <strong>Arming Business Leaders with Practical AI Strategy.</strong>
+                Product Lead at Google. Previously Amazon, Snapdeal, Shaadi.com.
+                <strong>Visiting Faculty at IIM Kozhikode since 2021.</strong>
             </div>
+            <p class="hero-value">I help business leaders cut through AI hype and build practical strategies that actually ship.</p>
             <div class="btn-group">
-                <a href="#book" class="btn btn-primary">Book Session</a>
-                <a href="#resources" class="btn btn-outline">Explore AI Tools</a>
+                <a href="#sessions" class="btn btn-primary">Get Session Materials</a>
+                <a href="#lab" class="btn btn-outline">Explore AI Tools</a>
             </div>
             <div class="social-row">
                 <a href="https://www.linkedin.com/in/aditya-jain-8895181/" target="_blank" class="social-link">LinkedIn</a>
@@ -47,81 +49,173 @@
         </div>
     </div>
 
-    <div class="lab-section-header">
-        <h2 class="lab-title">Academic Sessions</h2>
-    </div>
-
-    <div class="filter-container">
-        <div class="filter-bar">
-            <button class="filter-button active" data-filter="all" data-target="sessions">All</button>
-            <button class="filter-button" data-filter="Sales" data-target="sessions">Sales</button>
-            <button class="filter-button" data-filter="Marketing" data-target="sessions">Marketing</button>
-            <button class="filter-button" data-filter="Product Management" data-target="sessions">Product Management</button>
-            <button class="filter-button" data-filter="Customer Experience" data-target="sessions">Customer Experience</button>
-            <button class="filter-button" data-filter="AI" data-target="sessions">AI</button>
+    <!-- Quick Stats Bar -->
+    <div class="stats-bar">
+        <div class="stat-item">
+            <span class="stat-number">18+</span>
+            <span class="stat-label">Years in Product</span>
         </div>
-        <div class="filter-count" id="sessions-count"></div>
-    </div>
-
-    <div class="grid-wrapper" id="sessions-wrapper">
-        <div id="sessions-grid" class="course-grid"></div>
-        
-        <button class="show-more-button hidden" data-target="sessions">
-            <span class="show-more-text">Show More</span>
-            <span class="show-less-text" style="display:none;">Show Less</span>
-        </button>
-    </div>
-
-    <div id="resources" class="lab-section-header">
-        <h2 class="lab-title">The AI Lab</h2>
-    </div>
-
-    <div class="filter-container">
-        <div class="filter-bar">
-            <button class="filter-button active" data-filter="all" data-target="resources">All</button>
-            <button class="filter-button" data-filter="Sales" data-target="resources">Sales</button>
-            <button class="filter-button" data-filter="Marketing" data-target="resources">Marketing</button>
-            <button class="filter-button" data-filter="Product Management" data-target="resources">Product Management</button>
-            <button class="filter-button" data-filter="Customer Experience" data-target="resources">Customer Experience</button>
-            <button class="filter-button" data-filter="AI" data-target="resources">AI</button>
-            <button class="filter-button" data-filter="Research with AI" data-target="resources">Research with AI</button>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <span class="stat-number">4</span>
+            <span class="stat-label">Years at IIM-K</span>
         </div>
-        <div class="filter-count" id="resources-count"></div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <span class="stat-number">50+</span>
+            <span class="stat-label">Sessions Delivered</span>
+        </div>
     </div>
 
-    <div class="grid-wrapper" id="resources-wrapper">
-        <div id="resources-grid" class="course-grid"></div>
-        
-        <div id="prompt-storage-container"></div>
+    <!-- Sessions Section -->
+    <section id="sessions">
+        <div class="lab-section-header">
+            <h2 class="lab-title">Session Materials</h2>
+            <p class="section-subtitle">Decks, frameworks, and resources from executive education programs</p>
+        </div>
 
-        <button class="show-more-button hidden" data-target="resources">
-            <span class="show-more-text">Show More</span>
-            <span class="show-less-text" style="display:none;">Show Less</span>
-        </button>
+        <!-- Dual Filter System -->
+        <div class="filter-system">
+            <div class="filter-group">
+                <span class="filter-label">Program</span>
+                <div class="filter-bar" id="program-filters">
+                    <button class="filter-button active" data-filter="all" data-filter-type="program" data-target="sessions">All Programs</button>
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+            <div class="filter-group">
+                <span class="filter-label">Function</span>
+                <div class="filter-bar" id="function-filters-sessions">
+                    <button class="filter-button active" data-filter="all" data-filter-type="function" data-target="sessions">All</button>
+                    <button class="filter-button" data-filter="Sales" data-filter-type="function" data-target="sessions">Sales</button>
+                    <button class="filter-button" data-filter="Marketing" data-filter-type="function" data-target="sessions">Marketing</button>
+                    <button class="filter-button" data-filter="Product Management" data-filter-type="function" data-target="sessions">Product</button>
+                    <button class="filter-button" data-filter="Customer Experience" data-filter-type="function" data-target="sessions">CX</button>
+                    <button class="filter-button" data-filter="AI" data-filter-type="function" data-target="sessions">AI</button>
+                </div>
+            </div>
+            <div class="filter-count" id="sessions-count"></div>
+        </div>
+
+        <div class="grid-wrapper" id="sessions-wrapper">
+            <div id="sessions-grid" class="card-grid"></div>
+            
+            <button class="show-more-button hidden" data-target="sessions">
+                <span class="show-more-text">Show More Sessions</span>
+                <span class="show-less-text" style="display:none;">Show Less</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- AI Lab Section -->
+    <section id="lab">
+        <div class="lab-section-header">
+            <h2 class="lab-title">The AI Lab</h2>
+            <p class="section-subtitle">Prompts, Gems, and workflows I've built—yours to use</p>
+        </div>
+
+        <div class="filter-system">
+            <div class="filter-group">
+                <span class="filter-label">Function</span>
+                <div class="filter-bar" id="function-filters-resources">
+                    <button class="filter-button active" data-filter="all" data-filter-type="function" data-target="resources">All</button>
+                    <button class="filter-button" data-filter="Sales" data-filter-type="function" data-target="resources">Sales</button>
+                    <button class="filter-button" data-filter="Marketing" data-filter-type="function" data-target="resources">Marketing</button>
+                    <button class="filter-button" data-filter="Product Management" data-filter-type="function" data-target="resources">Product</button>
+                    <button class="filter-button" data-filter="AI" data-filter-type="function" data-target="resources">AI / General</button>
+                </div>
+            </div>
+            <div class="filter-count" id="resources-count"></div>
+        </div>
+
+        <div class="grid-wrapper" id="resources-wrapper">
+            <div id="resources-grid" class="card-grid"></div>
+            
+            <div id="prompt-storage-container"></div>
+
+            <button class="show-more-button hidden" data-target="resources">
+                <span class="show-more-text">Show More Tools</span>
+                <span class="show-less-text" style="display:none;">Show Less</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- Writings Section -->
+    <section id="writings" class="writings-section hidden">
+        <div class="lab-section-header">
+            <h2 class="lab-title">Build Notes</h2>
+            <p class="section-subtitle">Thoughts on AI, product, and the intersection</p>
+        </div>
+        <div id="writings-grid" class="card-grid"></div>
+    </section>
+
+    <!-- Contextual Booking Nudge (appears after engagement) -->
+    <div id="booking-nudge" class="booking-nudge hidden">
+        <div class="nudge-content">
+            <span class="nudge-icon">💡</span>
+            <div class="nudge-text">
+                <strong>Found this useful?</strong>
+                <span>I run custom workshops and 1:1 sessions for teams.</span>
+            </div>
+            <a href="#book" class="nudge-cta">Learn More</a>
+            <button class="nudge-dismiss" aria-label="Dismiss">×</button>
+        </div>
     </div>
 
-    <div class="lab-section-header">
-        <h2 class="lab-title">Build Notes & Writings</h2>
-    </div>
-    <div id="writings-grid" class="course-grid"></div>
+    <!-- Main Booking Section -->
+    <section id="book" class="booking-section">
+        <div class="booking-card">
+            <div class="booking-content">
+                <span class="booking-eyebrow">Go Deeper</span>
+                <h3 class="booking-title">Custom Sessions for Your Team</h3>
+                <p class="booking-desc">Whether it's a half-day AI workshop tailored to your industry or a 1:1 strategy session, I'll help you move from "we should use AI" to a concrete implementation plan.</p>
+                <div class="booking-options">
+                    <div class="booking-option">
+                        <span class="option-icon">👥</span>
+                        <span class="option-text">Team Workshops</span>
+                    </div>
+                    <div class="booking-option">
+                        <span class="option-icon">🎯</span>
+                        <span class="option-text">1:1 Strategy</span>
+                    </div>
+                    <div class="booking-option">
+                        <span class="option-icon">🏢</span>
+                        <span class="option-text">Corporate Training</span>
+                    </div>
+                </div>
+                <a href="https://calendly.com/adityavj" target="_blank" class="btn btn-primary btn-large">Check Availability</a>
+            </div>
+            <div class="booking-visual">
+                <div class="booking-blob"></div>
+            </div>
+        </div>
+    </section>
 
-    <div id="book" class="booking-bar">
-        <h3>Ready to Accelerate?</h3>
-        <p>Book a 1:1 mentorship session or schedule a custom workshop for your team. Let's transform your AI strategy into competitive advantage.</p>
-        <a href="https://calendly.com/adityavj" target="_blank" class="btn btn-primary">Check Availability</a>
-    </div>
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <span class="footer-name">Aditya V Jain</span>
+            <span class="footer-divider">·</span>
+            <span class="footer-role">Product Lead @ Google</span>
+        </div>
+    </footer>
 
+    <!-- Modal -->
     <div id="modal-overlay" class="modal-overlay">
         <div id="modal-container" class="modal-container">
             <div class="modal-header">
+                <div class="modal-meta">
+                    <span class="modal-type" id="modal-type"></span>
+                </div>
                 <h3 id="modal-title"></h3>
-                <button class="modal-close">&times;</button>
+                <button class="modal-close" aria-label="Close modal">&times;</button>
             </div>
             <div class="modal-body" id="modal-body"></div>
             <div class="modal-footer" id="modal-footer"></div>
         </div>
     </div>
 
+    <!-- Toast -->
     <div id="toast" class="toast"></div>
 
 </div>
