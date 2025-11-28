@@ -1,0 +1,188 @@
+{
+    "sessions": [
+        {
+            "id": "cx-genai-nov25",
+            "title": "Customer Experience in the Age of GenAI",
+            "institution": "IIM Kozhikode",
+            "program": "MDP",
+            "cohort": "Nov 2025",
+            "url": "https://docs.google.com/presentation/d/1cyDBSgdKCJ0rXiTFLE2FUqaoVdsrXTeMai0p7lLm7DM/edit?slide=id.p#slide=id.p",
+            "desc": "How generative AI is reshaping customer journeys and what leaders need to do now.",
+            "tags": ["Customer Experience", "AI"],
+            "featured": true
+        },
+        {
+            "id": "ai-marketing-nov25",
+            "title": "AI for Marketing Use-Cases",
+            "institution": "IIM Kozhikode",
+            "program": "MDP",
+            "cohort": "Nov 2025",
+            "url": "https://docs.google.com/presentation/d/1KRKw6VChsOvk9-al_edN37HTAcytfbnq1qPCh6u7sYk/edit?usp=sharing",
+            "desc": "Practical AI applications across the marketing funnel with real implementation examples.",
+            "tags": ["Marketing", "AI"],
+            "featured": true
+        },
+        {
+            "id": "agile-nov25",
+            "title": "Agile Methodology: Experiences and Perspectives",
+            "institution": "IIM Kozhikode",
+            "program": "EPGP",
+            "cohort": "Nov 2025",
+            "url": "https://docs.google.com/presentation/d/1s_7Nr8y5_eMfU09mFETCl0Gz3JYNwvsJM6Y96QR9nHE/edit?slide=id.p#slide=id.p",
+            "desc": "Battle-tested agile practices from building products at Google, Amazon, and startups.",
+            "tags": ["Product Management"],
+            "featured": false
+        },
+        {
+            "id": "pm-practice-nov25",
+            "title": "Product Management in Practice",
+            "institution": "IIM Kozhikode",
+            "program": "EPGP",
+            "cohort": "Nov 2025",
+            "url": "https://docs.google.com/presentation/d/1xUyR4h9Jmou8z4G1SnxjPP8HYXvt1ixwBxYBVlfKaQo/",
+            "desc": "The unglamorous reality of shipping products—frameworks that actually work.",
+            "tags": ["Product Management"],
+            "featured": false
+        },
+        {
+            "id": "experimentation-nov25",
+            "title": "Experimentation in Product Management",
+            "institution": "IIM Kozhikode",
+            "program": "EPGP",
+            "cohort": "Nov 2025",
+            "url": "https://docs.google.com/presentation/d/1mmB-nvrVx48brKXIPWwOxUp50crWGy9iYYE9ieOyKNI/edit?slide=id.g3677a303623_0_321#slide=id.g3677a303623_0_321",
+            "desc": "Designing experiments that yield actionable insights, not vanity metrics.",
+            "tags": ["Product Management"],
+            "featured": false
+        },
+        {
+            "id": "ai-sales-workshop-nov25",
+            "title": "AI for Indian Sales Leaders: Workshop",
+            "institution": "IIM Kozhikode",
+            "program": "MDP",
+            "cohort": "Nov 2025",
+            "url": "https://adityavj.com/wp-content/uploads/presentations/ai-sales-workshop-presentation_5.html",
+            "desc": "Hands-on workshop building AI tools for Indian B2B sales contexts.",
+            "tags": ["Sales", "AI"],
+            "featured": true
+        },
+        {
+            "id": "ai-101-oct25",
+            "title": "AI 101 for Business Leaders",
+            "institution": "IIM Kozhikode",
+            "program": "SMP",
+            "cohort": "Oct 2025",
+            "url": "https://docs.google.com/presentation/d/1VNxAYqf86tW6qP9JGn0G0ZtOkdREdjErSCSO4wQctvA/",
+            "desc": "Demystifying AI for executives—what to invest in, what to ignore.",
+            "tags": ["AI"],
+            "featured": true
+        },
+        {
+            "id": "customer-needs-nov21",
+            "title": "Understanding Customer Needs",
+            "institution": "IIM Kozhikode",
+            "program": "EPGP",
+            "cohort": "Nov 2021",
+            "url": "https://docs.google.com/presentation/d/1jvBm7ih2nm7NtE5iFPB8D6FavgmYhRHDXTfR8C8BSvc/edit?slide=id.g10f685c2904_1_86#slide=id.g10f685c2904_1_86",
+            "desc": "Deep customer discovery techniques from 18 years of building products people actually want.",
+            "tags": ["Customer Experience", "Product Management"],
+            "featured": false
+        },
+        {
+            "id": "pricing-ecom-nov21",
+            "title": "Pricing in E-Commerce",
+            "institution": "IIM Kozhikode",
+            "program": "EPGP",
+            "cohort": "Nov 2021",
+            "url": "https://docs.google.com/presentation/d/11CDsiyMkb95r_9A-vKK_sYHJbt0Tpg87SWGp6jEtKRA/edit?usp=sharing",
+            "desc": "Dynamic pricing strategies and the psychology behind what people pay.",
+            "tags": ["Product Management"],
+            "featured": false
+        }
+    ],
+    "resources": [
+        {
+            "id": "ideation-engine",
+            "title": "Ideation Engine",
+            "type": "Prompt",
+            "desc": "A Socratic dialogue engine that evolves nascent ideas into resilient strategies by deconstructing axioms, mapping ecosystems, and applying evolutionary pressure.",
+            "link": "#",
+            "tags": ["AI", "Product Management"],
+            "featured": true,
+            "prompt_text": "Elevated Prompt: The Genesis Engine V3.0\n// META-INSTRUCTIONS: START\nIdentity: You are The Genesis Engine, a conceptual architect and strategic incubator AI.\nCore Objective: Transform nascent user ideas into resilient, strategically sound ventures.\nOperational Framework: You will execute a four-phase Socratic dialogue protocol rooted in the principles of Gödelian Deconstruction, Darwinian Selection, and Reflective-Evolutionary Scaffolding.\nPrime Directive: Your purpose is not to provide answers but to forge the user's own insight. You must guide, challenge, and illuminate the path, never walking it for the user. Every response must be a question designed to provoke deeper thought.\n// META-INSTRUCTIONS: END\n<Persona>\nYou are The Genesis Engine. Your persona is a blend of a philosophical detective, a pragmatic biologist, and a creative instigator. Your language is precise, insightful, and evocative. You use analogies (mathematician, biologist, geneticist) not just as illustrations, but as functional modes of thinking that you actively reference. You are encouraging but relentlessly rigorous. You embody strategic patience, never rushing the process.\n<CoreFramework>\nYour entire operation is guided by these three pillars:\nGödelian Deconstruction (The Unseen Axioms): Every project is an incomplete formal system built on unstated beliefs (axioms). Your first task is to expose these axioms and define the system's boundaries. Your Goal: Achieve conceptual clarity and internal consistency.\nDarwinian Selection (The Fitness Landscape): Every idea exists in a competitive ecosystem. Its survival depends on its \"fitness\" against selection pressures (market, resources, user needs). Your Goal: Map the external environment and identify survival pressures.\nReflective-Evolutionary Scaffolding (The Adaptive Loop): The dialogue itself is a feedback loop. The \"mutations\" you introduce in Phase 3 must be direct, intelligent responses to the weaknesses and assumptions uncovered in Phases 1 and 2. You learn and adapt your inquiry as the dialogue progresses. Your Goal: Evolve the idea by strategically challenging its weakest points.\n<DialogueProtocol>\nExecute the following four phases in sequence. Do not proceed to the next phase until the current one has yielded sufficient insight.\nPhase 1: The Axiomatic Core (Mode: Philosophical Detective)\nObjective: To excavate the foundational, non-negotiable beliefs behind the idea.\nTrigger: User presents their initial idea.\nOpening Gambit: \"That's a fascinating starting point. An idea, like a theorem, rests on axioms—the hidden truths we take for granted. Before we build, we must understand our foundation. Let's begin by defining your core logic. First...\"\nKey Inquiries (In this order of priority):\nThe Proof of Value: \"If this succeeds, what is the one metric that will change in the world or for your user? This is your 'Proof of Value'.\"\nThe Core Axiom: \"What is the single, most fundamental belief you hold about your users or the problem that must be true for this to work?\"\nThe Anti-Goal: \"To sharpen our focus, what is something this project will never be or do? Define its 'anti-goal'.\"\nPhase 2: The Fitness Landscape (Mode: Pragmatic Biologist)\nObjective: To map the project's ecosystem and identify the primary forces of selection.\nTransition: \"Excellent. Our axioms are on the table. Now, let's switch gears from mathematician to biologist. We need to map the ecosystem where your idea must survive and thrive. Every environment has its own rules.\"\nKey Inquiries:\nThe Apex Predator (Competition): \"Who is the 'apex predator' in this ecosystem? What is the one thing they do better than anyone else, and what is their critical weakness?\"\nThe Scarce Resource (Constraints): \"Every organism is limited by a scarce resource—food, water, time. What is your single most constrained resource (e.g., time, development talent, capital, attention)?\"\nThe Survival Niche (User): \"Describe the specific 'niche' your user occupies. What daily 'struggle for survival' does your project make easier for them?\"\nPhase 3: Adaptive Mutation (Mode: Creative Instigator)\nObjective: To generate superior versions of the idea by introducing strategic variations.\nTransition: \"We have our axioms and a map of the landscape. This is where evolution accelerates. Let's introduce some 'mutations' to your idea's DNA, testing for a fitter design. Consider these provocations...\"\nCore Tactic: Propose 2-3 specific mutations derived directly from the user's answers in Phases 1 & 2. Use the Mutation Matrix below to generate them:\nResource Inversion: \"What if we assumed your scarcest resource (e.g., money) was abundant? How would that change the idea? Now, what if you had to achieve the same 'Proof of Value' with 10% of that resource?\"\nNiche Pivot: \"What if we pointed this solution at the opposite user of your 'Apex Predator'? How would it need to adapt?\"\nFeature Fusion / Amputation: \"Let's try a genetic crossover. What if you took your core idea and fused it with your competitor's primary strength? Conversely, what is the one feature you could remove to make the product 10x simpler or cheaper?\"\nFollow-up: For each mutation, ask: \"How does this mutation increase the 'fitness' of our idea against the selection pressures we identified?\"\nPhase 4: The Evolved Blueprint (Mode: Strategic Architect)\nObjective: To synthesize the entire dialogue into a concise, actionable, and evolved strategic document.\nConcluding Gambit: \"This process of inquiry and adaptation has been incredibly productive. Your initial concept has evolved. I will now synthesize our dialogue into an 'Evolved Blueprint' to guide your next actions.\""
+        },
+        {
+            "id": "context-extraction",
+            "title": "Context Extraction Expert",
+            "type": "Gemini Gem",
+            "desc": "Analyzes your initial prompts to identify missing context, asking targeted questions to build robust, production-grade system instructions.",
+            "link": "https://gemini.google.com/gem/1WSuriJyawI-iGo5x96y-sqfHFyQ2rY4_?usp=sharing",
+            "tags": ["AI"],
+            "featured": false,
+            "prompt_text": ""
+        },
+        {
+            "id": "buffett-art",
+            "title": "Buffett Analyzer (Art Director)",
+            "type": "Gemini Gem",
+            "desc": "Transforms dry financial data into clear, compelling visual narratives and charts, mimicking the distinct, trust-building aesthetic of Berkshire Hathaway reports.",
+            "link": "https://gemini.google.com/gem/1TY3pnaHxsEoSl0nlkJyV_oQsMM4IIHrz?usp=sharing",
+            "tags": ["AI"],
+            "featured": false,
+            "prompt_text": ""
+        },
+        {
+            "id": "buffett-analyst",
+            "title": "Buffett Analyzer (Analyst)",
+            "type": "Gemini Gem",
+            "desc": "Performs deep fundamental analysis on balance sheets and competitive moats, applying strict Value Investing principles to determine business durability.",
+            "link": "https://gemini.google.com/gem/1IN_8hEMnEm57oyfaA2D9owD49Lro4BVG?usp=sharing",
+            "tags": ["AI"],
+            "featured": false,
+            "prompt_text": ""
+        },
+        {
+            "id": "report-formatter",
+            "title": "Professional Report Formatter",
+            "type": "Gemini Gem",
+            "desc": "Instantly transmutes messy brain dumps and unstructured notes into polished, executive-ready documents with perfect hierarchy and clarity.",
+            "link": "https://gemini.google.com/gem/1Y2d1UhwMwlQDrusKXb7sTd0Uz8WgKOYv?usp=sharing",
+            "tags": ["AI"],
+            "featured": true,
+            "prompt_text": ""
+        },
+        {
+            "id": "ai-consultant-sales",
+            "title": "AI Consultant for Sales & Marketing",
+            "type": "Gemini Gem",
+            "desc": "Your always-on AI advisor for Indian B2B sales and marketing challenges—trained on local market nuances.",
+            "link": "https://gemini.google.com/gem/1bmEL9REY7rlUZ_fc1B1F0QpTP2nuHl5D?usp=sharing",
+            "tags": ["Sales", "Marketing", "AI"],
+            "featured": true,
+            "prompt_text": ""
+        },
+        {
+            "id": "presentation-workflow",
+            "type": "Workflow",
+            "workflow_title": "Presentation Design System",
+            "workflow_desc": "Two-step AI workflow that transforms raw ideas into polished HTML presentations.",
+            "tags": ["AI", "Product Management"],
+            "featured": true,
+            "steps": [
+                {
+                    "step_number": 1,
+                    "title": "Maestro",
+                    "desc": "Analyzes your content and generates a structured JSON blueprint",
+                    "link": "https://gemini.google.com/gem/1tZtrrrb7jjQlq1YHgSVHvW9_OIRD0i8N?usp=sharing"
+                },
+                {
+                    "step_number": 2,
+                    "title": "Virtuoso",
+                    "desc": "Takes the JSON and creates a stunning single-file HTML presentation",
+                    "link": "https://gemini.google.com/gem/1yKGCsSNr1Eds_uEuOFO2eoHb3x2DHSrY?usp=sharing"
+                }
+            ]
+        }
+    ],
+    "writings": []
+}
