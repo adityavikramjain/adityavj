@@ -184,5 +184,13 @@
             ]
         }
     ],
-    "writings": []
+    "writings": [
+        {
+            "id": "presentation-engine",
+            "title": "I Replaced PowerPoint with Code: The Evolution of an AI Presentation Engine",
+            "date": "November 2025",
+            "link": "blog-presentation-engine.html",
+            "excerpt": "How I engineered a dual-engine AI system that separates strategy from design, forcing me to think like the world's best presentation experts."
+        }
+    ]
 }
