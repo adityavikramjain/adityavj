@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Replaced PowerPoint with Code | Aditya V Jain</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* === VARIABLES === */
+        :root {
+            --electric-orange: #FF4500;
+            --electric-orange-light: rgba(255, 69, 0, 0.1);
+            --electric-orange-glow: rgba(255, 69, 0, 0.3);
+            --white: #FFFFFF;
+            --mist-rose: #FFF5F2;
+            --charcoal: #1F2937;
+            --soft-grey: #6B7280;
+            --light-grey: #9CA3AF;
+            --border-light: rgba(0, 0, 0, 0.06);
+            --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        /* === GLOBAL === */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--charcoal);
+            background: var(--mist-rose);
+            line-height: 1.75;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* === CONTAINER === */
+        .blog-container {
+            background:
+                radial-gradient(ellipse 80% 50% at 20% 80%, rgba(255, 69, 0, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 40% at 85% 20%, rgba(255, 69, 0, 0.06) 0%, transparent 50%),
+                var(--mist-rose);
+            min-height: 100vh;
+            padding: 60px 40px;
+        }
+
+        /* === TERMINAL HEADER === */
+        .terminal-header {
+            font-family: 'Space Grotesk', monospace;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--charcoal);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            animation: slideIn 0.6s var(--ease-smooth) forwards;
+        }
+
+        .terminal-text { letter-spacing: -0.02em; }
+        .terminal-prompt { color: var(--electric-orange); }
+
+        .back-link {
+            margin-left: auto;
+            font-size: 0.9rem;
+            color: var(--electric-orange);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: var(--white);
+            border: 1px solid var(--border-light);
+        }
+
+        .back-link:hover {
+            background: var(--electric-orange-light);
+            transform: translateX(-4px);
+        }
+
+        /* === ARTICLE === */
+        .article-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--white);
+            border-radius: 24px;
+            padding: 80px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-light);
+            opacity: 0;
+            animation: fadeInUp 0.8s var(--ease-smooth) 0.2s forwards;
+        }
+
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+            font-size: 0.9rem;
+            color: var(--soft-grey);
+        }
+
+        .article-badge {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 6px 12px;
+            border-radius: 6px;
+            background: var(--electric-orange-light);
+            color: var(--electric-orange);
+        }
+
+        .article-date {
+            font-weight: 500;
+        }
+
+        .article-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -0.03em;
+            color: var(--charcoal);
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--charcoal) 0%, #374151 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .article-subtitle {
+            font-size: 1.25rem;
+            line-height: 1.6;
+            color: var(--soft-grey);
+            margin-bottom: 48px;
+            padding-left: 20px;
+            border-left: 3px solid var(--electric-orange);
+        }
+
+        /* === TYPOGRAPHY === */
+        .article-content h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--charcoal);
+            margin-top: 56px;
+            margin-bottom: 24px;
+            line-height: 1.3;
+            letter-spacing: -0.02em;
+        }
+
+        .article-content h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--charcoal);
+            margin-top: 40px;
+            margin-bottom: 16px;
+            line-height: 1.4;
+        }
+
+        .article-content h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-top: 32px;
+            margin-bottom: 12px;
+        }
+
+        .article-content p {
+            font-size: 1.1rem;
+            line-height: 1.75;
+            color: var(--charcoal);
+            margin-bottom: 24px;
+        }
+
+        .article-content strong {
+            font-weight: 700;
+            color: var(--charcoal);
+        }
+
+        .article-content a {
+            color: var(--electric-orange);
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 2px solid var(--electric-orange-light);
+            transition: all 0.2s ease;
+        }
+
+        .article-content a:hover {
+            border-bottom-color: var(--electric-orange);
+            background: var(--electric-orange-light);
+        }
+
+        .article-content ul,
+        .article-content ol {
+            margin-bottom: 24px;
+            padding-left: 32px;
+        }
+
+        .article-content li {
+            font-size: 1.1rem;
+            line-height: 1.75;
+            color: var(--charcoal);
+            margin-bottom: 12px;
+        }
+
+        .article-content hr {
+            border: none;
+            height: 1px;
+            background: var(--border-light);
+            margin: 56px 0;
+        }
+
+        .article-content blockquote {
+            margin: 32px 0;
+            padding: 24px 32px;
+            background: var(--electric-orange-light);
+            border-left: 4px solid var(--electric-orange);
+            border-radius: 8px;
+            font-style: italic;
+            color: var(--soft-grey);
+        }
+
+        .article-content code {
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9em;
+            background: var(--mist-rose);
+            padding: 3px 8px;
+            border-radius: 4px;
+            color: var(--electric-orange);
+        }
+
+        /* === HIGHLIGHT BOX === */
+        .highlight-box {
+            background: linear-gradient(135deg, var(--white) 0%, rgba(255, 69, 0, 0.03) 100%);
+            border: 2px solid var(--electric-orange-light);
+            border-radius: 16px;
+            padding: 32px;
+            margin: 40px 0;
+        }
+
+        .highlight-box h3 {
+            margin-top: 0 !important;
+            color: var(--electric-orange);
+        }
+
+        /* === CTA SECTION === */
+        .cta-section {
+            background: var(--electric-orange);
+            color: var(--white);
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+            margin-top: 56px;
+        }
+
+        .cta-section p {
+            color: var(--white);
+            font-size: 1.2rem;
+            margin-bottom: 24px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--white);
+            color: var(--electric-orange);
+            padding: 16px 32px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.05rem;
+            transition: all 0.3s var(--ease-smooth);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        /* === FOOTER === */
+        .article-footer {
+            max-width: 800px;
+            margin: 40px auto 0;
+            padding-top: 32px;
+            border-top: 1px solid var(--border-light);
+            text-align: center;
+        }
+
+        .article-footer p {
+            color: var(--soft-grey);
+            font-size: 0.95rem;
+        }
+
+        .article-footer a {
+            color: var(--electric-orange);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .article-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* === ANIMATIONS === */
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 768px) {
+            .blog-container {
+                padding: 40px 20px;
+            }
+
+            .terminal-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .back-link {
+                margin-left: 0;
+            }
+
+            .article-wrapper {
+                padding: 40px 32px;
+            }
+
+            .article-title {
+                font-size: 2rem;
+            }
+
+            .article-content h2 {
+                font-size: 1.5rem;
+            }
+
+            .article-content h3 {
+                font-size: 1.25rem;
+            }
+
+            .article-content p,
+            .article-content li {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .article-wrapper {
+                padding: 32px 24px;
+                border-radius: 16px;
+            }
+
+            .article-title {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="blog-container">
+    <!-- Terminal Header -->
+    <div class="terminal-header">
+        <span class="terminal-text"><span class="terminal-prompt">&gt;</span> adityavj.com/blog</span>
+        <a href="index.html" class="back-link">← Back to Home</a>
+    </div>
+
+    <!-- Article -->
+    <article class="article-wrapper">
+        <div class="article-meta">
+            <span class="article-badge">Build Notes</span>
+            <span class="article-date">November 2025</span>
+        </div>
+
+        <h1 class="article-title">I Replaced PowerPoint with Code: The Evolution of an AI Presentation Engine</h1>
+
+        <div class="article-subtitle">
+            Most professionals dread making presentations. It's not because we lack ideas; it's because we are forcing our brains to do two contradictory things at once.
+        </div>
+
+        <div class="article-content">
+            <p>We try to be the <strong>Strategist</strong> (crafting a logical argument) and the <strong>Designer</strong> (aligning pixel-perfect boxes) simultaneously.</p>
+
+            <p>The result? We do neither well. We end up with "Frankendecks"—slides cluttered with walls of text, confused logic, and inconsistent fonts.</p>
+
+            <p>I wanted to solve this. Not by hiring an agency, but by treating presentations as a software engineering problem. Over six months and 20 iterations, I built <strong>Tandem Duo</strong>: a dual-engine AI system that separates "Thinking" from "Doing."</p>
+
+            <p>Here is how I engineered a system that forces me to think like the world's best presentation experts—and why I stopped using Google Slides entirely.</p>
+
+            <p>Want to try it out now? <a href="https://gemini.google.com/gem/1tZtrrrb7jjQlq1YHgSVHvW9_OIRD0i8N?usp=sharing" target="_blank">Click here</a></p>
+
+            <hr>
+
+            <h3>The Core Philosophy: Separation of Concerns</h3>
+
+            <p>In software engineering, we have a principle called <strong>Separation of Concerns</strong>. You don't put your database logic in your user interface code. Yet, when we use standard AI tools (like ChatGPT) for presentations, we ask them to "Create a 10-slide pitch deck."</p>
+
+            <p>We are asking the AI to be the architect and the bricklayer at the same time. It inevitably fails, giving us generic bullet points on ugly slides.</p>
+
+            <p>To fix this, I split the system into two distinct agents:</p>
+
+            <ol>
+                <li><strong>Maestro (The Brain):</strong> A ruthless strategist who doesn't care about fonts, only logic.</li>
+                <li><strong>Virtuoso (The Hands):</strong> A master craftsman who doesn't care about the story, only the pixels.</li>
+            </ol>
+
+            <h3>Phase 1: Maestro (The Strategy Engine)</h3>
+
+            <p><strong>The Problem:</strong> Early versions of my prompt (V6) acted like a "Yes Man." If I gave it garbage inputs, it politely organized that garbage into bullet points. It lacked the friction necessary for good strategy.</p>
+
+            <p><strong>The Solution:</strong> I had to codify the wisdom of experts like <strong>Barbara Minto</strong> and <strong>Nancy Duarte</strong> directly into the system constraints.</p>
+
+            <div class="highlight-box">
+                <h4>1. The "Red Team" Protocol</h4>
+
+                <p>In V21, I stopped asking Maestro to "write slides." Instead, I programmed it to run a <strong>Dynamic Interview</strong>. It now acts as a consultant using the <strong>SCQA Framework</strong> (Situation, Complication, Question, Answer).</p>
+
+                <ul>
+                    <li><strong>Situation:</strong> What is the status quo?</li>
+                    <li><strong>Complication:</strong> Why is it broken <em>now</em>?</li>
+                    <li><strong>Question:</strong> What must we solve?</li>
+                    <li><strong>Answer:</strong> What is the single "Governed Thought"?</li>
+                </ul>
+
+                <p>If I cannot answer these questions, Maestro refuses to generate the next step. It acts as a "Red Team," challenging my logic before a single slide is written.</p>
+            </div>
+
+            <div class="highlight-box">
+                <h4>2. The Narrative Sparkline</h4>
+
+                <p>Nancy Duarte teaches that great presentations toggle between "What Is" (the status quo) and "What Could Be" (the solution). Maestro now enforces this tension. It ensures the narrative isn't just a list of features, but a journey from a problem to a resolution.</p>
+            </div>
+
+            <h3>Phase 2: Virtuoso (The Execution Engine)</h3>
+
+            <p><strong>The Problem:</strong> Even with a great story, AI struggles with visual layout. My early attempts (V8) tried to make the AI "guess" where to put text. It resulted in broken layouts and overflowing text boxes.</p>
+
+            <p><strong>The Solution:</strong> I realized that "design" in presentations isn't art; it's <strong>Cognitive Load Management</strong>. I turned to the principles of <strong>Garr Reynolds</strong> (Presentation Zen) and hard-coded them into CSS.</p>
+
+            <div class="highlight-box">
+                <h4>1. The Cognitive Load Calculator</h4>
+
+                <p>I built a scoring system into the Virtuoso prompt. The AI analyzes the density of the content Maestro produces:</p>
+
+                <ul>
+                    <li><strong>High Complexity:</strong> The system automatically triggers the .load-high CSS class, which increases white space, reduces font weight, and removes decorative elements.</li>
+                    <li><strong>Low Complexity:</strong> The system triggers .load-low, allowing for bolder typography and hero visuals.</li>
+                </ul>
+
+                <p>This isn't an artistic choice; it is a mathematical rule that protects the audience from exhaustion.</p>
+            </div>
+
+            <div class="highlight-box">
+                <h4>2. The "No-Parse" Mandate</h4>
+
+                <p>The biggest breakthrough came in Version 10. I discovered that if you let AI write JavaScript to manipulate the DOM, it breaks. It tries to get too clever.</p>
+
+                <p>I implemented the <strong>No-Parse Mandate</strong>: Virtuoso is forbidden from writing logic that touches innerHTML. Instead, it must generate a single, self-contained HTML file where all layout rules are handled strictly by <strong>CSS Grid</strong> and an <strong>Architectural Library</strong> of components (like .matrix-wrapper or .timeline-step).</p>
+            </div>
+
+            <h3>The Result: Accessible Authority</h3>
+
+            <p>By separating these concerns, the output changed dramatically.</p>
+
+            <ul>
+                <li><strong>Before (V6):</strong> I got a generic list of bullet points that I had to manually copy-paste into a slide template.</li>
+                <li><strong>After (V21):</strong> I get a "Battle-Tested" strategy from Maestro, which flows into Virtuoso to generate a production-ready HTML file.</li>
+            </ul>
+
+            <p>The system doesn't just make the work faster; it makes the work <em>better</em>. It forces me to answer the hard questions first. It effectively replaces the "Blank Page Panic" with a structured engineering process.</p>
+
+            <p>We often think creativity is about total freedom. But as I learned through 20 iterations of this tool, <strong>creativity thrives on constraints.</strong> By constraining the AI with the wisdom of Minto, Duarte, and Reynolds, we unlock its true potential: not as a generator of fluff, but as an architect of persuasion.</p>
+
+            <div class="cta-section">
+                <p><strong>Ready to give it a spin?</strong></p>
+                <a href="https://gemini.google.com/gem/1tZtrrrb7jjQlq1YHgSVHvW9_OIRD0i8N?usp=sharing" target="_blank" class="cta-button">Try Tandem Duo Now →</a>
+            </div>
+        </div>
+    </article>
+
+    <div class="article-footer">
+        <p>Written by <a href="index.html">Aditya V Jain</a> · Product Lead @ Google</p>
+    </div>
+</div>
+
+</body>
+</html>
