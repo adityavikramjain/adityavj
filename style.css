@@ -168,7 +168,7 @@ p { color: var(--soft-grey); }
     width: 380px;
     height: 380px;
     position: relative;
-    background-image: url('square aditya.png');
+    background-image: url('aditya.png');
     background-size: cover;
     background-position: center top 30%;
     border: 3px solid var(--charcoal);
