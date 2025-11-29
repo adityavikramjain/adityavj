@@ -98,6 +98,50 @@
             "desc": "Dynamic pricing strategies and the psychology behind what people pay.",
             "tags": ["Product Management"],
             "featured": false
+        },
+        {
+            "id": "crm-feb22",
+            "title": "Customer Relationship Marketing",
+            "institution": "IIM Kozhikode",
+            "program": "MDP",
+            "cohort": "Feb 2022",
+            "url": "presentations/Customer_Relationship_Marketing.pdf",
+            "desc": "CAC vs LTV economics, the AARRR funnel, and data-driven pricing strategies for e-commerce.",
+            "tags": ["Marketing", "Customer Experience"],
+            "featured": false
+        },
+        {
+            "id": "ecom-scm-mar22",
+            "title": "Value Creation in E-Commerce Platform and Supply Chain Management",
+            "institution": "IIM Kozhikode",
+            "program": "MDP",
+            "cohort": "Mar 2022",
+            "url": "presentations/Value_creation_in_E-Commerce_platform_and_Supply_Chain_Management.pdf",
+            "desc": "Forward and reverse logistics, last-mile delivery challenges, and building efficient e-commerce supply chains.",
+            "tags": ["Product Management"],
+            "featured": false
+        },
+        {
+            "id": "jtbd-oct21",
+            "title": "Jobs to be Done Framework",
+            "institution": "IIM Kozhikode",
+            "program": "MDP",
+            "cohort": "Oct 2021",
+            "url": "presentations/Jobs_to_be_done_.pdf",
+            "desc": "Problem space vs solution space thinking, with real examples of outcome-oriented product development.",
+            "tags": ["Product Management"],
+            "featured": true
+        },
+        {
+            "id": "service-design-jan22",
+            "title": "Service Design and Product Architecture",
+            "institution": "IIM Kozhikode",
+            "program": "MDP",
+            "cohort": "Jan 2022",
+            "url": "presentations/Service_Design_and_Product_Architecture.pdf",
+            "desc": "Three levels of customer pain points, journey mapping, and the 15 principles of good service design.",
+            "tags": ["Product Management", "Customer Experience"],
+            "featured": false
         }
     ],
     "resources": [
@@ -184,13 +228,5 @@
             ]
         }
     ],
-    "writings": [
-        {
-            "id": "presentation-engine",
-            "title": "Creating Effective Slide Presentations with AI",
-            "date": "November 2025",
-            "link": "blog-presentation-engine.html",
-            "excerpt": "How I split presentation creation into two distinct AI prompts—one for narrative strategy, one for visual design—and why I stopped using Google Slides."
-        }
-    ]
+    "writings": []
 }
