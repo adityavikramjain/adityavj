@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Digital Prospecting & Sales Intelligence Workshop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --iimk-blue: #003366;
+            --iimk-gold: #FFCC00;
+            --dove-gray: #666666;
+            --pure-white: #FFFFFF;
+            --pure-black: #000000;
+            --light-blue: #E6EEF5;
+            --light-gold: #FFF9E6;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--pure-white);
+            color: var(--pure-black);
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 1440px;
+            height: 932px;
+            margin: 0 auto;
+            position: relative;
+            background: var(--pure-white);
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            padding: 60px 80px 60px 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            overflow: hidden;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .slide-indicator {
+            position: fixed;
+            bottom: 30px;
+            right: 40px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            color: var(--dove-gray);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 16px;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .speaker-notes {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 51, 102, 0.95);
+            color: white;
+            padding: 20px 40px;
+            max-height: 200px;
+            overflow-y: auto;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            z-index: 999;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .speaker-notes.visible {
+            transform: translateY(0);
+        }
+
+        .speaker-notes p {
+            margin-bottom: 10px;
+        }
+
+        /* Typography */
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 64px;
+            font-weight: 700;
+            color: var(--iimk-blue);
+            margin-bottom: 30px;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 50px;
+            font-weight: 600;
+            color: var(--iimk-blue);
+            margin-bottom: 25px;
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--iimk-gold);
+            margin-bottom: 18px;
+        }
+
+        .subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 28px;
+            font-weight: 400;
+            color: var(--dove-gray);
+            margin-bottom: 40px;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes highlightPulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(255, 204, 0, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 0 20px rgba(255, 204, 0, 0);
+            }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .animate-scale {
+            animation: fadeInScale 0.8s ease forwards;
+        }
+
+        .hero-content {
+            animation: fadeInScale 0.8s ease forwards;
+            position: relative;
+        }
+
+        .hero-highlight {
+            display: inline-block;
+            background: linear-gradient(120deg, var(--light-gold) 0%, var(--light-gold) 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 40%;
+            background-position: 0 85%;
+            padding: 0 8px;
+        }
+
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 35px;
+            margin-top: 20px;
+        }
+
+        .bullet-list {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .bullet-list li {
+            font-size: 22px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            padding-left: 40px;
+            position: relative;
+            color: var(--pure-black);
+        }
+
+        .bullet-list li:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 12px;
+            width: 10px;
+            height: 10px;
+            background: var(--iimk-gold);
+            border-radius: 50%;
+        }
+
+        .numbered-list {
+            list-style: none;
+            counter-reset: item;
+            margin-left: 0;
+        }
+
+        .numbered-list li {
+            font-size: 22px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            padding-left: 50px;
+            position: relative;
+            color: var(--pure-black);
+        }
+
+        .numbered-list li:before {
+            content: counter(item);
+            counter-increment: item;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 36px;
+            height: 36px;
+            background: var(--iimk-gold);
+            color: var(--iimk-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        /* Prompt and Output Boxes */
+        .prompt-box {
+            background: var(--light-blue);
+            border-left: 5px solid var(--iimk-blue);
+            padding: 30px 35px;
+            margin: 25px 0;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 20px;
+            line-height: 1.9;
+            white-space: pre-wrap;
+            box-shadow: 0 4px 12px rgba(0, 51, 102, 0.1);
+        }
+
+        .output-box {
+            background: var(--light-gold);
+            border-left: 5px solid var(--iimk-gold);
+            padding: 30px 35px;
+            margin: 25px 0;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 20px;
+            line-height: 1.9;
+            white-space: pre-wrap;
+            box-shadow: 0 4px 12px rgba(255, 204, 0, 0.15);
+        }
+
+        .prompt-label {
+            display: inline-block;
+            background: var(--iimk-blue);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+            letter-spacing: 1px;
+        }
+
+        .output-label {
+            display: inline-block;
+            background: var(--iimk-gold);
+            color: var(--iimk-blue);
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+            letter-spacing: 1px;
+        }
+
+        /* Persona Cards */
+        .persona-card {
+            background: linear-gradient(135deg, var(--light-blue) 0%, var(--pure-white) 100%);
+            border: 2px solid var(--iimk-blue);
+            border-radius: 12px;
+            padding: 30px 35px;
+            margin: 25px 0;
+            box-shadow: 0 6px 20px rgba(0, 51, 102, 0.12);
+        }
+
+        .persona-card h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 30px;
+            color: var(--iimk-blue);
+            margin-bottom: 10px;
+        }
+
+        .persona-card .role {
+            font-size: 22px;
+            color: var(--dove-gray);
+            font-weight: 600;
+            margin-bottom: 14px;
+        }
+
+        .persona-card .details {
+            font-size: 20px;
+            color: var(--pure-black);
+            line-height: 1.7;
+        }
+
+        /* Title Slide */
+        .title-slide {
+            background: linear-gradient(135deg, var(--iimk-blue) 0%, #004d99 100%);
+            color: white;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .title-slide h1 {
+            color: white;
+            font-size: 68px;
+            margin-bottom: 30px;
+        }
+
+        .title-slide .subtitle {
+            color: var(--iimk-gold);
+            font-size: 32px;
+        }
+
+        /* Module Title Slides */
+        .module-slide {
+            background: linear-gradient(135deg, var(--light-blue) 0%, var(--pure-white) 100%);
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .module-slide h1 {
+            font-size: 62px;
+        }
+
+        /* Section Headers */
+        .section-header {
+            background: var(--iimk-blue);
+            color: white;
+            padding: 18px 30px;
+            margin: -60px -80px 35px -80px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Checkboxes */
+        .checkbox-list {
+            list-style: none;
+        }
+
+        .checkbox-list li {
+            font-size: 22px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            padding-left: 45px;
+            position: relative;
+            color: var(--pure-black);
+        }
+
+        .checkbox-list li:before {
+            content: '□';
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 28px;
+            color: var(--iimk-gold);
+            font-weight: bold;
+        }
+
+        /* Two Column Layout */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 20px;
+        }
+
+        /* Break Slide */
+        .break-slide {
+            background: linear-gradient(135deg, var(--iimk-gold) 0%, #FFD700 100%);
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .break-slide h1 {
+            color: var(--iimk-blue);
+            font-size: 80px;
+        }
+
+        /* Emphasis Box */
+        .emphasis-box {
+            background: var(--light-gold);
+            border: 3px solid var(--iimk-gold);
+            border-radius: 12px;
+            padding: 35px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .emphasis-box p {
+            font-size: 24px;
+            line-height: 1.7;
+            color: var(--pure-black);
+            font-weight: 500;
+        }
+
+        /* Framework Box */
+        .framework-box {
+            background: white;
+            border: 3px solid var(--iimk-blue);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 25px 0;
+        }
+
+        .framework-item {
+            margin-bottom: 22px;
+        }
+
+        .framework-item strong {
+            color: var(--iimk-blue);
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .framework-item span {
+            color: var(--pure-black);
+            font-size: 19px;
+        }
+
+        /* Workflow Visual */
+        .workflow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 35px 0;
+        }
+
+        .workflow-step {
+            flex: 1;
+            text-align: center;
+            padding: 25px;
+            background: var(--light-blue);
+            border-radius: 12px;
+            margin: 0 10px;
+        }
+
+        .workflow-step h4 {
+            color: var(--iimk-blue);
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .workflow-step p {
+            font-size: 17px;
+        }
+
+        .workflow-arrow {
+            font-size: 36px;
+            color: var(--iimk-gold);
+        }
+
+        /* Responsive scaling for smaller screens */
+        @media (max-width: 1440px) {
+            .presentation-container {
+                transform: scale(0.9);
+                transform-origin: top center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- Slide Indicator -->
+        <div class="slide-indicator">
+            <span id="current-slide">1</span> / <span id="total-slides">49</span>
+        </div>
+
+        <!-- Speaker Notes Panel -->
+        <div class="speaker-notes" id="speaker-notes">
+            <p id="notes-content">Press 'S' to toggle speaker notes</p>
+        </div>
+
+        <!-- SLIDE 1: Title Slide -->
+        <div class="slide active title-slide">
+            <h1 class="animate-in">Digital Prospecting & Sales Intelligence Workshop</h1>
+            <p class="subtitle animate-in" style="animation-delay: 0.2s;">Leveraging AI for Strategic Advantage in New Age Marketing</p>
+            <div class="animate-in" style="animation-delay: 0.4s; margin-top: 40px;">
+                <p style="font-size: 22px; color: white;">Aditya V Jain for IIM Kozhikode - Management Development Program, Nov-2025</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: Pre-Session Checklist -->
+        <div class="slide">
+            <h2 class="hero-content">Let's Get Started: <span class="hero-highlight">3 Things You Need</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="numbered-list">
+                    <li><strong>LinkedIn Open:</strong> Have it open on your device.</li>
+                    <li><strong>A Target Prospect:</strong> One company/account name you're currently trying to crack.</li>
+                    <li><strong>An AI Tool Ready:</strong> Have ChatGPT, Google Gemini, or Perplexity.ai open in a separate tab.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: Live Polls -->
+        <div class="slide">
+            <h2 class="hero-content">Where Are We Now?</h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 24px; color: var(--dove-gray); margin-bottom: 35px; font-style: italic;">Launch Zoom Polls now</p>
+                <ul class="bullet-list">
+                    <li>How many LinkedIn connections do you currently have?</li>
+                    <li>How often do you use WhatsApp for business communication?</li>
+                    <li>Have you used LinkedIn Sales Navigator?</li>
+                    <li>How confident are you in your digital prospecting skills?</li>
+                    <li><strong>How often do you use AI (ChatGPT, etc.) for sales tasks?</strong> (Never / Sometimes / Daily)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: The Three Brutal Truths -->
+        <div class="slide">
+            <h2 class="hero-content">The <span class="hero-highlight">Brutal Truths</span> of Selling in 2025</h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="numbered-list">
+                    <li><strong>Visibility:</strong> Your buyers Google you before meetings. What do they find?</li>
+                    <li><strong>The AI Imperative:</strong> Your competitors are using AI to analyze your accounts and anticipate their needs while you're still manually searching LinkedIn.</li>
+                    <li><strong>The Noise:</strong> The information you need to win is public, but you are drowning in data and starving for insight.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: Today's Promise -->
+        <div class="slide">
+            <h2 class="hero-content">From Data Collector to <span class="hero-highlight">Intelligence Analyst</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="two-column">
+                    <div>
+                        <h3 style="color: var(--dove-gray);">Today is NOT about:</h3>
+                        <p style="font-size: 20px; line-height: 1.6; margin-top: 20px;">Becoming an "influencer" or manual data entry.</p>
+                    </div>
+                    <div>
+                        <h3>Today IS about using AI to:</h3>
+                        <ul class="bullet-list" style="margin-top: 20px;">
+                            <li>Find hidden buying signals.</li>
+                            <li>Craft hyper-personalized outreach.</li>
+                            <li>Build a credible presence that opens doors.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: Structure Preview -->
+        <div class="slide">
+            <h2 class="hero-content">Today's Agenda: <span class="hero-highlight">3 Modules</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="framework-box">
+                    <div class="framework-item">
+                        <strong>10:20 | Module 1: AI-Powered Signal Detection</strong><br>
+                        <span style="font-style: italic;">Instantly understanding what your prospect cares about.</span>
+                    </div>
+                    <div class="framework-item">
+                        <strong>11:05 | Module 2: AI-Powered Precision Outreach</strong><br>
+                        <span style="font-style: italic;">Crafting personalized messages at scale (without sounding sloppy).</span>
+                    </div>
+                    <div class="framework-item">
+                        <strong>12:00 | Module 3: The AI Content Engine</strong><br>
+                        <span style="font-style: italic;">Building credibility by rapidly extracting your expertise.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: Module 1 Title -->
+        <div class="slide module-slide">
+            <div class="section-header">Module 1</div>
+            <h1 class="hero-content">AI-Powered Signal Detection</h1>
+            <p class="subtitle animate-in" style="animation-delay: 0.2s;">Finding the Signal in the Noise</p>
+        </div>
+
+        <!-- SLIDE 8: The Bottleneck -->
+        <div class="slide">
+            <h2 class="hero-content">Manual Research <span class="hero-highlight">Doesn't Scale</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="emphasis-box">
+                    <p><strong>The Reality:</strong> Average B2B deal has 6-7 decision-makers. Tracking them manually across LinkedIn, news, and reports is impossible.</p>
+                </div>
+                <div style="margin-top: 30px;">
+                    <h3>The Problem:</h3>
+                    <p style="font-size: 22px; line-height: 1.6; margin-top: 20px;">The challenge isn't finding information; it's analyzing it quickly.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: The Pivot -->
+        <div class="slide">
+            <h2 class="hero-content">The New Way: <span class="hero-highlight">The AI Analyst</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <h3>The AI Role:</h3>
+                <ul class="bullet-list" style="margin-top: 20px;">
+                    <li>It reads the noise.</li>
+                    <li>It finds the signals (Priorities, risks, challenges).</li>
+                    <li>It synthesizes the insight.</li>
+                </ul>
+                <div style="margin-top: 35px;">
+                    <h3 style="color: var(--iimk-blue);">Your New Value:</h3>
+                    <p style="font-size: 22px; line-height: 1.6; margin-top: 20px; font-weight: 500;">Knowing how to ask the AI the right questions.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: The 5-Minute AI Sales Briefing -->
+        <div class="slide">
+            <h2 class="hero-content">The <span class="hero-highlight">5-Minute AI Sales Briefing</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 22px; margin-bottom: 25px;"><strong>Concept:</strong> Before any outreach, use AI to create a prioritized intelligence briefing.</p>
+                <h3>The Complete Workflow:</h3>
+                <div class="framework-box" style="margin-top: 20px;">
+                    <div class="framework-item">
+                        <strong>Step 1: Research the Company</strong> <span>(Perplexity Research Report)</span>
+                    </div>
+                    <div class="framework-item">
+                        <strong>Step 2: Analyze Company Strategy</strong> <span>(The Account Analyzer)</span>
+                    </div>
+                    <div class="framework-item">
+                        <strong>Step 3: Research the Decision-Maker</strong> <span>(Gemini Deep Research)</span>
+                    </div>
+                    <div class="framework-item">
+                        <strong>Step 4: Analyze Stakeholder Priorities</strong> <span>(The Stakeholder Analyzer)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 11: NEW - Using Perplexity for Company Research -->
+        <div class="slide">
+            <h2 class="hero-content">Step 1: <span class="hero-highlight">Research Using Perplexity</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 22px; margin-bottom: 25px;"><strong>Tool:</strong> Perplexity.ai (Free tier works fine)</p>
+                <h3>The Perplexity Research Prompt:</h3>
+                <div class="prompt-box">
+                    <div class="prompt-label">Perplexity Prompt</div>
+Create a comprehensive research report on [Company Name, e.g., Apollo Hospitals].
+
+Focus on:
+1. Recent strategic initiatives and expansion plans (last 12 months)
+2. Key financial priorities and challenges mentioned by leadership
+3. Major capital investments or projects announced
+4. Industry pressures or market changes affecting them
+
+Please cite all sources with links.
+                </div>
+                <p style="font-size: 20px; color: var(--dove-gray); margin-top: 35px; font-style: italic;">Perplexity will search the web and create a sourced report in 30-45 seconds.</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 12: DEMO 1 Setup - Overview -->
+        <div class="slide">
+            <h2 class="hero-content">Scenario 1: <span class="hero-highlight">The Account Analyzer</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 22px; margin-bottom: 35px;"><strong>Context:</strong> Analyzing a large B2B account (e.g., Apollo Hospitals - major hospital chain).</p>
+                <div class="emphasis-box">
+                    <p><strong>The Strategy:</strong> Combine two AI tools for complete account intelligence</p>
+                </div>
+                <div class="two-column" style="margin-top: 35px;">
+                    <div style="background: var(--light-blue); padding: 25px; border-radius: 12px;">
+                        <h4 style="color: var(--iimk-blue); font-size: 20px; margin-bottom: 12px;">Tool 1: Perplexity</h4>
+                        <p style="font-size: 18px;">Market intelligence, recent news, competitive landscape</p>
+                    </div>
+                    <div style="background: var(--light-gold); padding: 25px; border-radius: 12px;">
+                        <h4 style="color: var(--iimk-blue); font-size: 20px; margin-bottom: 12px;">Tool 2: ChatGPT/Gemini</h4>
+                        <p style="font-size: 18px;">Deep analysis of annual report, financial priorities</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 13: Using Perplexity Research -->
+        <div class="slide">
+            <h2 class="hero-content">Step 1: <span class="hero-highlight">Perplexity Research Report</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 22px; margin-bottom: 35px;">Use Perplexity to gather market intelligence and recent developments.</p>
+                <div class="prompt-box">
+                    <div class="prompt-label">Perplexity Pro Search</div>
+Create a comprehensive research report on [Apollo Hospitals / Target Company Name].
+
+Focus on:
+1. Recent strategic initiatives and expansion plans (last 12 months)
+2. Financial performance trends and key metrics
+3. Competitive positioning in the market
+4. Leadership changes or strategic pivots
+5. Any recent press releases or announcements
+
+Format as a structured report with sources.
+                </div>
+                <p style="font-size: 18px; color: var(--dove-gray); margin-top: 35px; font-style: italic;">Switch to Perplexity. Execute the search. Show the structured report it generates with citations.</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 14: DEMO 1 - Account Analyzer Prompt -->
+        <div class="slide">
+            <h2 class="hero-content">Step 2: <span class="hero-highlight">Analyze the Annual Report</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 22px; margin-bottom: 35px;">Now combine external research with internal financial priorities from their annual report.</p>
+                <div class="prompt-box">
+                    <div class="prompt-label">ChatGPT/Gemini Prompt</div>
+You are an expert B2B sales strategist.
+
+Analyze this [Annual Report/Press Release].
+
+I am selling [e.g., High-Value Cardiac Systems / IT Automation Software].
+
+Identify:
+1. The top 3 strategic priorities for the CEO/CFO.
+2. Specific risks or challenges they mention that my solution might help mitigate.
+3. Any capital allocation priorities mentioned.
+                </div>
+                <p style="font-size: 18px; color: var(--dove-gray); margin-top: 35px; font-style: italic;">Upload the annual report PDF. Execute the prompt live.</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 13: DEMO 1 Impact -->
+        <div class="slide">
+            <h2 class="hero-content">Step 3: <span class="hero-highlight">Combined Intelligence</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="two-column">
+                    <div>
+                        <h3 style="color: var(--dove-gray);">Before:</h3>
+                        <p style="font-size: 20px; margin-top: 20px; line-height: 1.6;">• 150-page annual report<br>• Scattered news articles<br>• Manual LinkedIn research<br>• Hours of work</p>
+                    </div>
+                    <div>
+                        <h3>After (10 minutes):</h3>
+                        <div class="output-box" style="margin-top: 20px;">
+                            <div class="output-label">Synthesized Intelligence</div>
+<strong>From Perplexity:</strong> Recently appointed new leadership team, announced ₹500Cr cardiology expansion, competing with Fortis for market share.
+
+<strong>From Annual Report:</strong> CFO priority = "optimizing cash flow during expansion", capital allocation for new wing, focus on ROI metrics for equipment purchases.
+
+<strong>Your Opening:</strong> "Cash flow optimization during your cardiology expansion"
+                        </div>
+                    </div>
+                </div>
+                <div class="emphasis-box" style="margin-top: 30px;">
+                    <p><strong>The Takeaway:</strong> Two AI tools in 10 minutes = Complete account intelligence that used to take hours.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 14: DEMO 2 Setup -->
+        <div class="slide">
+            <h2 class="hero-content">Scenario 2: <span class="hero-highlight">The Stakeholder Analyzer</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="persona-card">
+                    <h4>Meet "Arjun"</h4>
+                    <p class="role">Regional Manager for a Global MedTech firm</p>
+                    <p class="details"><strong>Profile:</strong> B2B, High-Value Capital Equipment</p>
+                </div>
+                <p style="font-size: 22px; margin-top: 35px;"><strong>Context:</strong> Arjun is trying to engage the <em>new</em> CFO (Mr. Rao) at the hospital analyzed above.</p>
+                <div class="emphasis-box" style="margin-top: 20px;">
+                    <p><strong>The Challenge:</strong> How do you quickly gather comprehensive intelligence on a busy executive without spending hours manually scrolling LinkedIn?</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 14A: DEMO 2 Using Gemini Deep Research -->
+        <div class="slide">
+            <h2 class="hero-content">Step 1: <span class="hero-highlight">Gemini Deep Research</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 22px; margin-bottom: 35px;">Use Gemini Deep Research to gather comprehensive stakeholder intelligence in minutes.</p>
+                <div class="prompt-box">
+                    <div class="prompt-label">Gemini Deep Research</div>
+Research Mr. Rao, the newly appointed CFO at Apollo Hospitals.
+
+Gather:
+1. Professional background and career trajectory
+2. His stated priorities from LinkedIn posts, articles, or interviews
+3. Any recent public statements or thought leadership
+4. His expertise areas and focus topics
+5. Context about his appointment (when, why, from where)
+
+Compile this into a structured profile with sources.
+                </div>
+                <p style="font-size: 18px; color: var(--dove-gray); margin-top: 35px; font-style: italic;">Switch to Gemini Deep Research. Execute the search. Let it run for 2-3 minutes while it gathers and synthesizes information.</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 15: Prompt Engineering 101 -->
+        <div class="slide">
+            <h2 class="hero-content">Prompt Engineering 101: <span class="hero-highlight">Structure Matters</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 22px; margin-bottom: 25px;"><strong>The Principle:</strong> Garbage In, Garbage Out. A good prompt has structure.</p>
+                <div class="framework-box">
+                    <div class="framework-item">
+                        <strong>(R) Role:</strong> <span>"Act as a..." (e.g., B2B Sales Analyst)</span>
+                    </div>
+                    <div class="framework-item">
+                        <strong>(C) Context:</strong> <span>"I am trying to..." (e.g., Prepare for a meeting with a CIO)</span>
+                    </div>
+                    <div class="framework-item">
+                        <strong>(T) Task:</strong> <span>"Identify/Analyze/Draft..." (e.g., 3 key priorities based on this data)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 16: DEMO 2 The Prompt -->
+        <div class="slide">
+            <h2 class="hero-content">Step 2: <span class="hero-highlight">Analyze with R.C.T. Framework</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 22px; margin-bottom: 35px;">Now take the Gemini research output and extract actionable sales intelligence.</p>
+                <div class="prompt-box">
+                    <div class="prompt-label">ChatGPT/Claude Prompt (R.C.T.)</div>
+(R) Act as a strategic B2B Sales Analyst.
+(C) I am preparing to engage the new CFO, Mr. Rao. We sell high-value capital equipment.
+(T) Analyze the following research about Mr. Rao. Identify:
+    1. His top 3 strategic priorities right now.
+    2. His likely KPIs and financial concerns.
+    3. Two specific, non-salesy conversation starters based *only* on this data.
+
+Research Data: [Paste the Gemini Deep Research output]
+                </div>
+                <p style="font-size: 18px; color: var(--dove-gray); margin-top: 35px; font-style: italic;">Copy-paste the Gemini research into ChatGPT/Claude. Execute the prompt live.</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 17: DEMO 2 Impact -->
+        <div class="slide">
+            <h2 class="hero-content">The "Aha" Moment: <span class="hero-highlight">Connecting the Dots</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="output-box">
+                    <div class="output-label">AI Output</div>
+The CFO is focused on optimizing cash flow specifically for the new wing mentioned in the annual report.
+
+<strong>Priority 1:</strong> Capital efficiency for expansion
+<strong>Priority 2:</strong> ROI on medical equipment investments
+<strong>Priority 3:</strong> Cost containment in operations
+
+<strong>Conversation Starters:</strong>
+• "I noticed the new cardiology wing - how are you approaching the equipment investment timeline?"
+• "With your focus on cash flow optimization, have you explored flexible financing models for capital equipment?"
+                </div>
+                <div class="emphasis-box" style="margin-top: 35px;">
+                    <p><strong>The Takeaway:</strong> You now know exactly what the CFO cares about. This is your opening line.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 18: Activity -->
+        <div class="slide">
+            <div class="section-header">Activity: 10 Minutes</div>
+            <h2 class="hero-content">Now You Do It: <span class="hero-highlight">Analyze Your Prospect</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="numbered-list">
+                    <li><strong>Gather Data:</strong> Go to the LinkedIn profile of your prospect. Copy their "About" section/recent activity.</li>
+                    <li><strong>Use the Template:</strong> Use the "Stakeholder Analyzer Prompt" (pasted in chat).</li>
+                    <li><strong>Execute & Share:</strong> Run the prompt and type your biggest insight or "Aha" moment in the chat.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SLIDE 19: Module 2 Title -->
+        <div class="slide module-slide">
+            <div class="section-header">Module 2</div>
+            <h1 class="hero-content">AI-Powered Precision Outreach</h1>
+            <p class="subtitle animate-in" style="animation-delay: 0.2s;">Moving from Sloppy to Strategic</p>
+        </div>
+
+        <!-- SLIDE 20: The Sloppy AI Problem -->
+        <div class="slide">
+            <h2 class="hero-content">Are Your AI Messages <span class="hero-highlight">Sloppy?</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <h3>Symptoms of Sloppy AI:</h3>
+                <ul class="bullet-list" style="margin-top: 20px;">
+                    <li>Generic ("I hope this message finds you well...")</li>
+                    <li>Robotic or overly enthusiastic tone (Too many emojis 🚀)</li>
+                    <li>Fake personalization (Just inserting name/company)</li>
+                    <li>Salesy and pushy</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SLIDE 21: The Diagnosis -->
+        <div class="slide">
+            <h2 class="hero-content">Why AI Fails: <span class="hero-highlight">The Generic Prompt</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="prompt-box">
+                    <div class="prompt-label">The Sloppy Prompt</div>
+"Write a LinkedIn connection request to a busy Hospital CFO about my cardiac system."
+                </div>
+                <div class="output-box">
+                    <div class="output-label">The Sloppy Output</div>
+Dear CFO,
+
+I am excited to introduce our state-of-the-art systems. We offer best-in-class solutions and would love a demo to discuss synergies. Let's connect! 🚀
+                </div>
+                <p style="font-size: 22px; margin-top: 35px; color: var(--iimk-blue); font-weight: 600;">Ask the Audience: "Would you respond to this?"</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 22: The Principle -->
+        <div class="slide">
+            <h2 class="hero-content">Treat AI Like a <span class="hero-highlight">Brilliant Intern</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="emphasis-box">
+                    <p><strong>The Principle:</strong> AI is a brilliant intern, not a mind reader.</p>
+                </div>
+                <div style="margin-top: 30px;">
+                    <h3>It needs:</h3>
+                    <ul class="bullet-list" style="margin-top: 20px;">
+                        <li>Specific instructions</li>
+                        <li>Clear context</li>
+                        <li>Strict guardrails</li>
+                    </ul>
+                </div>
+                <div style="margin-top: 30px;">
+                    <h3 style="color: var(--iimk-blue);">The Fix:</h3>
+                    <p style="font-size: 22px; margin-top: 20px; line-height: 1.6;">To get professional output, you must provide professional input.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 23: The R.C.S.T.C. Framework -->
+        <div class="slide">
+            <h2 class="hero-content">The Precision Outreach Framework: <span class="hero-highlight">R.C.S.T.C.</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 20px; margin-bottom: 20px; font-style: italic;">We upgrade the R.C.T. framework by adding Signal and Constraints.</p>
+                <div class="framework-box">
+                    <div class="framework-item">
+                        <strong>(R) Role:</strong> <span>Who are you?</span>
+                    </div>
+                    <div class="framework-item">
+                        <strong>(C) Context:</strong> <span>What are you doing?</span>
+                    </div>
+                    <div class="framework-item">
+                        <strong>(S) Signal (NEW):</strong> <span>Why are you reaching out NOW? (The insight from Module 1)</span>
+                    </div>
+                    <div class="framework-item">
+                        <strong>(T) Task:</strong> <span>What is the output?</span>
+                    </div>
+                    <div class="framework-item">
+                        <strong>(C) CONSTRAINTS (NEW):</strong> <span>What should the AI absolutely NOT do? (The secret sauce)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 24: DEMO 3 Setup -->
+        <div class="slide">
+            <h2 class="hero-content">Scenario 1: <span class="hero-highlight">The High-Stakes Connection</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 22px; margin-bottom: 20px;"><strong>Context:</strong> Arjun (MedTech Manager) connecting with the CFO, Mr. Rao.</p>
+                <div class="emphasis-box">
+                    <p><strong>The Signal (From Module 1):</strong> Mr. Rao is prioritizing "optimizing cash flow for the new cardiology wing."</p>
+                </div>
+                <p style="font-size: 18px; color: var(--dove-gray); margin-top: 35px; font-style: italic;">Switch to Live Screen Share.</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 25: DEMO 3 The Advanced Prompt -->
+        <div class="slide">
+            <h2 class="hero-content">The Precision Outreach Prompt</h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="prompt-box">
+                    <div class="prompt-label">R.C.S.T.C. Prompt</div>
+(R) Role: Act as Arjun, an experienced Regional Manager (10+ yrs exp).
+(C) Context: Sending a cold LinkedIn connection request to Mr. Rao, the new CFO. Goal is long-term relationship building.
+(S) Signal: He is focused on optimizing cash flow for the new cardiology wing (Source: Annual Report).
+(T) Task: Draft the connection request (max 300 characters).
+(C) Constraints:
+    - Tone: Peer-to-peer, professional, concise.
+    - CRITICAL: DO NOT mention the company name or the product.
+    - CRITICAL: DO NOT ask for a meeting.
+    - Start by acknowledging his specific priority.
+                </div>
+                <p style="font-size: 18px; color: var(--dove-gray); margin-top: 20px; font-style: italic;">Execute the prompt live.</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 26: DEMO 3 Superior Output -->
+        <div class="slide">
+            <h2 class="hero-content">The Power of <span class="hero-highlight">Constraints</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="output-box">
+                    <div class="output-label">Strategic Output</div>
+Mr. Rao, noticed your focus on optimizing cash flow for the new cardiology wing in the annual report—a critical challenge. Keen to connect with a fellow leader navigating healthcare CapEx. - Arjun
+                </div>
+                <div class="emphasis-box" style="margin-top: 30px;">
+                    <p><strong>The Takeaway:</strong> Constraints (the 'DO NOTs') are the secret to forcing the AI to be strategic, not salesy.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 27: DEMO 4 Setup -->
+        <div class="slide">
+            <h2 class="hero-content">Scenario 2: <span class="hero-highlight">The Channel Motivator (WhatsApp)</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="persona-card">
+                    <h4>Meet "Rajesh"</h4>
+                    <p class="role">Cluster Manager for a major FMCG/Durables brand</p>
+                    <p class="details"><strong>Profile:</strong> Channel Sales, Distribution Management</p>
+                </div>
+                <p style="font-size: 22px; margin-top: 20px;"><strong>Context:</strong> Rajesh manages 100+ distributors. He needs to announce a new festive collection and incentive scheme via WhatsApp Broadcast.</p>
+                <div class="emphasis-box" style="margin-top: 20px;">
+                    <p><strong>The Goal:</strong> Use AI to craft a clear, motivating, and professional message for instant delivery.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 28: DEMO 4 The WhatsApp Prompt -->
+        <div class="slide">
+            <h2 class="hero-content">Adapting the Prompt for WhatsApp (Channel Sales)</h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="prompt-box">
+                    <div class="prompt-label">R.C.S.T.C. Prompt - WhatsApp</div>
+(R) Role: Act as Rajesh, Cluster Manager for "DuraBuild Pipes".
+(C) Context: Sending a WhatsApp Broadcast message to 100+ distributors (they don't see each other).
+(S) Signal: Festive construction season approaching; new product line launching Nov 30.
+(T) Task: Draft the WhatsApp message announcing the launch and incentive scheme.
+(C) Constraints:
+    - Tone: Professional yet motivating and energetic.
+    - Structure: Clear details (margin 28%, launch date), clear incentive (early bird offer), clear CTA (order link).
+    - Keep it concise for mobile reading. Use bolding for key numbers.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 29: DEMO 4 Channel-Ready Output -->
+        <div class="slide">
+            <h2 class="hero-content">Efficient <span class="hero-highlight">Channel Communication</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="output-box">
+                    <div class="output-label">Strategic Output</div>
+Dear DuraBuild Partners, 🚀
+
+New "Titan" collection launching <strong>Nov 30</strong>.
+
+✅ Dealer margin: <strong>28%</strong> (up from 25%).
+
+<em>Early order benefit:</em> Free standee for orders before Dec 5.
+
+Order link: [link].
+
+Let's build a strong season!
+
+- Rajesh, DuraBuild Team
+                </div>
+                <div class="emphasis-box" style="margin-top: 35px;">
+                    <p><strong>The Takeaway:</strong> AI ensures clarity and consistency when communicating at scale with your distribution network.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 30: Activity -->
+        <div class="slide">
+            <div class="section-header">Activity: 15 Minutes</div>
+            <h2 class="hero-content">Now You Do It: <span class="hero-highlight">Craft Your Outreach</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="numbered-list">
+                    <li><strong>Identify Signal:</strong> Use the insight gathered in Module 1.</li>
+                    <li><strong>Use the R.C.S.T.C. Template:</strong> (Pasted in chat). Pay close attention to Constraints.</li>
+                    <li><strong>Execute:</strong> Run the prompt.</li>
+                    <li><strong>Hot Seat:</strong> Paste your <strong>Prompt AND the AI Output</strong> into the chat for live review.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SLIDE 31: BREAK -->
+        <div class="slide break-slide">
+            <h1 class="hero-content">BREAK</h1>
+            <p style="font-size: 32px; color: var(--iimk-blue); margin-top: 20px; font-weight: 600;">10 Minutes</p>
+            <p style="font-size: 22px; color: var(--dove-gray); margin-top: 20px;">11:50 - 12:00</p>
+        </div>
+
+        <!-- SLIDE 32: Module 3 Title -->
+        <div class="slide module-slide">
+            <div class="section-header">Module 3</div>
+            <h1 class="hero-content">The AI Content Engine</h1>
+            <p class="subtitle animate-in" style="animation-delay: 0.2s;">Building Credibility at Speed</p>
+        </div>
+
+        <!-- SLIDE 33: Strategy First -->
+        <div class="slide">
+            <h2 class="hero-content">Content is <span class="hero-highlight">Not About Going Viral</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="emphasis-box">
+                    <p><strong>The Purpose:</strong> It's about ensuring that when you reach out (Module 2), the prospect finds a credible presence when they Google you.</p>
+                </div>
+                <div style="margin-top: 35px;">
+                    <h3>It's a Tiebreaker:</h3>
+                    <p style="font-size: 22px; line-height: 1.6; margin-top: 20px;">When products are similar, credibility wins.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 34: The AI Paradox -->
+        <div class="slide">
+            <h2 class="hero-content">The <span class="hero-highlight">AI Content Paradox</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="framework-box">
+                    <div class="framework-item">
+                        <strong>The Challenge:</strong> <span>You have deep expertise, but you don't have time to write.</span>
+                    </div>
+                    <div class="framework-item">
+                        <strong>The AI Reality:</strong> <span>AI writes quickly, but it has zero real-world experience.</span>
+                    </div>
+                    <div class="framework-item">
+                        <strong>The Solution:</strong> <span>You provide the expertise; AI provides the structure and speed.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 35: Strategic Guardrails -->
+        <div class="slide">
+            <h2 class="hero-content">Content Strategy <span class="hero-highlight">Guardrails</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="two-column">
+                    <div>
+                        <h3>Regulated Industries</h3>
+                        <p style="font-size: 18px; color: var(--dove-gray); margin-bottom: 12px;">(Pharma, Finance, Medical Devices)</p>
+                        <div style="background: var(--light-blue); padding: 20px; border-radius: 8px;">
+                            <p style="font-size: 18px; line-height: 1.6;"><strong>Focus:</strong> Disease awareness, data analysis, leadership.</p>
+                            <p style="font-size: 18px; line-height: 1.6; margin-top: 10px;"><strong>Constraint:</strong> Never talk about specific products or make claims.</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h3>B2B Industries</h3>
+                        <p style="font-size: 18px; color: var(--dove-gray); margin-bottom: 12px;">(Tech, Industrial, Services)</p>
+                        <div style="background: var(--light-gold); padding: 20px; border-radius: 8px;">
+                            <p style="font-size: 18px; line-height: 1.6;"><strong>Focus:</strong> Customer problems, insights, lessons learned.</p>
+                            <p style="font-size: 18px; line-height: 1.6; margin-top: 10px;"><strong>Constraint:</strong> Don't post about your features; post about your customer's problems.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 36: The AI Content Accelerator Workflow -->
+        <div class="slide">
+            <h2 class="hero-content">The <span class="hero-highlight">3-Step Content Workflow</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="workflow">
+                    <div class="workflow-step">
+                        <h4>1. INPUT</h4>
+                        <p style="font-size: 18px; margin-top: 10px; line-height: 1.5;">The Raw Material: Your expertise (messy notes) OR External data (reports)</p>
+                    </div>
+                    <div class="workflow-arrow">→</div>
+                    <div class="workflow-step">
+                        <h4>2. PROCESS</h4>
+                        <p style="font-size: 18px; margin-top: 10px; line-height: 1.5;">The AI Prompt: Use R.C.S.T.C. to structure the input</p>
+                    </div>
+                    <div class="workflow-arrow">→</div>
+                    <div class="workflow-step">
+                        <h4>3. POLISH</h4>
+                        <p style="font-size: 18px; margin-top: 10px; line-height: 1.5;">The Human Touch: The crucial final step</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 37: The 90/10 Rule -->
+        <div class="slide">
+            <h2 class="hero-content">The <span class="hero-highlight">90/10 Rule</span> of AI Content</h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="two-column">
+                    <div style="background: var(--light-blue); padding: 30px; border-radius: 12px; text-align: center;">
+                        <h3 style="font-size: 48px; color: var(--iimk-blue); margin-bottom: 15px;">90%</h3>
+                        <h4 style="color: var(--iimk-blue); margin-bottom: 15px;">AI</h4>
+                        <p style="font-size: 18px; line-height: 1.6;">Structure, grammar, speed, first draft</p>
+                    </div>
+                    <div style="background: var(--light-gold); padding: 30px; border-radius: 12px; text-align: center;">
+                        <h3 style="font-size: 48px; color: var(--iimk-blue); margin-bottom: 15px;">10%</h3>
+                        <h4 style="color: var(--iimk-blue); margin-bottom: 15px;">Human</h4>
+                        <p style="font-size: 18px; line-height: 1.6;">Your voice, your specific examples, compliance check, authenticity</p>
+                    </div>
+                </div>
+                <div class="emphasis-box" style="margin-top: 30px;">
+                    <p><strong>Warning:</strong> Skipping the 10% risks your credibility.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 38: DEMO 5 Setup -->
+        <div class="slide">
+            <h2 class="hero-content">Technique 1: <span class="hero-highlight">The "Brain Dump to Gold"</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="persona-card">
+                    <h4>Meet "Priya"</h4>
+                    <p class="role">Enterprise Sales Lead for an IT Automation/AI firm</p>
+                    <p class="details"><strong>Profile:</strong> B2B SaaS, Complex Sales</p>
+                </div>
+                <p style="font-size: 22px; margin-top: 20px;"><strong>Scenario:</strong> Turning internal expertise into a post. Priya has an insight from a recent project failure.</p>
+                <p style="font-size: 18px; color: var(--dove-gray); margin-top: 20px; font-style: italic;">Switch to Live Screen Share. Start by typing raw notes.</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 39: DEMO 5 The Input -->
+        <div class="slide">
+            <h2 class="hero-content">Step 1: <span class="hero-highlight">The Raw Input</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="prompt-box">
+                    <div class="prompt-label">The Brain Dump</div>
+"Bank wanted faster loan approvals. We automated data entry. Wrong move. Real bottleneck was manual credit committee reviews. Lesson: automate the constraint, not the convenient thing."
+                </div>
+                <p style="font-size: 20px; margin-top: 35px; line-height: 1.6;">This is raw, unpolished expertise. AI will transform it.</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 40: DEMO 5 The Process -->
+        <div class="slide">
+            <h2 class="hero-content">Step 2: <span class="hero-highlight">The "Brain Dump" Prompt</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="prompt-box">
+                    <div class="prompt-label">R.C.S.T.C. Prompt</div>
+(R) Role: Act as a B2B technology sales manager (Automation/AI).
+(C) Context: Transforming raw notes about a project failure into a LinkedIn post.
+(S) Signal/Input: [Paste the Brain Dump]
+(T) Task: Draft a concise, insightful post using the "Situation-Complication-Takeaway" structure.
+(C) Constraints:
+    - Tone: Humble, expert, engaging.
+    - DO NOT blame the client.
+    - End with a question.
+                </div>
+                <p style="font-size: 18px; color: var(--dove-gray); margin-top: 20px; font-style: italic;">Execute the prompt live.</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 41: DEMO 5 Polished Output -->
+        <div class="slide">
+            <h2 class="hero-content">Step 3: <span class="hero-highlight">The Polished Output</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="output-box">
+                    <div class="output-label">Polished LinkedIn Post</div>
+Lesson from a failed automation project...
+
+A bank approached us to speed up loan approvals. We automated their data entry thinking it would solve everything.
+It didn't.
+The real bottleneck? Manual credit committee reviews that happened downstream. We had optimized the wrong process.
+Takeaway: Automate the constraint, not the convenient.
+Fellow automation folks: What's your "we automated the wrong thing" story?
+                </div>
+                <div class="emphasis-box" style="margin-top: 15px;">
+                    <p><strong>The Takeaway:</strong> 5 minutes from raw thought to professional post.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 42: DEMO 6 Setup -->
+        <div class="slide">
+            <h2 class="hero-content">Technique 2: <span class="hero-highlight">The "Compliant Synthesizer"</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="persona-card">
+                    <h4>Meet "Suresh"</h4>
+                    <p class="role">District Manager for a major Pharma MNC</p>
+                    <p class="details"><strong>Profile:</strong> Regulated Industry, Compliance focused</p>
+                </div>
+                <p style="font-size: 22px; margin-top: 20px;"><strong>Scenario:</strong> Turning external data into insights (Safely). Suresh wants to post about new ICMR diabetes data.</p>
+                <p style="font-size: 18px; color: var(--dove-gray); margin-top: 20px; font-style: italic;">Switch to Live Screen Share. Paste a scientific abstract or news report.</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 43: DEMO 6 The Compliant Prompt -->
+        <div class="slide">
+            <h2 class="hero-content">The "Compliant Synthesizer" Prompt</h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 20px; margin-bottom: 20px; font-style: italic;">Emphasizing safety constraints for regulated industries.</p>
+                <div class="prompt-box">
+                    <div class="prompt-label">R.C.S.T.C. Prompt - Compliance Mode</div>
+(R) Role: Act as a District Manager for a major pharmaceutical company in India.
+(C) Context: Analyzing scientific data on diabetes prevalence (ICMR study).
+(S) Signal/Input: [Paste the data/abstract]
+(T) Task: Draft a professional LinkedIn post (4-5 bullet points) highlighting the key findings.
+(C) Constraints:
+    - Tone: Educational, scientific.
+    - CRITICAL: DO NOT mention any specific drug names, brands, or treatments.
+    - CRITICAL: Focus ONLY on disease awareness and the data provided.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 44: DEMO 6 Compliant Output -->
+        <div class="slide">
+            <h2 class="hero-content">Step 3: <span class="hero-highlight">The Compliant Output</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="output-box">
+                    <div class="output-label">Compliant LinkedIn Post</div>
+World Diabetes Day: Concerning numbers from South India
+
+Key findings from the ICMR-INDIAB study 2023:
+
+• Tamil Nadu has 13% prevalence among adults
+• Urban populations show higher rates than rural
+• Pre-diabetes affects an additional 14% of the population
+• Early detection rates remain below 40%
+
+For healthcare professionals: Early screening remains our best tool.
+
+Source: ICMR-INDIAB study 2023
+
+#DiabetesAwareness #PublicHealth #ICMR
+                </div>
+                <div class="emphasis-box" style="margin-top: 35px;">
+                    <p><strong>The Takeaway:</strong> AI can help navigate compliance if you set the right constraints. (Always verify!)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 45: Activity -->
+        <div class="slide">
+            <div class="section-header">Activity: 10 Minutes</div>
+            <h2 class="hero-content">Now You Do It: <span class="hero-highlight">Draft Your Next Post</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="numbered-list">
+                    <li><strong>Choose a Method:</strong> Brain Dump OR Synthesizer.</li>
+                    <li><strong>Input:</strong> Write down raw notes or find an article.</li>
+                    <li><strong>Process:</strong> Use the relevant prompt template (pasted in chat).</li>
+                    <li><strong>Share:</strong> Paste the first line of your AI-generated post in the chat for quick review.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SLIDE 46: The New Narrative -->
+        <div class="slide">
+            <h2 class="hero-content">You Now Have <span class="hero-highlight">A System</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <h3>The AI-Powered Sales Workflow:</h3>
+                <div class="framework-box" style="margin-top: 20px;">
+                    <div class="framework-item">
+                        <strong>Module 1:</strong> <span>AI Analyst for Signal Detection</span>
+                    </div>
+                    <div class="framework-item">
+                        <strong>Module 2:</strong> <span>R.C.S.T.C. Framework for Precision Outreach</span>
+                    </div>
+                    <div class="framework-item">
+                        <strong>Module 3:</strong> <span>AI Accelerator for Content</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 47: The 7-Day Challenge -->
+        <div class="slide">
+            <h2 class="hero-content">The <span class="hero-highlight">7-Day Implementation Challenge</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="framework-box">
+                    <h3 style="color: var(--iimk-blue); margin-bottom: 15px;">Day 1 (Today):</h3>
+                    <ul class="checkbox-list">
+                        <li>Run the <strong>AI Stakeholder Analyzer Prompt (M1)</strong> on your top prospect.</li>
+                    </ul>
+                    
+                    <h3 style="color: var(--iimk-blue); margin-bottom: 15px; margin-top: 35px;">Day 2-3:</h3>
+                    <ul class="checkbox-list">
+                        <li>Run the <strong>AI Account Analyzer Prompt (M1)</strong>.</li>
+                        <li>Send 3 connection requests using the <strong>Precision Outreach Framework (R.C.S.T.C.) (M2)</strong>.</li>
+                    </ul>
+                    
+                    <h3 style="color: var(--iimk-blue); margin-bottom: 15px; margin-top: 35px;">Day 4-5:</h3>
+                    <ul class="checkbox-list">
+                        <li>Post 1 piece of content using the <strong>AI Content Accelerator (M3)</strong>.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 48: Final Message -->
+        <div class="slide">
+            <h2 class="hero-content">The Goal <span class="hero-highlight">Remains the Same</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="emphasis-box" style="padding: 50px;">
+                    <p style="font-size: 28px; line-height: 1.6; font-weight: 500; font-family: 'Playfair Display', serif;">
+                        "You already know how to sell. AI doesn't replace your expertise; it amplifies it. It extends your reach and sharpens your edge."
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 49: Q&A -->
+        <div class="slide module-slide">
+            <h1 class="hero-content">Questions & Discussion</h1>
+            <div class="animate-in" style="animation-delay: 0.2s; margin-top: 50px;">
+                <p style="font-size: 24px; color: var(--dove-gray); margin-bottom: 15px;"><strong>Aditya Jain</strong></p>
+                <p style="font-size: 24px; color: var(--dove-gray); margin-bottom: 15px;"><strong>aditya1384 [at] gmail.com</strong></p>
+                <p style="font-size: 22px; color: var(--dove-gray);">+91 9986590180</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const currentSlideElement = document.getElementById('current-slide');
+        const speakerNotes = document.getElementById('speaker-notes');
+        const notesContent = document.getElementById('notes-content');
+
+        // Speaker notes data
+        const notesData = {
+            2: "Launch the Zoom Polls now to gauge the audience's current use of LinkedIn, WhatsApp, and AI tools.",
+            10: "Prepare to switch to screen share for the live demo. Have a sample annual report or investor call transcript ready.",
+            11: "Execute the Account Analyzer prompt live. Show the AI processing and highlight the key strategic insights that emerge.",
+            13: "Emphasize how AI condensed 150 pages into actionable intelligence in seconds.",
+            14: "Introduce the persona 'Arjun' and set up the scenario. Switch to screen share and paste the CFO's LinkedIn data.",
+            16: "Execute the Stakeholder Analyzer prompt live. Show how the R.C.T. framework structures the analysis.",
+            18: "Paste the Stakeholder Analyzer prompt template in the Zoom chat. Give participants 10 minutes to work.",
+            21: "Ask the audience directly: 'Would you respond to this message?' Let them react before moving forward.",
+            24: "Set up the LinkedIn connection scenario. Remind participants that we're using the signal from Module 1.",
+            25: "Execute the R.C.S.T.C. prompt live. Emphasize the power of the Constraints section.",
+            27: "Introduce Rajesh and the channel sales scenario. This demonstrates AI's versatility across different sales contexts.",
+            30: "Paste the R.C.S.T.C. template in chat. Collect prompt and output pairs for live review on hot seat.",
+            38: "Switch to screen share. Type out the brain dump live to show the messy starting point.",
+            40: "Execute the Brain Dump prompt live. Show the transformation from raw notes to polished content.",
+            42: "Switch to screen share. Paste scientific data or news report about diabetes prevalence.",
+            43: "Execute the Compliant Synthesizer prompt. Emphasize the critical compliance constraints.",
+            45: "Paste both prompt templates in chat. Give participants 10 minutes to create content.",
+            47: "Review the 7-day challenge. Encourage participants to start TODAY with the Stakeholder Analyzer."
+        };
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            currentSlideElement.textContent = currentSlide + 1;
+            
+            // Trigger animations
+            const animatedElements = slides[currentSlide].querySelectorAll('.animate-in, .animate-scale, .hero-content');
+            animatedElements.forEach((el, index) => {
+                el.style.animation = 'none';
+                setTimeout(() => {
+                    el.style.animation = '';
+                }, 10);
+            });
+
+            // Update speaker notes if available
+            if (notesData[currentSlide]) {
+                notesContent.textContent = notesData[currentSlide];
+            } else {
+                notesContent.textContent = 'No speaker notes for this slide.';
+            }
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function prevSlide() {
+            showSlide(currentSlide - 1);
+        }
+
+        function toggleSpeakerNotes() {
+            speakerNotes.classList.toggle('visible');
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                prevSlide();
+            } else if (e.key === 's' || e.key === 'S') {
+                e.preventDefault();
+                toggleSpeakerNotes();
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                showSlide(0);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                showSlide(totalSlides - 1);
+            }
+        });
+
+        // Initialize
+        document.getElementById('total-slides').textContent = totalSlides;
+        showSlide(0);
+
+        // Prevent default spacebar scroll
+        window.addEventListener('keydown', (e) => {
+            if (e.key === ' ' && e.target === document.body) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>
