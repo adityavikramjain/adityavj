@@ -638,3 +638,94 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+/**
+ * Booking Enhancement JavaScript
+ * Add this to the end of your existing script.js
+ */
+
+// Initialize sticky booking button
+(function initStickyBookingButton() {
+    const stickyBtn = document.getElementById('sticky-book-btn');
+    if (!stickyBtn) return;
+    
+    let hasScrolled = false;
+    
+    // Show sticky button after scrolling past hero section
+    window.addEventListener('scroll', function() {
+        const scrollPosition = window.scrollY;
+        const heroHeight = document.querySelector('.lab-hero')?.offsetHeight || 600;
+        
+        if (scrollPosition > heroHeight && !hasScrolled) {
+            hasScrolled = true;
+            setTimeout(() => {
+                stickyBtn.classList.add('visible');
+            }, 300);
+        } else if (scrollPosition <= heroHeight && hasScrolled) {
+            hasScrolled = false;
+            stickyBtn.classList.remove('visible');
+        }
+    });
+    
+    // Hide sticky button when booking section is in view
+    const bookingSection = document.getElementById('book');
+    if (bookingSection) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    stickyBtn.style.opacity = '0';
+                    stickyBtn.style.pointerEvents = 'none';
+                } else if (hasScrolled) {
+                    stickyBtn.style.opacity = '1';
+                    stickyBtn.style.pointerEvents = 'all';
+                }
+            });
+        }, { threshold: 0.2 });
+        
+        observer.observe(bookingSection);
+    }
+})();
+
+// Optional: Add booking hint to featured session cards
+// This is commented out by default - you can enable it by adding to renderSessions()
+/*
+function addBookingHintToCard(cardElement, isFeatured) {
+    if (isFeatured) {
+        const footer = cardElement.querySelector('.card-footer');
+        if (footer) {
+            const hint = document.createElement('div');
+            hint.className = 'card-booking-hint';
+            hint.innerHTML = `
+                <span>Need this customized for your team?</span>
+                <a href="#book" onclick="event.stopPropagation()">Book a workshop →</a>
+            `;
+            footer.insertAdjacentElement('afterend', hint);
+        }
+    }
+}
+*/
+
+// Track booking CTA clicks for analytics (optional)
+function trackBookingClick(source) {
+    // Replace with your analytics implementation
+    console.log('Booking CTA clicked from:', source);
+    
+    // Example: Google Analytics
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'booking_cta_click', {
+            'event_category': 'engagement',
+            'event_label': source
+        });
+    }
+}
+
+// Add tracking to all booking CTAs
+document.querySelectorAll('a[href="#book"], a[href*="calendly"]').forEach(link => {
+    link.addEventListener('click', function() {
+        const source = this.closest('.stats-bar') ? 'stats_bar' :
+                      this.closest('.bridge-card') ? 'bridge_section' :
+                      this.closest('.sticky-book-btn') ? 'sticky_button' :
+                      this.closest('.booking-section') ? 'main_booking' :
+                      'other';
+        trackBookingClick(source);
+    });
+});
