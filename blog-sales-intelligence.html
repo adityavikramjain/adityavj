@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building a 30-Minute Sales Intelligence Briefing with AI | Aditya V Jain</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* === VARIABLES === */
+        :root {
+            --electric-orange: #FF4500;
+            --electric-orange-light: rgba(255, 69, 0, 0.1);
+            --electric-orange-glow: rgba(255, 69, 0, 0.3);
+            --white: #FFFFFF;
+            --mist-rose: #FFF5F2;
+            --charcoal: #1F2937;
+            --soft-grey: #6B7280;
+            --light-grey: #9CA3AF;
+            --border-light: rgba(0, 0, 0, 0.06);
+            --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        /* === GLOBAL === */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--charcoal);
+            background: var(--mist-rose);
+            line-height: 1.75;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* === CONTAINER === */
+        .blog-container {
+            background:
+                radial-gradient(ellipse 80% 50% at 20% 80%, rgba(255, 69, 0, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 40% at 85% 20%, rgba(255, 69, 0, 0.06) 0%, transparent 50%),
+                var(--mist-rose);
+            min-height: 100vh;
+            padding: 60px 40px;
+        }
+
+        /* === TERMINAL HEADER === */
+        .terminal-header {
+            font-family: 'Space Grotesk', monospace;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--charcoal);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            animation: slideIn 0.6s var(--ease-smooth) forwards;
+        }
+
+        .terminal-text { letter-spacing: -0.02em; }
+        .terminal-prompt { color: var(--electric-orange); }
+
+        .back-link {
+            margin-left: auto;
+            font-size: 0.9rem;
+            color: var(--electric-orange);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: var(--white);
+            border: 1px solid var(--border-light);
+        }
+
+        .back-link:hover {
+            background: var(--electric-orange-light);
+            transform: translateX(-4px);
+        }
+
+        /* === ARTICLE === */
+        .article-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--white);
+            border-radius: 24px;
+            padding: 80px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-light);
+            opacity: 0;
+            animation: fadeInUp 0.8s var(--ease-smooth) 0.2s forwards;
+        }
+
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+            font-size: 0.9rem;
+            color: var(--soft-grey);
+        }
+
+        .article-badge {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 6px 12px;
+            border-radius: 6px;
+            background: var(--electric-orange-light);
+            color: var(--electric-orange);
+        }
+
+        .article-date {
+            font-weight: 500;
+        }
+
+        .article-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -0.03em;
+            color: var(--charcoal);
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--charcoal) 0%, #374151 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .article-subtitle {
+            font-size: 1.25rem;
+            line-height: 1.6;
+            color: var(--soft-grey);
+            margin-bottom: 48px;
+            padding-left: 20px;
+            border-left: 3px solid var(--electric-orange);
+        }
+
+        /* === TYPOGRAPHY === */
+        .article-content h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--charcoal);
+            margin-top: 56px;
+            margin-bottom: 24px;
+            line-height: 1.3;
+            letter-spacing: -0.02em;
+        }
+
+        .article-content h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--charcoal);
+            margin-top: 40px;
+            margin-bottom: 16px;
+            line-height: 1.4;
+        }
+
+        .article-content h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-top: 32px;
+            margin-bottom: 12px;
+        }
+
+        .article-content p {
+            font-size: 1.1rem;
+            line-height: 1.75;
+            color: var(--charcoal);
+            margin-bottom: 24px;
+        }
+
+        .article-content strong {
+            font-weight: 700;
+            color: var(--charcoal);
+        }
+
+        .article-content a {
+            color: var(--electric-orange);
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 2px solid var(--electric-orange-light);
+            transition: all 0.2s ease;
+        }
+
+        .article-content a:hover {
+            border-bottom-color: var(--electric-orange);
+            background: var(--electric-orange-light);
+        }
+
+        .article-content ul,
+        .article-content ol {
+            margin-bottom: 24px;
+            padding-left: 32px;
+        }
+
+        .article-content li {
+            font-size: 1.1rem;
+            line-height: 1.75;
+            color: var(--charcoal);
+            margin-bottom: 12px;
+        }
+
+        .article-content hr {
+            border: none;
+            height: 1px;
+            background: var(--border-light);
+            margin: 56px 0;
+        }
+
+        .article-content blockquote {
+            margin: 32px 0;
+            padding: 24px 32px;
+            background: var(--electric-orange-light);
+            border-left: 4px solid var(--electric-orange);
+            border-radius: 8px;
+            font-style: italic;
+            color: var(--soft-grey);
+        }
+
+        .article-content code {
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9em;
+            background: var(--mist-rose);
+            padding: 3px 8px;
+            border-radius: 4px;
+            color: var(--electric-orange);
+        }
+
+        /* === HIGHLIGHT BOX === */
+        .highlight-box {
+            background: linear-gradient(135deg, var(--white) 0%, rgba(255, 69, 0, 0.03) 100%);
+            border: 2px solid var(--electric-orange-light);
+            border-radius: 16px;
+            padding: 32px;
+            margin: 40px 0;
+        }
+
+        .highlight-box h3 {
+            margin-top: 0 !important;
+            color: var(--electric-orange);
+        }
+
+        .highlight-box h4 {
+            margin-top: 20px !important;
+        }
+
+        /* === WORKFLOW BOX === */
+        .workflow-box {
+            background: var(--white);
+            border: 2px solid var(--border-light);
+            border-radius: 16px;
+            padding: 32px;
+            margin: 40px 0;
+        }
+
+        .workflow-step {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .workflow-step:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .step-number {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            background: var(--electric-orange);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .step-content h4 {
+            margin-top: 0 !important;
+            margin-bottom: 8px !important;
+            font-size: 1.1rem;
+        }
+
+        .step-content p {
+            margin-bottom: 0;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* === EXAMPLE BOX === */
+        .example-box {
+            background: var(--mist-rose);
+            border-left: 4px solid var(--electric-orange);
+            border-radius: 8px;
+            padding: 24px 28px;
+            margin: 32px 0;
+        }
+
+        .example-box h4 {
+            margin-top: 0 !important;
+            color: var(--electric-orange);
+            font-size: 1rem;
+            margin-bottom: 12px !important;
+        }
+
+        .example-box p {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .example-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* === CTA SECTION === */
+        .cta-section {
+            background: var(--electric-orange);
+            color: var(--white);
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+            margin-top: 56px;
+        }
+
+        .cta-section p {
+            color: var(--white);
+            font-size: 1.2rem;
+            margin-bottom: 24px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--white);
+            color: var(--electric-orange);
+            padding: 16px 32px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.05rem;
+            transition: all 0.3s var(--ease-smooth);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        /* === FOOTER === */
+        .article-footer {
+            max-width: 800px;
+            margin: 40px auto 0;
+            padding-top: 32px;
+            border-top: 1px solid var(--border-light);
+            text-align: center;
+        }
+
+        .article-footer p {
+            color: var(--soft-grey);
+            font-size: 0.95rem;
+        }
+
+        .article-footer a {
+            color: var(--electric-orange);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .article-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* === ANIMATIONS === */
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 768px) {
+            .blog-container {
+                padding: 40px 20px;
+            }
+
+            .terminal-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .back-link {
+                margin-left: 0;
+            }
+
+            .article-wrapper {
+                padding: 40px 32px;
+            }
+
+            .article-title {
+                font-size: 2rem;
+            }
+
+            .article-content h2 {
+                font-size: 1.5rem;
+            }
+
+            .article-content h3 {
+                font-size: 1.25rem;
+            }
+
+            .article-content p,
+            .article-content li {
+                font-size: 1rem;
+            }
+
+            .workflow-step {
+                flex-direction: column;
+                gap: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .article-wrapper {
+                padding: 32px 24px;
+                border-radius: 16px;
+            }
+
+            .article-title {
+                font-size: 1.75rem;
+            }
+
+            .highlight-box,
+            .workflow-box,
+            .example-box {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="blog-container">
+    <!-- Terminal Header -->
+    <div class="terminal-header">
+        <span class="terminal-text"><span class="terminal-prompt">&gt;</span> adityavj.com/blog</span>
+        <a href="index.html" class="back-link">← Back to Home</a>
+    </div>
+
+    <!-- Article -->
+    <article class="article-wrapper">
+        <div class="article-meta">
+            <span class="article-badge">Build Notes</span>
+            <span class="article-date">December 2024</span>
+        </div>
+
+        <h1 class="article-title">Building a 30-Minute Sales Intelligence Briefing with AI</h1>
+
+        <div class="article-subtitle">
+            Most B2B sales teams waste hours researching prospects manually. Here's how I built a system that delivers boardroom-ready intelligence in 30 minutes.
+        </div>
+
+        <div class="article-content">
+            <p>I was sitting in on a sales call last month. The rep had spent three hours "researching" the prospect. When the CFO joined, the first question was about their new manufacturing facility in Tamil Nadu.</p>
+
+            <p>The rep had no idea what he was talking about. The information was public—announced two weeks earlier—but buried in a press release the rep never found.</p>
+
+            <p>That meeting was dead on arrival.</p>
+
+            <h2>The Problem: Research Doesn't Scale</h2>
+
+            <p>In enterprise B2B sales, you're not selling to one person. The average deal involves 6-7 decision-makers. Each has their own priorities, pain points, and political considerations.</p>
+
+            <p>Manual research falls apart at scale. You can either:</p>
+
+            <ul>
+                <li><strong>Go deep on one stakeholder</strong> and risk blindsiding from another</li>
+                <li><strong>Go shallow on everyone</strong> and sound generic in every conversation</li>
+            </ul>
+
+            <p>Neither works. What you need is <strong>structured intelligence that covers the entire decision-making unit</strong>—delivered fast enough that it's still relevant when you make the call.</p>
+
+            <h2>The System: The 10-Section Intelligence Framework</h2>
+
+            <p>I built a prompt that forces AI to think like a sales analyst, not a summarization bot. It doesn't just regurgitate facts—it <strong>synthesizes intelligence across 10 strategic dimensions</strong>.</p>
+
+            <p>Here's what makes it work:</p>
+
+            <div class="highlight-box">
+                <h3>The Core Principle: Structure Before Speed</h3>
+                <p>Generic prompts like "research this company" produce generic outputs. The prompt needs to <strong>enforce analytical rigor</strong>—specific sections, mandatory context, actionable outputs.</p>
+                
+                <h4>What the Prompt Does:</h4>
+                <ul>
+                    <li>Maps organizational structure and decision-making power</li>
+                    <li>Identifies stated priorities from earnings calls and leadership statements</li>
+                    <li>Surfaces pain points and trigger events (funding, leadership changes, regulatory pressure)</li>
+                    <li>Analyzes competitive positioning and existing vendor relationships</li>
+                    <li>Reads financial health signals (investment mode vs. cost-cutting mode)</li>
+                    <li>Accounts for India-specific context (compliance, local leadership authority)</li>
+                    <li>Anticipates objections before you walk into the room</li>
+                </ul>
+            </div>
+
+            <h2>How It Works: The 30-Minute Workflow</h2>
+
+            <div class="workflow-box">
+                <div class="workflow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Gather Raw Materials (5 mins)</h4>
+                        <p>Don't start with AI. Start with sources: company website, latest annual report, recent press releases, LinkedIn profiles of key executives, industry reports. Copy relevant sections into a doc.</p>
+                    </div>
+                </div>
+
+                <div class="workflow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Run the Intelligence Prompt (10 mins)</h4>
+                        <p>Paste your raw materials into ChatGPT or Claude along with the 10-section framework prompt. Specify your solution category (e.g., "I sell enterprise HR automation software"). Let the AI synthesize across all 10 sections.</p>
+                    </div>
+                </div>
+
+                <div class="workflow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Validate Critical Claims (10 mins)</h4>
+                        <p>AI will occasionally hallucinate names or dates. Spot-check the 3-4 most important claims—especially leadership names, recent initiatives, and financial figures. If something seems off, search for primary sources.</p>
+                    </div>
+                </div>
+
+                <div class="workflow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Extract Your Opening Line (5 mins)</h4>
+                        <p>The last section ("Recommended Engagement Approach") is your cheat sheet. It will suggest who to contact, what to lead with, and what to avoid. Use it to draft your outreach message or prep your discovery questions.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Real Example: Analyzing a Hospital Chain</h2>
+
+            <p>Let me show you what this looks like in practice.</p>
+
+            <div class="example-box">
+                <h4>Scenario:</h4>
+                <p>You sell medical equipment financing solutions. Your target is a large private hospital chain expanding into smaller cities.</p>
+                
+                <p><strong>Input:</strong> Annual report, recent press releases about their expansion, CFO's LinkedIn profile</p>
+                
+                <p><strong>What the AI Found:</strong></p>
+                <ul>
+                    <li>The chain announced 15 new centers opening in 18 months</li>
+                    <li>CFO's priority (from earnings call): "optimizing cash flow during expansion phase"</li>
+                    <li>Regulatory challenge: new government norms requiring upfront equipment certification</li>
+                    <li>Existing vendor: Large bank offers equipment loans but at 12% interest with rigid terms</li>
+                    <li>Budget signal: They're in investment mode but under pressure from private equity backers to show profitability within 24 months</li>
+                </ul>
+
+                <p><strong>Recommended Opening:</strong> "I noticed your focus on cash flow optimization while scaling to 15 new centers—curious how you're approaching equipment financing given the new certification requirements?"</p>
+            </div>
+
+            <p>This isn't a guess. It's structured intelligence extracted from public data—<strong>and it took 25 minutes</strong>.</p>
+
+            <h2>The India Context Layer</h2>
+
+            <p>One section of the framework is India-specific. Why? Because <strong>decision-making authority works differently here</strong>.</p>
+
+            <p>In many multinationals operating in India, the "decision-maker" on paper often needs approval from regional or global headquarters. The prompt forces the AI to identify:</p>
+
+            <ul>
+                <li>Scale of India operations (are we talking 50 people or 5,000?)</li>
+                <li>Local leadership autonomy (can the India CEO sign, or is this a Singapore decision?)</li>
+                <li>India-specific compliance requirements that might be purchase drivers</li>
+            </ul>
+
+            <p>This level of nuance doesn't come from generic research. It comes from <strong>forcing the AI to ask the right questions</strong>.</p>
+
+            <h2>Advanced Technique: The "Objection Pre-Mortem"</h2>
+
+            <p>Section 8 of the framework is my favorite: <strong>Objection Anticipation</strong>.</p>
+
+            <p>Instead of reacting to objections in the meeting, you surface them during research. The AI will flag likely pushback based on:</p>
+
+            <ul>
+                <li>Company size (startups worry about price; enterprises worry about integration complexity)</li>
+                <li>Procurement culture (some companies require 3-bid tenders; others prefer sole-source relationships)</li>
+                <li>Existing solutions (if they just spent ₹2 crore on a system 8 months ago, you're fighting sunk cost bias)</li>
+            </ul>
+
+            <p>You walk in prepared, not surprised.</p>
+
+            <h2>Why This System Scales</h2>
+
+            <p>Here's the strategic advantage: <strong>this workflow is repeatable</strong>.</p>
+
+            <p>You can run it on 10 accounts in a morning. You can train a junior sales rep to execute it reliably. You can build a library of intelligence briefings for your entire target account list.</p>
+
+            <p>Manual research doesn't scale. This does.</p>
+
+            <div class="highlight-box">
+                <h3>The 80/20 Rule for AI Sales Research</h3>
+                <p>The prompt does 80% of the work in 20% of the time. Your job is the other 20%:</p>
+                <ul>
+                    <li>Validating critical facts</li>
+                    <li>Adding nuance from your industry knowledge</li>
+                    <li>Translating insights into conversation starters</li>
+                </ul>
+                <p>AI doesn't replace your judgment. It amplifies it.</p>
+            </div>
+
+            <h2>How to Get Started</h2>
+
+            <p>Start small. Pick one account you're pursuing right now. Gather the basics:</p>
+
+            <ul>
+                <li>Their homepage and "About" section</li>
+                <li>Latest annual report (or investor deck if they're public)</li>
+                <li>LinkedIn profiles of 2-3 decision-makers</li>
+                <li>Any recent news (Google their name + "news")</li>
+            </ul>
+
+            <p>Run the prompt. See what comes back. Validate the top 3 claims. Then build your outreach message based on Section 10.</p>
+
+            <p>If the intelligence is useful, repeat the process for your next 5 accounts. <strong>By the end of the week, you'll have a systematic advantage over every competitor still Googling prospects 10 minutes before meetings</strong>.</p>
+
+            <div class="cta-section">
+                <p><strong>Ready to try it?</strong></p>
+                <a href="index.html#lab" class="cta-button">Get the Sales Intelligence Prompt →</a>
+            </div>
+        </div>
+    </article>
+
+    <div class="article-footer">
+        <p>Written by <a href="index.html">Aditya V Jain</a> · Product Lead @ Google · Visiting Faculty @ IIM Kozhikode</p>
+    </div>
+</div>
+
+</body>
+</html>
