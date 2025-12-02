@@ -1473,3 +1473,276 @@ p { color: var(--soft-grey); }
     .modal-header, .modal-body, .modal-footer { padding-left: 20px; padding-right: 20px; }
     .modal-body .prompt-container { max-height: 40vh; }
 }
+/* === BOOKING ENHANCEMENT STYLES === */
+
+/* Stats Bar Booking CTA */
+.stat-cta {
+    transition: transform 0.3s var(--ease-smooth);
+}
+
+.stat-cta:hover {
+    transform: translateY(-2px);
+}
+
+.stat-book-link {
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.3s var(--ease-smooth);
+    padding: 8px 16px;
+    border-radius: 12px;
+}
+
+.stat-book-link:hover {
+    background: var(--electric-orange-light);
+}
+
+.stat-book-link .stat-number {
+    font-size: 2rem;
+    margin-bottom: 4px;
+}
+
+.stat-book-link .stat-label {
+    color: var(--electric-orange);
+    font-weight: 600;
+}
+
+/* Lab to Booking Bridge Section */
+.lab-to-booking-bridge {
+    margin: 80px 0;
+}
+
+.bridge-card {
+    background: linear-gradient(135deg, var(--white) 0%, rgba(255, 69, 0, 0.03) 100%);
+    border: 2px solid var(--electric-orange-light);
+    border-radius: 20px;
+    padding: 48px;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    position: relative;
+    overflow: hidden;
+}
+
+.bridge-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(255, 69, 0, 0.08) 0%, transparent 60%);
+    border-radius: 50%;
+    animation: float 8s ease-in-out infinite;
+}
+
+.bridge-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--electric-orange);
+    display: inline-block;
+    margin-bottom: 12px;
+    padding: 6px 16px;
+    background: var(--electric-orange-light);
+    border-radius: 20px;
+}
+
+.bridge-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--charcoal);
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 1;
+}
+
+.bridge-desc {
+    font-size: 1.1rem;
+    color: var(--soft-grey);
+    max-width: 600px;
+    margin: 0 auto 32px;
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+}
+
+.bridge-options {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+}
+
+.bridge-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    color: var(--charcoal);
+    font-weight: 500;
+    padding: 8px 16px;
+    background: var(--white);
+    border-radius: 20px;
+    border: 1px solid var(--border-light);
+    transition: all 0.2s ease;
+}
+
+.bridge-option:hover {
+    border-color: var(--electric-orange);
+    background: var(--electric-orange-light);
+    transform: translateY(-2px);
+}
+
+.bridge-option .option-icon {
+    font-size: 1.25rem;
+}
+
+/* Sticky Booking Button */
+.sticky-book-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--electric-orange);
+    color: var(--white);
+    padding: 14px 24px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: var(--shadow-orange);
+    z-index: 999;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s var(--ease-smooth);
+    pointer-events: none;
+}
+
+.sticky-book-btn.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+}
+
+.sticky-book-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(255, 69, 0, 0.4);
+}
+
+.sticky-book-icon {
+    font-size: 1.1rem;
+}
+
+/* In-Card Booking Hints (for session cards) */
+.card-booking-hint {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 0.85rem;
+}
+
+.card-booking-hint span {
+    color: var(--soft-grey);
+    font-weight: 500;
+}
+
+.card-booking-hint a {
+    color: var(--electric-orange);
+    text-decoration: none;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    padding: 4px 12px;
+    border-radius: 6px;
+}
+
+.card-booking-hint a:hover {
+    background: var(--electric-orange-light);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .bridge-card {
+        padding: 32px 24px;
+    }
+
+    .bridge-title {
+        font-size: 1.5rem;
+    }
+
+    .bridge-options {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .bridge-option {
+        justify-content: center;
+    }
+
+    .sticky-book-btn {
+        bottom: 16px;
+        right: 16px;
+        padding: 12px 20px;
+        font-size: 0.85rem;
+    }
+
+    .stat-book-link {
+        padding: 6px 12px;
+    }
+
+    .stat-book-link .stat-number {
+        font-size: 1.5rem;
+    }
+
+    .card-booking-hint {
+        flex-direction: column;
+        text-align: center;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .bridge-card {
+        padding: 24px 20px;
+    }
+
+    .bridge-title {
+        font-size: 1.25rem;
+    }
+
+    .bridge-desc {
+        font-size: 1rem;
+    }
+
+    .sticky-book-btn {
+        padding: 10px 16px;
+        font-size: 0.8rem;
+    }
+
+    .sticky-book-text {
+        display: none;
+    }
+
+    .sticky-book-btn .sticky-book-icon {
+        font-size: 1.3rem;
+    }
+}
+
+/* Animation for bridge card entrance */
+.bridge-card {
+    opacity: 0;
+    animation: slideInBlur 0.8s var(--ease-smooth) forwards;
+}
