@@ -146,8 +146,24 @@ document.addEventListener('DOMContentLoaded', () => {
             const iframe = document.getElementById('presentation-iframe');
             
             iframe.onload = () => {
-                document.getElementById('loading-overlay').classList.add('hidden');
-            };
+    document.getElementById('loading-overlay').classList.add('hidden');
+    
+    // AUTO-FOCUS: Enable keyboard navigation in presentations
+    try {
+        // For same-origin presentations (your local HTML files)
+        if (iframe.contentDocument && iframe.contentDocument.body) {
+            iframe.contentDocument.body.focus();
+            iframe.contentDocument.body.tabIndex = 0; // Make focusable
+        }
+    } catch (e) {
+        // Cross-origin (Google Drive, external links) - can't access
+        console.log('Cross-origin iframe, using fallback focus');
+    }
+    
+    // FALLBACK: Focus the iframe itself
+    iframe.focus();
+    iframe.tabIndex = 0; // Make iframe focusable
+};
             
             iframe.onerror = () => {
                 showError('Failed to load the presentation. Please try again.');
