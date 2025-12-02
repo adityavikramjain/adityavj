@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
         resources: { function: 'all' }
     };
 
+    // Store prompt texts for copy functionality
+    const promptStorage = {};
+
     fetch('data.json')
         .then(response => response.json())
         .then(data => {
@@ -76,21 +79,28 @@ document.addEventListener('DOMContentLoaded', () => {
             const tagsAttr = tags.join(',');
             const featuredClass = session.featured ? 'featured' : '';
             const desc = session.desc || 'Session materials and frameworks.';
+            
+            // Determine link: use viewer for sessions with viewerUrl, otherwise direct link
+            const hasViewer = session.viewerUrl && session.viewerUrl.trim() !== '';
+            const linkUrl = hasViewer ? `viewer.html?id=${session.id}` : session.url;
+            const linkTarget = hasViewer ? '_self' : '_blank';
 
             html += `
             <div class="session-card filterable-card ${featuredClass}" 
                  data-tags="${tagsAttr}" 
                  data-program="${session.program || ''}"
-                 data-index="${index}">
+                 data-index="${index}"
+                 data-viewer="${hasViewer ? 'true' : 'false'}"
+                 data-link="${linkUrl}">
                 <div class="card-meta">
                     <span class="card-badge program">${session.program || 'Program'}</span>
                     <span class="card-cohort">${session.cohort || ''}</span>
                 </div>
-                <a href="${session.url}" target="_blank" class="card-title" onclick="trackDownload(event)">${session.title}</a>
+                <a href="${linkUrl}" target="${linkTarget}" class="card-title" onclick="trackDownload(event)">${session.title}</a>
                 <p class="card-desc">${desc}</p>
                 <div class="card-footer">
                     <span class="card-institution">${session.institution || ''}</span>
-                    <span class="card-action">Open Deck →</span>
+                    <span class="card-action">${hasViewer ? 'View Presentation →' : 'Open Deck →'}</span>
                 </div>
             </div>`;
         });
@@ -102,9 +112,14 @@ document.addEventListener('DOMContentLoaded', () => {
             card.addEventListener('click', function(e) {
                 if (e.target.classList.contains('card-title')) return; // Let link handle it
                 const link = this.querySelector('.card-title');
+                const hasViewer = this.getAttribute('data-viewer') === 'true';
                 if (link) {
                     trackDownload(e);
-                    window.open(link.href, '_blank');
+                    if (hasViewer) {
+                        window.location.href = link.href;
+                    } else {
+                        window.open(link.href, '_blank');
+                    }
                 }
             });
         });
@@ -113,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // === RENDER RESOURCES ===
     function renderResources(resources) {
         const container = document.getElementById('resources-grid');
-        const promptContainer = document.getElementById('prompt-storage-container');
         
         if (!resources || resources.length === 0) {
             container.innerHTML = '<p class="empty-state">No resources found.</p>';
@@ -128,7 +142,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         let html = '';
-        let promptsHtml = '';
 
         sorted.forEach((res, index) => {
             const tags = res.tags || [];
@@ -138,35 +151,207 @@ document.addEventListener('DOMContentLoaded', () => {
             // Handle Workflow type
             if (res.type === 'Workflow' && res.steps) {
                 html += renderWorkflow(res, tagsAttr);
-            } else {
-                // Regular Resource
-                const icon = getResourceIcon(res.type);
+            } 
+            // Handle Prompt type - with card-level copy button
+            else if (res.type === 'Prompt' && res.prompt_text && res.prompt_text.trim() !== '') {
+                const promptId = 'prompt-' + index;
+                promptStorage[promptId] = res.prompt_text;
                 
-                let dataAttrs = '';
-                if (res.prompt_text && res.prompt_text.trim() !== '') {
-                    const promptId = 'prompt-' + index;
-                    promptsHtml += `<div id="${promptId}" class="prompt-storage">${escapeHtml(res.prompt_text)}</div>`;
-                    dataAttrs = `data-modal="prompt" data-prompt-id="${promptId}" data-title="${escapeHtml(res.title)}" data-type="${res.type}"`;
-                } else {
-                    dataAttrs = `data-modal="gem" data-gem-link="${res.link}" data-title="${escapeHtml(res.title)}" data-type="${res.type}"`;
-                }
-
                 html += `
-                <div class="resource-card filterable-card ${featuredClass}" ${dataAttrs} data-tags="${tagsAttr}">
+                <div class="resource-card prompt-card filterable-card ${featuredClass}" 
+                     data-modal="prompt" 
+                     data-prompt-id="${promptId}" 
+                     data-title="${escapeHtml(res.title)}" 
+                     data-type="${res.type}"
+                     data-tags="${tagsAttr}">
+                    <button class="card-copy-btn" data-prompt-id="${promptId}" title="Copy prompt">
+                        <span class="copy-icon">📋</span>
+                    </button>
+                    <div class="resource-type"><span class="icon">⚡</span> ${res.type}</div>
+                    <div class="resource-title">${res.title}</div>
+                    <p class="resource-desc">${res.desc || ''}</p>
+                    <div class="resource-footer">Preview Prompt</div>
+                </div>`;
+            }
+            // Handle Gemini Gem type - direct link, no modal
+            else if (res.type === 'Gemini Gem') {
+                html += `
+                <div class="resource-card gem-card filterable-card ${featuredClass}" 
+                     data-gem-link="${res.link}"
+                     data-tags="${tagsAttr}">
+                    <div class="resource-type"><span class="icon">💎</span> ${res.type}</div>
+                    <div class="resource-title">${res.title}</div>
+                    <p class="resource-desc">${res.desc || ''}</p>
+                    <div class="resource-footer">Try Now →</div>
+                    <div class="launch-indicator">↗</div>
+                </div>`;
+            }
+            // Handle other types (Custom GPT, Template, etc.)
+            else {
+                const icon = getResourceIcon(res.type);
+                html += `
+                <div class="resource-card filterable-card ${featuredClass}" 
+                     data-link="${res.link}"
+                     data-tags="${tagsAttr}">
                     <div class="resource-type"><span class="icon">${icon}</span> ${res.type}</div>
                     <div class="resource-title">${res.title}</div>
                     <p class="resource-desc">${res.desc || ''}</p>
-                    <div class="resource-footer">View Details →</div>
+                    <div class="resource-footer">Open Tool →</div>
                 </div>`;
             }
         });
 
         container.innerHTML = html;
-        promptContainer.innerHTML = promptsHtml;
 
-        // Attach modal listeners
-        attachModalListeners();
+        // Attach event listeners
+        attachResourceListeners();
     }
+
+    // === ATTACH RESOURCE LISTENERS ===
+    function attachResourceListeners() {
+        // Card-level copy buttons for prompts
+        document.querySelectorAll('.card-copy-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation(); // Don't trigger card click
+                const promptId = this.getAttribute('data-prompt-id');
+                const promptText = promptStorage[promptId];
+                if (promptText) {
+                    copyWithDelight(promptText, this);
+                }
+            });
+        });
+
+        // Prompt cards - open modal on card click (not copy button)
+        document.querySelectorAll('.resource-card.prompt-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                // Don't open modal if clicking copy button
+                if (e.target.closest('.card-copy-btn')) return;
+                
+                const promptId = this.getAttribute('data-prompt-id');
+                const title = this.getAttribute('data-title');
+                const type = this.getAttribute('data-type');
+                const promptText = promptStorage[promptId];
+                
+                openPromptModal(title, type, promptText);
+                trackResourceView();
+            });
+        });
+
+        // Gem cards - direct link, no modal
+        document.querySelectorAll('.resource-card.gem-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                const gemLink = this.getAttribute('data-gem-link');
+                if (gemLink) {
+                    trackResourceView();
+                    window.open(gemLink, '_blank');
+                }
+            });
+        });
+
+        // Other resource cards - direct link
+        document.querySelectorAll('.resource-card[data-link]').forEach(card => {
+            card.addEventListener('click', function(e) {
+                const link = this.getAttribute('data-link');
+                if (link && link !== '#') {
+                    trackResourceView();
+                    window.open(link, '_blank');
+                }
+            });
+        });
+    }
+
+    // === OPEN PROMPT MODAL ===
+    function openPromptModal(title, type, promptText) {
+        const modalOverlay = document.getElementById('modal-overlay');
+        const modalTitle = document.getElementById('modal-title');
+        const modalType = document.getElementById('modal-type');
+        const modalBody = document.getElementById('modal-body');
+        const modalFooter = document.getElementById('modal-footer');
+
+        modalTitle.textContent = title;
+        modalType.textContent = type;
+
+        // Scrollable prompt container
+        modalBody.innerHTML = `
+            <div class="prompt-container">
+                <pre>${escapeHtml(promptText)}</pre>
+            </div>`;
+
+        // Sticky copy button in footer
+        modalFooter.innerHTML = `
+            <button class="copy-button" id="modal-copy-btn">
+                <span class="copy-icon">📋</span>
+                <span class="copy-text">Copy Prompt</span>
+            </button>`;
+
+        // Attach copy listener
+        document.getElementById('modal-copy-btn').addEventListener('click', function() {
+            copyWithDelight(promptText, this);
+        });
+
+        modalOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    // === COPY WITH DELIGHT ===
+    function copyWithDelight(text, buttonElement) {
+        navigator.clipboard.writeText(text)
+            .then(() => {
+                // Update button state
+                buttonElement.classList.add('copied');
+                
+                // Update icon/text if it's a full button
+                const iconEl = buttonElement.querySelector('.copy-icon');
+                const textEl = buttonElement.querySelector('.copy-text');
+                
+                if (iconEl) iconEl.textContent = '✓';
+                if (textEl) textEl.textContent = 'Copied!';
+                
+                // Show warm toast
+                showToast('Prompt copied — go build something great! ✨', 'success');
+                
+                // Reset after delay
+                setTimeout(() => {
+                    buttonElement.classList.remove('copied');
+                    if (iconEl) iconEl.textContent = '📋';
+                    if (textEl) textEl.textContent = 'Copy Prompt';
+                }, 2000);
+            })
+            .catch(err => {
+                console.error('Copy failed', err);
+                showToast('Failed to copy — try again', 'error');
+            });
+    }
+
+    // === CLOSE MODAL ===
+    function initializeModalClose() {
+        const modalOverlay = document.getElementById('modal-overlay');
+        const modalClose = document.querySelector('.modal-close');
+        
+        const closeModal = () => {
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+            setTimeout(() => {
+                document.getElementById('modal-body').innerHTML = '';
+                document.getElementById('modal-footer').innerHTML = '';
+                document.getElementById('modal-title').textContent = '';
+                document.getElementById('modal-type').textContent = '';
+            }, 300);
+        };
+
+        if (modalClose) modalClose.addEventListener('click', closeModal);
+        if (modalOverlay) {
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) closeModal();
+            });
+        }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    }
+    
+    // Initialize modal close on load
+    initializeModalClose();
 
     // === RENDER WORKFLOW ===
     function renderWorkflow(res, tagsAttr) {
@@ -223,74 +408,6 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>`;
         });
         container.innerHTML = html;
-    }
-
-    // === MODAL SYSTEM ===
-    function attachModalListeners() {
-        const modalOverlay = document.getElementById('modal-overlay');
-        const modalTitle = document.getElementById('modal-title');
-        const modalType = document.getElementById('modal-type');
-        const modalBody = document.getElementById('modal-body');
-        const modalFooter = document.getElementById('modal-footer');
-        const modalClose = document.querySelector('.modal-close');
-        
-        document.querySelectorAll('.resource-card[data-modal]').forEach(card => {
-            card.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                const modalKind = this.getAttribute('data-modal');
-                const title = this.getAttribute('data-title');
-                const type = this.getAttribute('data-type');
-
-                modalTitle.textContent = title;
-                modalType.textContent = type;
-
-                if (modalKind === 'prompt') {
-                    const promptId = this.getAttribute('data-prompt-id');
-                    const promptDiv = document.getElementById(promptId);
-                    const promptText = promptDiv ? promptDiv.textContent : '';
-                    
-                    modalBody.innerHTML = '<pre>' + escapeHtml(promptText) + '</pre>';
-
-                    modalFooter.innerHTML = `
-                        <button class="copy-button" onclick="copyToClipboard(\`${escapeForJs(promptText)}\`)">
-                            📋 Copy Prompt
-                        </button>`;
-                } else if (modalKind === 'gem') {
-                    const gemLink = this.getAttribute('data-gem-link');
-                    modalBody.innerHTML = '<p class="gem-description">Click below to open this tool in a new tab and start using it right away.</p>';
-                    modalFooter.innerHTML = `<a href="${gemLink}" target="_blank" class="btn btn-primary" onclick="trackResourceView()">Open Tool →</a>`;
-                }
-
-                modalOverlay.classList.add('active');
-                document.body.style.overflow = 'hidden';
-                
-                // Track engagement
-                trackResourceView();
-            });
-        });
-
-        // Close Modal
-        const closeModal = () => {
-            modalOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-            setTimeout(() => {
-                modalBody.innerHTML = '';
-                modalFooter.innerHTML = '';
-                modalTitle.textContent = '';
-                modalType.textContent = '';
-            }, 300);
-        };
-
-        if (modalClose) modalClose.addEventListener('click', closeModal);
-        if (modalOverlay) {
-            modalOverlay.addEventListener('click', (e) => {
-                if (e.target === modalOverlay) closeModal();
-            });
-        }
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeModal();
-        });
     }
 
     // === FILTERING SYSTEM ===
@@ -467,25 +584,12 @@ document.addEventListener('DOMContentLoaded', () => {
         return div.innerHTML;
     };
 
-    function escapeForJs(text) {
-        return text.replace(/\\/g, '\\\\')
-                   .replace(/`/g, '\\`')
-                   .replace(/\$/g, '\\$');
-    }
-
-    window.copyToClipboard = function(text) {
-        navigator.clipboard.writeText(text)
-            .then(() => showToast('Copied to clipboard ✓'))
-            .catch(err => {
-                console.error('Copy failed', err);
-                showToast('Failed to copy');
-            });
-    };
-
-    function showToast(message) {
+    function showToast(message, type = 'default') {
         const toast = document.getElementById('toast');
         if (!toast) return;
         toast.textContent = message;
+        toast.className = 'toast'; // Reset classes
+        if (type === 'success') toast.classList.add('success');
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 3000);
     }
