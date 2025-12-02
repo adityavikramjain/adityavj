@@ -190,10 +190,15 @@ document.addEventListener('DOMContentLoaded', () => {
     initEmailCapture(presentationId);
 });
 
-// Email Capture Logic (outside DOMContentLoaded to keep it clean)
+// Email Capture Logic
 function initEmailCapture(presentationId) {
-    const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/1kov-UO7M_dKERQ3oKJm6M76pxEDp_NEfLT69XJWqPAc/formResponse';
-    const EMAIL_FIELD_NAME = 'entry.1045781291'; // UPDATE THIS: Right-click email field in form → Inspect → find entry.XXXXXX
+    // Google Form configuration
+    // Form ID: 1kov-UO7M_dKERQ3oKJm6M76pxEDp_NEfLT69XJWqPAc
+    const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1kov-UO7M_dKERQ3oKJm6M76pxEDp_NEfLT69XJWqPAc/formResponse';
+    
+    // TODO: Update this with your actual entry ID
+    // To find it: Open form → Right-click email field → Inspect → find name="entry.XXXXXX"
+    const EMAIL_FIELD_NAME = 'entry.2094806374';
     
     const TIME_THRESHOLD = 90; // seconds before popup can show
     const STORAGE_KEY = `email_capture_${presentationId}`;
@@ -219,13 +224,6 @@ function initEmailCapture(presentationId) {
     document.addEventListener('mouseleave', (e) => {
         if (e.clientY < 10 && canShow && !hasShown) {
             showEmailCapture();
-        }
-    });
-    
-    // Also trigger on page visibility change (switching tabs)
-    document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'hidden' && canShow && !hasShown) {
-            // Don't show on tab switch, but mark as potential
         }
     });
     
@@ -304,7 +302,6 @@ function initEmailCapture(presentationId) {
             // Submit to Google Form
             const formData = new FormData();
             formData.append(EMAIL_FIELD_NAME, email);
-            formData.append('entry.839337160', presentationId); // Session ID field (if you add one)
             
             // Google Forms doesn't support CORS, so we use no-cors mode
             await fetch(GOOGLE_FORM_URL, {
