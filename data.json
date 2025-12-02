@@ -239,10 +239,17 @@
             ]
         }
     ],
-    "writings": [{
+    "writings": [
+         {
+            "title": "Creating Effective Slide Presentations with AI",
+            "link": "blog-presentation-engine.html",
+            "date": "November 2025",
+            "excerpt": "Many of us dread making presentations, not for lack of ideas, but because we are forcing our brains to do two contradictory things at once."
+        },
+        {
     "title": "Building a 30-Minute Sales Intelligence Briefing with AI",
     "link": "blog-sales-intelligence.html",
-    "date": "Dec 2024",
+    "date": "Nov 2025",
     "excerpt": "Most B2B sales teams waste hours researching prospects manually. Here's how I built a system that delivers boardroom-ready intelligence in 30 minutes."
 }]
 }
