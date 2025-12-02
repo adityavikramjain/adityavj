@@ -239,5 +239,10 @@
             ]
         }
     ],
-    "writings": []
+    "writings": [{
+    "title": "Building a 30-Minute Sales Intelligence Briefing with AI",
+    "link": "blog-sales-intelligence.html",
+    "date": "Dec 2024",
+    "excerpt": "Most B2B sales teams waste hours researching prospects manually. Here's how I built a system that delivers boardroom-ready intelligence in 30 minutes."
+}]
 }
