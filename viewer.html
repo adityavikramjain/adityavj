@@ -34,7 +34,7 @@
     <div class="metadata-bar" id="metadata-bar">
         <div class="metadata-content">
             <div class="metadata-badges">
-                <span class="badge program-badge" id="program-badge">MDP</span>
+                <span class="badge institution-badge" id="program-badge">IIM Kozhikode</span>
                 <span class="badge cohort-badge" id="cohort-badge">Nov 2025</span>
             </div>
             <h1 class="presentation-title" id="presentation-title">Loading...</h1>
@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.title = `${presentation.title} | Aditya V Jain`;
             document.getElementById('presentation-title').textContent = presentation.title;
             document.getElementById('presentation-desc').textContent = presentation.desc || '';
-            document.getElementById('program-badge').textContent = presentation.program || 'Session';
+            document.getElementById('program-badge').textContent = presentation.institution || 'Session';
             document.getElementById('cohort-badge').textContent = presentation.cohort || '';
             
             // Determine which URL to use
