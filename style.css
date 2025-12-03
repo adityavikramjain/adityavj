@@ -556,8 +556,8 @@ p { color: var(--soft-grey); }
 .card-meta {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
+    gap: 12px;
+    margin-bottom: 16px;
     flex-wrap: wrap;
 }
 
@@ -574,8 +574,9 @@ p { color: var(--soft-grey); }
 }
 
 .card-badge.program {
-    background: var(--charcoal);
-    color: var(--white);
+    background: var(--border-light);
+    color: var(--light-grey);
+    font-weight: 500;
 }
 
 .card-cohort {
@@ -614,8 +615,16 @@ p { color: var(--soft-grey); }
 }
 
 .card-institution {
-    font-size: 0.8rem;
-    color: var(--light-grey);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--charcoal);
+}
+
+/* Institution styling when in card-meta (top of card) */
+.card-meta .card-institution {
+    font-size: 1rem;
+    letter-spacing: -0.01em;
 }
 
 .card-action {

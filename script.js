@@ -99,20 +99,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const linkTarget = hasViewer ? '_self' : '_blank';
 
             html += `
-            <div class="session-card filterable-card ${featuredClass}" 
-                 data-tags="${tagsAttr}" 
+            <div class="session-card filterable-card ${featuredClass}"
+                 data-tags="${tagsAttr}"
                  data-program="${session.program || ''}"
                  data-index="${index}"
                  data-viewer="${hasViewer ? 'true' : 'false'}"
                  data-link="${linkUrl}">
                 <div class="card-meta">
-                    <span class="card-badge program">${session.program || 'Program'}</span>
+                    <span class="card-institution">${session.institution || ''}</span>
                     <span class="card-cohort">${session.cohort || ''}</span>
                 </div>
                 <a href="${linkUrl}" target="${linkTarget}" class="card-title" onclick="trackDownload(event)">${session.title}</a>
                 <p class="card-desc">${desc}</p>
                 <div class="card-footer">
-                    <span class="card-institution">${session.institution || ''}</span>
+                    <span class="card-badge program">${session.program || 'Program'}</span>
                     <span class="card-action">${hasViewer ? 'View Presentation →' : 'Open Deck →'}</span>
                 </div>
             </div>`;
