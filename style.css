@@ -1807,3 +1807,41 @@ p { color: var(--soft-grey); }
     from { opacity: 0; transform: translateY(20px) scale(0.95); }
     to { opacity: 1; transform: translateY(0) scale(1); }
 }
+
+/* === PLATFORM COMPATIBILITY BADGES === */
+.platform-badges {
+    display: flex;
+    gap: 6px;
+    margin: 12px 0 8px 0;
+    flex-wrap: wrap;
+}
+
+.platform-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+    cursor: help;
+}
+
+.platform-badge.gemini {
+    background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+    color: var(--white);
+    box-shadow: 0 2px 4px rgba(66, 133, 244, 0.2);
+}
+
+.platform-badge.perplexity {
+    background: linear-gradient(135deg, #20808d 0%, #1a6b76 100%);
+    color: var(--white);
+    box-shadow: 0 2px 4px rgba(32, 128, 141, 0.2);
+}
+
+.platform-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}

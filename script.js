@@ -157,6 +157,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 const promptId = 'prompt-' + index;
                 promptStorage[promptId] = res.prompt_text;
                 
+                // Generate platform badges if available
+                let platformBadges = '';
+                if (res.platforms && res.platforms.length > 0) {
+                    platformBadges = '<div class="platform-badges">';
+                    res.platforms.forEach(platform => {
+                        if (platform === 'gemini') {
+                            platformBadges += '<span class="platform-badge gemini" title="Works with Gemini Deep Research">Gemini</span>';
+                        } else if (platform === 'perplexity') {
+                            platformBadges += '<span class="platform-badge perplexity" title="Works with Perplexity Pro">Perplexity</span>';
+                        }
+                    });
+                    platformBadges += '</div>';
+                }
+                
                 html += `
                 <div class="resource-card prompt-card filterable-card ${featuredClass}" 
                      data-modal="prompt" 
@@ -170,6 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="resource-type"><span class="icon">⚡</span> ${res.type}</div>
                     <div class="resource-title">${res.title}</div>
                     <p class="resource-desc">${res.desc || ''}</p>
+                    ${platformBadges}
                     <div class="resource-footer">Preview Prompt</div>
                 </div>`;
             }
