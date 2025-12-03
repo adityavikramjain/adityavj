@@ -1746,3 +1746,64 @@ p { color: var(--soft-grey); }
     opacity: 0;
     animation: slideInBlur 0.8s var(--ease-smooth) forwards;
 }
+
+/* === 1. ENHANCED ACTIVE FILTERS (Add Glow) === */
+/* Find the existing .filter-button.active rule and replace it with this: */
+.filter-button.active {
+    background: var(--electric-orange);
+    color: var(--white);
+    border-color: var(--electric-orange);
+    /* New Glow & Scale */
+    box-shadow: 0 0 0 4px var(--electric-orange-light), 0 8px 20px var(--shadow-orange);
+    transform: scale(1.05);
+    z-index: 1;
+}
+
+/* === 2. ENHANCED CARD HOVER DEPTH === */
+/* Find the existing .session-card:hover rule and replace it with this: */
+.session-card:hover, .resource-card:hover {
+    transform: translateY(-8px) scale(1.01); /* Deeper lift */
+    box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.1), 0 10px 20px -5px rgba(0, 0, 0, 0.04); /* Premium soft shadow */
+    border-color: rgba(255, 69, 0, 0.3); /* Subtle border highlight */
+}
+
+/* === 3. COPY BUTTON MORPH (Clipboard to Check) === */
+.copy-button .copy-icon {
+    display: inline-block;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.copy-button.copied .copy-icon {
+    transform: scale(1.2) rotate(360deg);
+}
+
+.copy-button.copied {
+    background: var(--success-green);
+    border-color: var(--success-green);
+    color: var(--white);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* === 4. FILTER TRANSITIONS (States) === */
+/* Base transition for all cards */
+.filterable-card {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center top;
+}
+
+/* The state before hiding (scale down + fade out) */
+.filterable-card.filtering-out {
+    opacity: 0;
+    transform: scale(0.9);
+    pointer-events: none;
+}
+
+/* The state when entering (scale up + fade in) */
+.filterable-card.filtering-in {
+    animation: cardEntrance 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes cardEntrance {
+    from { opacity: 0; transform: translateY(20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
