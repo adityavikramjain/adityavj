@@ -33,6 +33,9 @@ document.addEventListener('DOMContentLoaded', () => {
             initializeAccordion('sessions');
             initializeAccordion('resources');
             initializeNudgeSystem();
+
+            // === NEW: Handle Deep Linking (Must run after filters are initialized) ===
+            handleDeepLinks();
         })
         .catch(error => console.error('Error loading data:', error));
 
@@ -373,7 +376,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
-    // === CONFETTI FUNCTIONALITY (Restored) ===
+    // === CONFETTI FUNCTIONALITY (Restored & Fixed) ===
     function fireConfetti(x, y) {
         const count = 20;
         const defaults = {
@@ -597,6 +600,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // === NEW: DEEP LINKING HANDLER ===
+    function handleDeepLinks() {
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // 1. Get parameters
+        const filterParam = urlParams.get('filter') || urlParams.get('function');
+        const programParam = urlParams.get('program');
+
+        // Helper to click matching buttons
+        const clickFilterButton = (value, type) => {
+            if (!value) return;
+            
+            const buttons = document.querySelectorAll(`.filter-button[data-filter-type="${type}"]`);
+            for (const btn of buttons) {
+                if (btn.getAttribute('data-filter').toLowerCase() === value.toLowerCase()) {
+                    btn.click();
+                }
+            }
+        };
+
+        // 2. Apply filters if present
+        if (filterParam) clickFilterButton(filterParam, 'function');
+        if (programParam) clickFilterButton(programParam, 'program');
+    }
+
     // === ENGAGEMENT & NUDGE SYSTEM ===
     function initializeNudgeSystem() {
         const nudge = document.getElementById('booking-nudge');
@@ -702,7 +730,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Initialize sticky booking button
+    // === STICKY BOOKING BUTTON & ANALYTICS ===
+    
+    // 1. Sticky Button Logic
     const stickyBtn = document.getElementById('sticky-book-btn');
     if (stickyBtn) {
         let hasScrolled = false;
@@ -740,11 +770,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // Track booking CTA clicks
+    // 2. Analytics Helper (RESTORED)
+    function trackBookingClick(source) {
+        // Analytics hook
+        console.log('Booking CTA clicked from:', source);
+        
+        // Example: Google Analytics integration (if available)
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'booking_cta_click', {
+                'event_category': 'engagement',
+                'event_label': source
+            });
+        }
+    }
+
+    // 3. Attach Listeners with Source Tracking
     document.querySelectorAll('a[href="#book"], a[href*="calendly"]').forEach(link => {
         link.addEventListener('click', function() {
-            // Optional analytics hook
-            console.log('Booking CTA clicked');
+            const source = this.closest('.stats-bar') ? 'stats_bar' :
+                          this.closest('.bridge-card') ? 'bridge_section' :
+                          this.closest('.sticky-book-btn') ? 'sticky_button' :
+                          this.closest('.booking-section') ? 'main_booking' :
+                          'other';
+            trackBookingClick(source);
         });
     });
 });
