@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
             initializeNudgeSystem();
             initializeShareButton();
 
-            // === NEW: Handle Deep Linking (Must run after filters are initialized) ===
+            // Handle Deep Linking (Must run after filters are initialized)
             handleDeepLinks();
         })
         .catch(error => console.error('Error loading data:', error));
@@ -82,8 +82,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const featuredClass = session.featured ? 'featured' : '';
             const desc = session.desc || 'Session materials and frameworks.';
             
-            const hasViewer = session.viewerUrl && session.viewerUrl.trim() !== '';
+            // === SMART ROUTING LOGIC ===
+            // Detect if it is a Google Slides or Drive link
+            const isGoogleLink = session.url && (
+                session.url.includes('docs.google.com/presentation') || 
+                session.url.includes('drive.google.com/file')
+            );
+
+            // Use viewer if explicit viewerUrl exists OR if it's a Google link
+            const hasViewer = (session.viewerUrl && session.viewerUrl.trim() !== '') || isGoogleLink;
+            
+            // Construct the final URL
             const linkUrl = hasViewer ? `viewer.html?id=${session.id}` : session.url;
+            
+            // Viewer opens in same tab (_self), external links open in new tab (_blank)
             const linkTarget = hasViewer ? '_self' : '_blank';
 
             html += `
@@ -146,18 +158,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const tags = res.tags || [];
             const tagsAttr = tags.join(',');
             
-            // VISUAL DIFFERENTIATION
+            // Visual Differentiation
             const isResearch = tags.includes('Research') || tags.includes('Research Agents');
             const researchClass = isResearch ? 'research-card' : '';
-            
             const featuredClass = res.featured ? 'featured' : '';
             const cardClasses = `${featuredClass} ${researchClass}`;
 
             const platformBadges = generatePlatformBadges(res.platforms);
 
+            // Handle Workflow
             if (res.type === 'Workflow' && res.steps) {
                 html += renderWorkflow(res, tagsAttr, cardClasses, platformBadges);
             } 
+            // Handle Prompt
             else if (res.type === 'Prompt' && res.prompt_text && res.prompt_text.trim() !== '') {
                 const promptId = 'prompt-' + index;
                 promptStorage[promptId] = res.prompt_text;
@@ -179,6 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="resource-footer">Preview Prompt</div>
                 </div>`;
             }
+            // Handle Gemini Gem
             else if (res.type === 'Gemini Gem') {
                 html += `
                 <div class="resource-card gem-card filterable-card ${cardClasses}" 
@@ -191,6 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="launch-indicator">↗</div>
                 </div>`;
             }
+            // Handle other types
             else {
                 const icon = getResourceIcon(res.type);
                 html += `
@@ -459,17 +474,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 const filterType = this.getAttribute('data-filter-type');
                 const target = this.getAttribute('data-target');
 
-                // LOGIC FIX: Visual Reset of "Other" Section
-                // If I click a Resource filter, visually reset Session filter to 'All' to imply focus
+                // Visual Reset of "Other" Section (Smart Sync)
                 if (target === 'resources' && filterType === 'function') {
                     resetFilterVisuals('sessions');
-                    activeFilters.sessions.function = 'all'; // Logic reset
+                    activeFilters.sessions.function = 'all'; 
                 } else if (target === 'sessions' && filterType === 'function') {
                     resetFilterVisuals('resources');
-                    activeFilters.resources.function = 'all'; // Logic reset
+                    activeFilters.resources.function = 'all'; 
                 }
 
-                // Normal activation
                 const parent = this.closest('.filter-bar');
                 parent.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('active'));
                 this.classList.add('active');
@@ -480,11 +493,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     activeFilters.resources[filterType] = filter;
                 }
 
-                // Apply logic to both to reflect the reset
                 applyFilters('sessions');
                 applyFilters('resources');
-                
-                // Update URL last
                 updateUrlState();
             });
         });
@@ -493,7 +503,6 @@ document.addEventListener('DOMContentLoaded', () => {
         applyFilters('resources');
     }
 
-    // Helper to visually reset a filter bar
     function resetFilterVisuals(targetId) {
         const bar = document.getElementById(`function-filters-${targetId}`);
         if (!bar) return;
@@ -614,11 +623,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // === NEW: URL STATE MANAGEMENT ===
+    // === URL STATE MANAGEMENT ===
     function updateUrlState() {
         const params = new URLSearchParams();
         
-        // With the new Logic Fix in initializeFilters, only one function filter is usually active at a time
         const activeFunc = activeFilters.resources.function !== 'all' 
             ? activeFilters.resources.function 
             : activeFilters.sessions.function;
@@ -632,7 +640,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.history.pushState({ path: newUrl }, '', newUrl);
     }
 
-    // === NEW: DEEP LINKING HANDLER ===
+    // === DEEP LINKING HANDLER ===
     function handleDeepLinks() {
         const urlParams = new URLSearchParams(window.location.search);
         const filterParam = urlParams.get('filter') || urlParams.get('function');
@@ -652,7 +660,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (programParam) clickFilterButton(programParam, 'program');
     }
 
-    // === NEW: SHARE BUTTON HANDLER ===
+    // === SHARE BUTTON HANDLER ===
     function initializeShareButton() {
         const shareBtn = document.getElementById('share-view-btn');
         if (!shareBtn) return;
