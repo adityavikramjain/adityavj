@@ -237,6 +237,56 @@
                     "link": "https://gemini.google.com/gem/1yKGCsSNr1Eds_uEuOFO2eoHb3x2DHSrY?usp=sharing"
                 }
             ]
+        },
+        {
+            "id": "indian-b2b-sales-outreach",
+            "title": "Indian B2B Sales Outreach",
+            "type": "Prompt",
+            "desc": "Role-based prompt for crafting personalized Hinglish outreach emails that achieve 6X improvement in reply rates by acknowledging hierarchical decision-making and long sales cycles in Indian enterprise contexts.",
+            "link": "#",
+            "tags": ["Sales", "AI"],
+            "featured": true,
+            "prompt_text": "You are an experienced B2B sales executive with 10+ years of selling enterprise software solutions to mid-to-large Indian corporations in sectors like IT services, manufacturing, and financial services. Your objective is to craft a personalized outreach email in Hindi-English (Hinglish) to book a discovery call with [Prospect Title] at [Company Name].\n\nContext:\n- Prospect's company recently [specific trigger event - IPO, funding, expansion]\n- Their primary business challenge is [pain point from industry analysis]\n- Your solution reduces operational costs by 30-40% or improves efficiency by [specific metric]\n- Decision cycle: [typically 60-90 days for enterprise deals]\n\nOutput Format: Professional yet warm Hinglish tone, 150-180 words, single clear CTA (book 15-min call)\n\nVoice: Consultative, data-backed, respectful of hierarchical decision-making, reference ROI in INR terms\n\nConstraints: Avoid aggressive sales language, don't mention pricing upfront, acknowledge decision committee involvement"
+        },
+        {
+            "id": "indian-b2c-ecommerce-listing",
+            "title": "Indian B2C E-Commerce Listing",
+            "type": "Prompt",
+            "desc": "Context-engineered prompt for creating trust-first product listings on Indian platforms (Flipkart, Amazon, JioMart) that emphasize warranty, Made in India status, and festival-seasonal alignment to drive conversions.",
+            "link": "#",
+            "tags": ["Sales", "Marketing", "AI"],
+            "featured": false,
+            "prompt_text": "You are a dynamic sales professional specializing in direct-to-consumer product sales on Indian e-commerce platforms (Flipkart, Amazon, JioMart). Your objective is to write an engaging product listing description and promotional messaging for [Product Category] targeting Indian middle-class consumers aged [age range] with purchasing power of ₹[budget range].\n\nContext:\n- Top customer concerns: Quality assurance, warranty, return policy, Indian brand authenticity\n- Similar competitors on platform: [list 2-3 competitors with their positioning]\n- Your product's unique advantage: [specific feature/price/quality point]\n- Seasonal/cultural relevance: [festival, season, or lifestyle trend]\n\nOutput Format: Bullet-point feature list (Hindi + English), 100-word product description, social proof elements (ratings/testimonials)\n\nVoice: Aspirational yet trustworthy, celebration of Indian values, emphasis on \"value for money\"\n\nConstraints: Must comply with platform guidelines, highlight \"Made in India\" if applicable, include clear warranty terms"
+        },
+        {
+            "id": "indian-b2b-marketing-campaigns",
+            "title": "Indian B2B Marketing Campaigns",
+            "type": "Prompt",
+            "desc": "Five-rule structured prompt for generating email campaigns that achieve 25%+ open rates by referencing Indian compliance frameworks (FEMA, GST, RBI), localized ROI metrics, and recent economic news while avoiding overused superlatives.",
+            "link": "#",
+            "tags": ["Marketing", "AI"],
+            "featured": true,
+            "prompt_text": "You are a B2B marketing strategist for an Indian SaaS/enterprise software company targeting mid-market corporations. Your objective is to generate email campaign titles and subject lines that achieve 25%+ open rates and drive webinar registrations from decision-makers (CFOs, Operations Heads, CTOs).\n\nTechnical Parameters:\n- Email platform compliance (DKIM, SPF, character limits 50 characters max)\n- A/B testing with 2 subject line variants per campaign\n\nContent Structure Rules:\n- Reference Indian business context (Compliance with FEMA/GST, RBI guidelines, or industry-specific regulations)\n- Mention India-specific business metric (CAGR of Indian market, localized ROI calculation)\n- Connect to recent Indian economic/business news (government initiative, sector growth)\n\nTone & Style:\n- Professional yet conversational in tone\n- Use \"we understand Indian business\" positioning\n- Gender-neutral, inclusive language\n\nCTA Guidelines:\n- One clear call-to-action: \"Register for webinar\" or \"Download case study\"\n- Emphasis on limited seats/exclusive access\n\nProhibited Wording:\n- Avoid \"revolutionary\" or \"game-changing\" (overused in Indian market)\n- Don't use religious/cultural references\n- Avoid superlatives without data backing\n- No inappropriate English-Hindi mixing"
+        },
+        {
+            "id": "indian-b2c-social-content",
+            "title": "Indian B2C Social Media Content",
+            "type": "Prompt",
+            "desc": "Few-shot learning prompt with contrastive examples for creating authentic social media content targeting Indian women aged 20-40, balancing community-first approach with regional language integration and budget-conscious aspirational messaging.",
+            "link": "#",
+            "tags": ["Marketing", "AI"],
+            "featured": false,
+            "prompt_text": "You are a creative marketing professional for a consumer brand selling beauty, fashion, or lifestyle products to Indian women aged 20-40. Your objective is to generate social media content (Instagram captions, WhatsApp messages, email subject lines) that drives engagement and repeat purchases.\n\nReference Examples (Positive):\n- Example 1: [high-performing Instagram post with 15K+ likes, 200+ comments, focus on user-generated content]\n- Example 2: [WhatsApp message achieving 8% conversion rate, emphasizing limited-time offer and community]\n- Example 3: [Email subject achieving 28% open rate, using local language and festival reference]\n\nCounter-Examples (What NOT to do):\n- Example A: Generic corporate tone, 2% engagement, failed to resonate with audience\n- Example B: Excessive English, alienated regional market segments\n- Example C: Price-only messaging, didn't build emotional connection\n\nTone & Style:\n- Conversational, relatable, celebrates Indian femininity and independence\n- Mix of English and regional language where appropriate\n- Authentic, avoids stereotyping\n\nCTA Requirements:\n- Action-oriented: \"Shop now\", \"Join our community\", \"Claim your offer\"\n- Create sense of urgency through scarcity (limited stock, time-bound offer)\n\nContent Constraints:\n- Budget-conscious messaging (emphasize value, EMI options, discounts)\n- Include sustainability/ethical angle if brand positioning allows\n- Cultural sensitivity (avoid clichés about Indian women)"
+        },
+        {
+            "id": "indian-it-sales-discovery",
+            "title": "Indian IT Sales Discovery Call",
+            "type": "Prompt",
+            "desc": "Chain-of-thought prompt with sequential reasoning for IT solution sales that balances technical credibility with business value, acknowledging legacy system integration complexity and Indian IT organizations' preference for long-term vendor relationships.",
+            "link": "#",
+            "tags": ["Sales", "AI"],
+            "featured": true,
+            "prompt_text": "You are a solution sales engineer with 8+ years of selling enterprise IT infrastructure, cloud solutions, or cybersecurity products to Indian IT departments and CIOs. Your objective is to craft a technical discovery call invitation that balances business value with technical credibility.\n\nRole: Enterprise solution consultant for [Solution Category - e.g., Cloud Migration, Cybersecurity, IT Infrastructure]\n\nObjective: Book a 30-minute technical discovery call with [Target: CIO/IT Head/VP Infrastructure] at [Indian IT Company/Financial Services/Manufacturing firm]\n\nContext:\n- Their current IT environment: [approximate number of servers, on-premises vs cloud mix, legacy systems]\n- Regulatory compliance needs: [specific to Indian context - ISO 27001, SOC 2, RBI/SEBI guidelines]\n- Business driver: [cost optimization, compliance deadline, digital transformation initiative]\n- Technical stakeholders involved: [infrastructure team, security team, application team]\n\nSequential Reasoning Steps for Crafting Approach:\n1. Diagnose their current state: \"Based on [industry research], most [company size] Indian IT organizations face [specific pain point]\"\n2. Identify financial impact: \"This typically results in [efficiency loss, security risk, compliance cost] of approximately ₹[amount] annually\"\n3. Present unique capability: \"Our solution uniquely addresses this through [technical differentiator] - 3 Indian enterprises have reduced TCO by 35-40%\"\n4. Create urgency: \"[Compliance deadline/market window] means Q4 is optimal for implementation\"\n5. Clear next step: \"30-min call to assess technical fit and identify quick wins\"\n\nOutput Format: Technical yet accessible, 180-220 words, mentions 1-2 specific technical metrics, Hinglish tone acceptable\n\nVoice: Peer-to-peer, credible on technical details, understands Indian IT environment and constraints\n\nConstraints: No aggressive pricing claims, acknowledge Indian preference for long-term vendor relationships, reference proven deployments in Indian organizations"
         }
     ],
     "writings": [
