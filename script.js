@@ -295,16 +295,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // === COPY WITH DELIGHT ===
     function copyWithDelight(text, buttonElement) {
-        navigator.clipboard.writeText(text)
+       navigator.clipboard.writeText(text)
             .then(() => {
-                // Update button state
+                // 1. Trigger Confetti at button location
+                const rect = buttonElement.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                fireConfetti(centerX, centerY);
+
+                // 2. Update button state
                 buttonElement.classList.add('copied');
                 
-                // Update icon/text if it's a full button
+                // Update icon/text
                 const iconEl = buttonElement.querySelector('.copy-icon');
                 const textEl = buttonElement.querySelector('.copy-text');
                 
-                if (iconEl) iconEl.textContent = '✓';
+                if (iconEl) iconEl.textContent = '✓'; // Morph happens via CSS transform now
                 if (textEl) textEl.textContent = 'Copied!';
                 
                 // Show warm toast
@@ -315,7 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     buttonElement.classList.remove('copied');
                     if (iconEl) iconEl.textContent = '📋';
                     if (textEl) textEl.textContent = 'Copy Prompt';
-                }, 2000);
+                }, 2500);
             })
             .catch(err => {
                 console.error('Copy failed', err);
@@ -440,15 +446,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function applyFilters(target) {
-        const containerId = target === 'sessions' ? 'sessions-grid' : 'resources-grid';
+       const containerId = target === 'sessions' ? 'sessions-grid' : 'resources-grid';
         const grid = document.getElementById(containerId);
         if (!grid) return;
 
-        const cards = grid.querySelectorAll('.filterable-card');
-        let visibleCount = 0;
-
+        const cards = Array.from(grid.querySelectorAll('.filterable-card'));
         const filters = target === 'sessions' ? activeFilters.sessions : activeFilters.resources;
-
+        
+        // Step 1: Identify what needs to show vs hide
         cards.forEach(card => {
             const cardTags = card.getAttribute('data-tags') ? card.getAttribute('data-tags').split(',') : [];
             const cardProgram = card.getAttribute('data-program') || '';
@@ -460,15 +465,45 @@ document.addEventListener('DOMContentLoaded', () => {
                 matchesProgram = filters.program === 'all' || cardProgram === filters.program;
             }
 
-            if (matchesFunction && matchesProgram) {
-                card.classList.remove('hidden');
-                visibleCount++;
+            const shouldShow = matchesFunction && matchesProgram;
+            const isCurrentlyHidden = card.classList.contains('hidden');
+
+            if (shouldShow) {
+                if (isCurrentlyHidden) {
+                    // BRING IT IN
+                    card.classList.remove('hidden');
+                    card.classList.add('filtering-in');
+                    // Clean up animation class
+                    setTimeout(() => card.classList.remove('filtering-in'), 500);
+                } else {
+                    // ALREADY VISIBLE
+                    card.classList.remove('filtering-out');
+                }
             } else {
-                card.classList.add('hidden');
+                if (!isCurrentlyHidden) {
+                    // TAKE IT OUT SMOOTHLY
+                    card.classList.add('filtering-out');
+                    // Wait for transition, then hide
+                    setTimeout(() => {
+                        if (card.classList.contains('filtering-out')) {
+                            card.classList.add('hidden');
+                            card.classList.remove('filtering-out');
+                        }
+                    }, 350); // Match CSS transition time
+                }
             }
         });
 
-        // Update count
+        // Update count immediately (or you can delay this too)
+        const visibleCount = cards.filter(c => {
+            // Check logic again for accurate count
+            const cardTags = c.getAttribute('data-tags') ? c.getAttribute('data-tags').split(',') : [];
+            const cardProgram = c.getAttribute('data-program') || '';
+            let matchesFunction = filters.function === 'all' || cardTags.includes(filters.function);
+            let matchesProgram = target !== 'sessions' || filters.program === 'all' || cardProgram === filters.program;
+            return matchesFunction && matchesProgram;
+        }).length;
+
         const countEl = document.getElementById(target + '-count');
         if (countEl) {
             countEl.textContent = `${visibleCount} ${visibleCount === 1 ? 'item' : 'items'}`;
