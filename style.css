@@ -1582,6 +1582,35 @@ p { color: var(--soft-grey); }
     color: var(--soft-grey);
 }
 
+.footer-link {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    color: var(--charcoal);
+    text-decoration: none;
+    padding: 4px 0;
+    position: relative;
+    transition: color 0.2s ease;
+}
+
+.footer-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--electric-orange);
+    transition: width 0.3s var(--ease-smooth);
+}
+
+.footer-link:hover {
+    color: var(--electric-orange);
+}
+
+.footer-link:hover::after {
+    width: 100%;
+}
+
 .footer-name {
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 600;
