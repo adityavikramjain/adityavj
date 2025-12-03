@@ -146,33 +146,28 @@ document.addEventListener('DOMContentLoaded', () => {
         sorted.forEach((res, index) => {
             const tags = res.tags || [];
             const tagsAttr = tags.join(',');
+            
+            // VISUAL DIFFERENTIATION: Check for Research tag
+            const isResearch = tags.includes('Research') || tags.includes('Research Agents');
+            const researchClass = isResearch ? 'research-card' : '';
+            
             const featuredClass = res.featured ? 'featured' : '';
+            const cardClasses = `${featuredClass} ${researchClass}`;
+
+            // GENERATE BADGES
+            const platformBadges = generatePlatformBadges(res.platforms);
 
             // Handle Workflow type
             if (res.type === 'Workflow' && res.steps) {
-                html += renderWorkflow(res, tagsAttr);
+                html += renderWorkflow(res, tagsAttr, cardClasses, platformBadges);
             } 
             // Handle Prompt type - with card-level copy button
             else if (res.type === 'Prompt' && res.prompt_text && res.prompt_text.trim() !== '') {
                 const promptId = 'prompt-' + index;
                 promptStorage[promptId] = res.prompt_text;
                 
-                // Generate platform badges if available
-                let platformBadges = '';
-                if (res.platforms && res.platforms.length > 0) {
-                    platformBadges = '<div class="platform-badges">';
-                    res.platforms.forEach(platform => {
-                        if (platform === 'gemini') {
-                            platformBadges += '<span class="platform-badge gemini" title="Works with Gemini Deep Research">Gemini</span>';
-                        } else if (platform === 'perplexity') {
-                            platformBadges += '<span class="platform-badge perplexity" title="Works with Perplexity Pro">Perplexity</span>';
-                        }
-                    });
-                    platformBadges += '</div>';
-                }
-                
                 html += `
-                <div class="resource-card prompt-card filterable-card ${featuredClass}" 
+                <div class="resource-card prompt-card filterable-card ${cardClasses}" 
                      data-modal="prompt" 
                      data-prompt-id="${promptId}" 
                      data-title="${escapeHtml(res.title)}" 
@@ -191,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Handle Gemini Gem type - direct link, no modal
             else if (res.type === 'Gemini Gem') {
                 html += `
-                <div class="resource-card gem-card filterable-card ${featuredClass}" 
+                <div class="resource-card gem-card filterable-card ${cardClasses}" 
                      data-gem-link="${res.link}"
                      data-tags="${tagsAttr}">
                     <div class="resource-type"><span class="icon">💎</span> ${res.type}</div>
@@ -201,11 +196,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="launch-indicator">↗</div>
                 </div>`;
             }
-            // Handle other types (Custom GPT, Template, etc.)
+            // Handle other types
             else {
                 const icon = getResourceIcon(res.type);
                 html += `
-                <div class="resource-card filterable-card ${featuredClass}" 
+                <div class="resource-card filterable-card ${cardClasses}" 
                      data-link="${res.link}"
                      data-tags="${tagsAttr}">
                     <div class="resource-type"><span class="icon">${icon}</span> ${res.type}</div>
@@ -222,12 +217,58 @@ document.addEventListener('DOMContentLoaded', () => {
         attachResourceListeners();
     }
 
+    // === HELPER: GENERATE BADGES ===
+    function generatePlatformBadges(platforms) {
+        if (!platforms || platforms.length === 0) return '';
+        
+        let html = '<div class="platform-badges">';
+        platforms.forEach(platform => {
+            if (platform === 'gemini') {
+                html += '<span class="platform-badge gemini" title="Works with Gemini Deep Research">Gemini</span>';
+            } else if (platform === 'perplexity') {
+                html += '<span class="platform-badge perplexity" title="Works with Perplexity Pro">Perplexity</span>';
+            } else if (platform === 'universal') {
+                html += '<span class="platform-badge universal" title="Works on all major AI platforms (ChatGPT, Claude, Gemini)">Universal</span>';
+            }
+        });
+        html += '</div>';
+        return html;
+    }
+
+    // === RENDER WORKFLOW ===
+    // Updated to accept classes and badges
+    function renderWorkflow(res, tagsAttr, cardClasses = '', badgesHtml = '') {
+        let stepsHtml = '';
+        res.steps.forEach((step, stepIndex) => {
+            stepsHtml += `
+                <a href="${step.link}" target="_blank" class="workflow-step" onclick="trackResourceView()">
+                    <div class="step-number">${step.step_number}</div>
+                    <div class="step-title">${step.title}</div>
+                    <div class="step-desc">${step.desc}</div>
+                </a>`;
+            
+            if (stepIndex < res.steps.length - 1) {
+                stepsHtml += `<div class="workflow-arrow">→</div>`;
+            }
+        });
+
+        return `
+        <div class="workflow-card filterable-card ${cardClasses}" data-tags="${tagsAttr}">
+            <div class="workflow-header">
+                <div class="workflow-type"><span class="icon">🔗</span> Workflow</div>
+                <div class="workflow-title">${res.workflow_title}</div>
+                <p class="workflow-desc">${res.workflow_desc}</p>
+                ${badgesHtml}
+            </div>
+            <div class="workflow-steps">${stepsHtml}</div>
+        </div>`;
+    }
+
     // === ATTACH RESOURCE LISTENERS ===
     function attachResourceListeners() {
-        // Card-level copy buttons for prompts
         document.querySelectorAll('.card-copy-btn').forEach(btn => {
             btn.addEventListener('click', function(e) {
-                e.stopPropagation(); // Don't trigger card click
+                e.stopPropagation(); 
                 const promptId = this.getAttribute('data-prompt-id');
                 const promptText = promptStorage[promptId];
                 if (promptText) {
@@ -236,10 +277,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Prompt cards - open modal on card click (not copy button)
         document.querySelectorAll('.resource-card.prompt-card').forEach(card => {
             card.addEventListener('click', function(e) {
-                // Don't open modal if clicking copy button
                 if (e.target.closest('.card-copy-btn')) return;
                 
                 const promptId = this.getAttribute('data-prompt-id');
@@ -252,7 +291,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Gem cards - direct link, no modal
         document.querySelectorAll('.resource-card.gem-card').forEach(card => {
             card.addEventListener('click', function(e) {
                 const gemLink = this.getAttribute('data-gem-link');
@@ -263,7 +301,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Other resource cards - direct link
         document.querySelectorAll('.resource-card[data-link]').forEach(card => {
             card.addEventListener('click', function(e) {
                 const link = this.getAttribute('data-link');
@@ -286,20 +323,17 @@ document.addEventListener('DOMContentLoaded', () => {
         modalTitle.textContent = title;
         modalType.textContent = type;
 
-        // Scrollable prompt container
         modalBody.innerHTML = `
             <div class="prompt-container">
                 <pre>${escapeHtml(promptText)}</pre>
             </div>`;
 
-        // Sticky copy button in footer
         modalFooter.innerHTML = `
             <button class="copy-button" id="modal-copy-btn">
                 <span class="copy-icon">📋</span>
                 <span class="copy-text">Copy Prompt</span>
             </button>`;
 
-        // Attach copy listener
         document.getElementById('modal-copy-btn').addEventListener('click', function() {
             copyWithDelight(promptText, this);
         });
@@ -312,26 +346,21 @@ document.addEventListener('DOMContentLoaded', () => {
     function copyWithDelight(text, buttonElement) {
        navigator.clipboard.writeText(text)
             .then(() => {
-                // 1. Trigger Confetti at button location
                 const rect = buttonElement.getBoundingClientRect();
                 const centerX = rect.left + rect.width / 2;
                 const centerY = rect.top + rect.height / 2;
                 fireConfetti(centerX, centerY);
 
-                // 2. Update button state
                 buttonElement.classList.add('copied');
                 
-                // Update icon/text
                 const iconEl = buttonElement.querySelector('.copy-icon');
                 const textEl = buttonElement.querySelector('.copy-text');
                 
-                if (iconEl) iconEl.textContent = '✓'; // Morph happens via CSS transform now
+                if (iconEl) iconEl.textContent = '✓';
                 if (textEl) textEl.textContent = 'Copied!';
                 
-                // Show warm toast
                 showToast('Prompt copied — go build something great! ✨', 'success');
                 
-                // Reset after delay
                 setTimeout(() => {
                     buttonElement.classList.remove('copied');
                     if (iconEl) iconEl.textContent = '📋';
@@ -342,6 +371,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Copy failed', err);
                 showToast('Failed to copy — try again', 'error');
             });
+    }
+
+    // === CONFETTI FUNCTIONALITY (Restored) ===
+    function fireConfetti(x, y) {
+        const count = 20;
+        const defaults = {
+            origin: { x: x / window.innerWidth, y: y / window.innerHeight },
+            spread: 40,
+            startVelocity: 15,
+            ticks: 50,
+            zIndex: 10000,
+            colors: ['#FF4500', '#FFA500', '#FFD700', '#ffffff']
+        };
+
+        function particle(ratio, opts) {
+            if (typeof confetti !== 'undefined') {
+                confetti({
+                    ...defaults,
+                    ...opts,
+                    particleCount: Math.floor(count * ratio)
+                });
+            }
+        }
+        
+        if (typeof confetti !== 'undefined') {
+            particle(1, { spread: 30, startVelocity: 15 });
+            particle(1, { spread: 50, startVelocity: 20 });
+        }
     }
 
     // === CLOSE MODAL ===
@@ -371,35 +428,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Initialize modal close on load
     initializeModalClose();
-
-    // === RENDER WORKFLOW ===
-    function renderWorkflow(res, tagsAttr) {
-        let stepsHtml = '';
-        res.steps.forEach((step, stepIndex) => {
-            stepsHtml += `
-                <a href="${step.link}" target="_blank" class="workflow-step" onclick="trackResourceView()">
-                    <div class="step-number">${step.step_number}</div>
-                    <div class="step-title">${step.title}</div>
-                    <div class="step-desc">${step.desc}</div>
-                </a>`;
-            
-            if (stepIndex < res.steps.length - 1) {
-                stepsHtml += `<div class="workflow-arrow">→</div>`;
-            }
-        });
-
-        return `
-        <div class="workflow-card filterable-card" data-tags="${tagsAttr}">
-            <div class="workflow-header">
-                <div class="workflow-type"><span class="icon">🔗</span> Workflow</div>
-                <div class="workflow-title">${res.workflow_title}</div>
-                <p class="workflow-desc">${res.workflow_desc}</p>
-            </div>
-            <div class="workflow-steps">${stepsHtml}</div>
-        </div>`;
-    }
 
     // === RENDER WRITINGS ===
     function renderWritings(writings) {
@@ -439,12 +468,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const filterType = this.getAttribute('data-filter-type');
                 const target = this.getAttribute('data-target');
 
-                // Update active state within same filter group
                 const parent = this.closest('.filter-bar');
                 parent.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('active'));
                 this.classList.add('active');
 
-                // Update filter state
                 if (target === 'sessions') {
                     activeFilters.sessions[filterType] = filter;
                 } else if (target === 'resources') {
@@ -455,7 +482,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
         
-        // Initial render
         applyFilters('sessions');
         applyFilters('resources');
     }
@@ -468,7 +494,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const cards = Array.from(grid.querySelectorAll('.filterable-card'));
         const filters = target === 'sessions' ? activeFilters.sessions : activeFilters.resources;
         
-        // Step 1: Identify what needs to show vs hide
         cards.forEach(card => {
             const cardTags = card.getAttribute('data-tags') ? card.getAttribute('data-tags').split(',') : [];
             const cardProgram = card.getAttribute('data-program') || '';
@@ -485,33 +510,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (shouldShow) {
                 if (isCurrentlyHidden) {
-                    // BRING IT IN
                     card.classList.remove('hidden');
                     card.classList.add('filtering-in');
-                    // Clean up animation class
                     setTimeout(() => card.classList.remove('filtering-in'), 500);
                 } else {
-                    // ALREADY VISIBLE
                     card.classList.remove('filtering-out');
                 }
             } else {
                 if (!isCurrentlyHidden) {
-                    // TAKE IT OUT SMOOTHLY
                     card.classList.add('filtering-out');
-                    // Wait for transition, then hide
                     setTimeout(() => {
                         if (card.classList.contains('filtering-out')) {
                             card.classList.add('hidden');
                             card.classList.remove('filtering-out');
                         }
-                    }, 350); // Match CSS transition time
+                    }, 350); 
                 }
             }
         });
 
-        // Update count immediately (or you can delay this too)
         const visibleCount = cards.filter(c => {
-            // Check logic again for accurate count
             const cardTags = c.getAttribute('data-tags') ? c.getAttribute('data-tags').split(',') : [];
             const cardProgram = c.getAttribute('data-program') || '';
             let matchesFunction = filters.function === 'all' || cardTags.includes(filters.function);
@@ -545,7 +563,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             updateAccordionAfterFilter(target);
             
-            // Scroll to section if collapsing
             if (!accordionState[target]) {
                 const section = document.getElementById(target === 'sessions' ? 'sessions' : 'lab');
                 if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -593,13 +610,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Check if already dismissed this session
         if (sessionStorage.getItem('nudgeDismissed') === 'true') {
             engagement.nudgeDismissed = true;
         }
     }
 
-    // Global functions for tracking
     window.trackDownload = function(e) {
         engagement.downloads++;
         checkNudgeTrigger();
@@ -623,7 +638,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     nudge.classList.remove('hidden');
                     engagement.nudgeShown = true;
                 }
-            }, 1000); // Slight delay for better UX
+            }, 1000); 
         }
     }
 
@@ -638,7 +653,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const toast = document.getElementById('toast');
         if (!toast) return;
         toast.textContent = message;
-        toast.className = 'toast'; // Reset classes
+        toast.className = 'toast';
         if (type === 'success') toast.classList.add('success');
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 3000);
@@ -656,7 +671,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function compareCohorts(a, b) {
-        // Parse cohort strings like "Nov 2025" for sorting
         const parseDate = (str) => {
             if (!str) return new Date(0);
             const months = {
@@ -687,95 +701,50 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-});
-/**
- * Booking Enhancement JavaScript
- * Add this to the end of your existing script.js
- */
 
-// Initialize sticky booking button
-(function initStickyBookingButton() {
+    // Initialize sticky booking button
     const stickyBtn = document.getElementById('sticky-book-btn');
-    if (!stickyBtn) return;
-    
-    let hasScrolled = false;
-    
-    // Show sticky button after scrolling past hero section
-    window.addEventListener('scroll', function() {
-        const scrollPosition = window.scrollY;
-        const heroHeight = document.querySelector('.lab-hero')?.offsetHeight || 600;
+    if (stickyBtn) {
+        let hasScrolled = false;
         
-        if (scrollPosition > heroHeight && !hasScrolled) {
-            hasScrolled = true;
-            setTimeout(() => {
-                stickyBtn.classList.add('visible');
-            }, 300);
-        } else if (scrollPosition <= heroHeight && hasScrolled) {
-            hasScrolled = false;
-            stickyBtn.classList.remove('visible');
-        }
-    });
-    
-    // Hide sticky button when booking section is in view
-    const bookingSection = document.getElementById('book');
-    if (bookingSection) {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    stickyBtn.style.opacity = '0';
-                    stickyBtn.style.pointerEvents = 'none';
-                } else if (hasScrolled) {
-                    stickyBtn.style.opacity = '1';
-                    stickyBtn.style.pointerEvents = 'all';
-                }
-            });
-        }, { threshold: 0.2 });
-        
-        observer.observe(bookingSection);
-    }
-})();
-
-// Optional: Add booking hint to featured session cards
-// This is commented out by default - you can enable it by adding to renderSessions()
-/*
-function addBookingHintToCard(cardElement, isFeatured) {
-    if (isFeatured) {
-        const footer = cardElement.querySelector('.card-footer');
-        if (footer) {
-            const hint = document.createElement('div');
-            hint.className = 'card-booking-hint';
-            hint.innerHTML = `
-                <span>Need this customized for your team?</span>
-                <a href="#book" onclick="event.stopPropagation()">Book a workshop →</a>
-            `;
-            footer.insertAdjacentElement('afterend', hint);
-        }
-    }
-}
-*/
-
-// Track booking CTA clicks for analytics (optional)
-function trackBookingClick(source) {
-    // Replace with your analytics implementation
-    console.log('Booking CTA clicked from:', source);
-    
-    // Example: Google Analytics
-    if (typeof gtag !== 'undefined') {
-        gtag('event', 'booking_cta_click', {
-            'event_category': 'engagement',
-            'event_label': source
+        window.addEventListener('scroll', function() {
+            const scrollPosition = window.scrollY;
+            const heroHeight = document.querySelector('.lab-hero')?.offsetHeight || 600;
+            
+            if (scrollPosition > heroHeight && !hasScrolled) {
+                hasScrolled = true;
+                setTimeout(() => {
+                    stickyBtn.classList.add('visible');
+                }, 300);
+            } else if (scrollPosition <= heroHeight && hasScrolled) {
+                hasScrolled = false;
+                stickyBtn.classList.remove('visible');
+            }
         });
+        
+        const bookingSection = document.getElementById('book');
+        if (bookingSection) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        stickyBtn.style.opacity = '0';
+                        stickyBtn.style.pointerEvents = 'none';
+                    } else if (hasScrolled) {
+                        stickyBtn.style.opacity = '1';
+                        stickyBtn.style.pointerEvents = 'all';
+                    }
+                });
+            }, { threshold: 0.2 });
+            
+            observer.observe(bookingSection);
+        }
     }
-}
-
-// Add tracking to all booking CTAs
-document.querySelectorAll('a[href="#book"], a[href*="calendly"]').forEach(link => {
-    link.addEventListener('click', function() {
-        const source = this.closest('.stats-bar') ? 'stats_bar' :
-                      this.closest('.bridge-card') ? 'bridge_section' :
-                      this.closest('.sticky-book-btn') ? 'sticky_button' :
-                      this.closest('.booking-section') ? 'main_booking' :
-                      'other';
-        trackBookingClick(source);
+    
+    // Track booking CTA clicks
+    document.querySelectorAll('a[href="#book"], a[href*="calendly"]').forEach(link => {
+        link.addEventListener('click', function() {
+            // Optional analytics hook
+            console.log('Booking CTA clicked');
+        });
     });
 });
