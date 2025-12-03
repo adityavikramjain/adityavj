@@ -344,6 +344,15 @@ body {
     border-radius: 3px;
 }
 
+.institution-badge {
+    background: var(--charcoal);
+    color: var(--white);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    letter-spacing: -0.01em;
+}
+
 .program-badge {
     background: var(--charcoal);
     color: var(--white);
