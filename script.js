@@ -227,13 +227,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // === HELPER: GENERATE BADGES ===
     function generatePlatformBadges(platforms) {
         if (!platforms || platforms.length === 0) return '';
-        
+
         let html = '<div class="platform-badges">';
         platforms.forEach(platform => {
             if (platform === 'gemini') {
-                html += '<span class="platform-badge gemini" title="Works with Gemini Deep Research">Gemini</span>';
+                html += `<span class="platform-badge gemini" title="Works with Gemini Deep Research">
+                    <svg class="badge-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="currentColor"/>
+                        <path d="M2 17L12 22L22 17L12 12L2 17Z" fill="currentColor"/>
+                    </svg>
+                    <span class="badge-text">Gemini</span>
+                </span>`;
             } else if (platform === 'perplexity') {
-                html += '<span class="platform-badge perplexity" title="Works with Perplexity Pro">Perplexity</span>';
+                html += `<span class="platform-badge perplexity" title="Works with Perplexity Pro">
+                    <svg class="badge-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2"/>
+                        <path d="M12 8V16M8 12H16" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                    <span class="badge-text">Perplexity</span>
+                </span>`;
             } else if (platform === 'universal') {
                 html += '<span class="platform-badge universal" title="Works on all major AI platforms (ChatGPT, Claude, Gemini)">Universal</span>';
             }
