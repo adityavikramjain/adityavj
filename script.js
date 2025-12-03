@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
             initializeAccordion('sessions');
             initializeAccordion('resources');
             initializeNudgeSystem();
+            initializeShareButton();
 
             // === NEW: Handle Deep Linking (Must run after filters are initialized) ===
             handleDeepLinks();
@@ -49,7 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const container = document.getElementById('program-filters');
         if (!container) return;
 
-        // Keep the "All Programs" button, add others
         programs.forEach(program => {
             const btn = document.createElement('button');
             btn.className = 'filter-button';
@@ -69,7 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Sort: featured first, then by cohort (newest first)
         const sorted = [...sessions].sort((a, b) => {
             if (a.featured && !b.featured) return -1;
             if (!a.featured && b.featured) return 1;
@@ -83,7 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const featuredClass = session.featured ? 'featured' : '';
             const desc = session.desc || 'Session materials and frameworks.';
             
-            // Determine link: use viewer for sessions with viewerUrl, otherwise direct link
             const hasViewer = session.viewerUrl && session.viewerUrl.trim() !== '';
             const linkUrl = hasViewer ? `viewer.html?id=${session.id}` : session.url;
             const linkTarget = hasViewer ? '_self' : '_blank';
@@ -110,10 +108,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
         container.innerHTML = html;
 
-        // Make entire card clickable
         container.querySelectorAll('.session-card').forEach(card => {
             card.addEventListener('click', function(e) {
-                if (e.target.classList.contains('card-title')) return; // Let link handle it
+                if (e.target.classList.contains('card-title')) return;
                 const link = this.querySelector('.card-title');
                 const hasViewer = this.getAttribute('data-viewer') === 'true';
                 if (link) {
@@ -137,7 +134,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Sort: featured first
         const sorted = [...resources].sort((a, b) => {
             if (a.featured && !b.featured) return -1;
             if (!a.featured && b.featured) return 1;
@@ -150,21 +146,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const tags = res.tags || [];
             const tagsAttr = tags.join(',');
             
-            // VISUAL DIFFERENTIATION: Check for Research tag
+            // VISUAL DIFFERENTIATION
             const isResearch = tags.includes('Research') || tags.includes('Research Agents');
             const researchClass = isResearch ? 'research-card' : '';
             
             const featuredClass = res.featured ? 'featured' : '';
             const cardClasses = `${featuredClass} ${researchClass}`;
 
-            // GENERATE BADGES
             const platformBadges = generatePlatformBadges(res.platforms);
 
-            // Handle Workflow type
             if (res.type === 'Workflow' && res.steps) {
                 html += renderWorkflow(res, tagsAttr, cardClasses, platformBadges);
             } 
-            // Handle Prompt type - with card-level copy button
             else if (res.type === 'Prompt' && res.prompt_text && res.prompt_text.trim() !== '') {
                 const promptId = 'prompt-' + index;
                 promptStorage[promptId] = res.prompt_text;
@@ -186,7 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="resource-footer">Preview Prompt</div>
                 </div>`;
             }
-            // Handle Gemini Gem type - direct link, no modal
             else if (res.type === 'Gemini Gem') {
                 html += `
                 <div class="resource-card gem-card filterable-card ${cardClasses}" 
@@ -199,7 +191,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="launch-indicator">↗</div>
                 </div>`;
             }
-            // Handle other types
             else {
                 const icon = getResourceIcon(res.type);
                 html += `
@@ -215,8 +206,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         container.innerHTML = html;
-
-        // Attach event listeners
         attachResourceListeners();
     }
 
@@ -239,7 +228,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // === RENDER WORKFLOW ===
-    // Updated to accept classes and badges
     function renderWorkflow(res, tagsAttr, cardClasses = '', badgesHtml = '') {
         let stepsHtml = '';
         res.steps.forEach((step, stepIndex) => {
@@ -376,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
-    // === CONFETTI FUNCTIONALITY (Restored & Fixed) ===
+    // === CONFETTI FUNCTIONALITY ===
     function fireConfetti(x, y) {
         const count = 20;
         const defaults = {
@@ -471,6 +459,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 const filterType = this.getAttribute('data-filter-type');
                 const target = this.getAttribute('data-target');
 
+                // LOGIC FIX: Visual Reset of "Other" Section
+                // If I click a Resource filter, visually reset Session filter to 'All' to imply focus
+                if (target === 'resources' && filterType === 'function') {
+                    resetFilterVisuals('sessions');
+                    activeFilters.sessions.function = 'all'; // Logic reset
+                } else if (target === 'sessions' && filterType === 'function') {
+                    resetFilterVisuals('resources');
+                    activeFilters.resources.function = 'all'; // Logic reset
+                }
+
+                // Normal activation
                 const parent = this.closest('.filter-bar');
                 parent.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('active'));
                 this.classList.add('active');
@@ -481,12 +480,27 @@ document.addEventListener('DOMContentLoaded', () => {
                     activeFilters.resources[filterType] = filter;
                 }
 
-                applyFilters(target);
+                // Apply logic to both to reflect the reset
+                applyFilters('sessions');
+                applyFilters('resources');
+                
+                // Update URL last
+                updateUrlState();
             });
         });
         
         applyFilters('sessions');
         applyFilters('resources');
+    }
+
+    // Helper to visually reset a filter bar
+    function resetFilterVisuals(targetId) {
+        const bar = document.getElementById(`function-filters-${targetId}`);
+        if (!bar) return;
+        bar.querySelectorAll('.filter-button').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.getAttribute('data-filter') === 'all') btn.classList.add('active');
+        });
     }
 
     function applyFilters(target) {
@@ -600,18 +614,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // === NEW: URL STATE MANAGEMENT ===
+    function updateUrlState() {
+        const params = new URLSearchParams();
+        
+        // With the new Logic Fix in initializeFilters, only one function filter is usually active at a time
+        const activeFunc = activeFilters.resources.function !== 'all' 
+            ? activeFilters.resources.function 
+            : activeFilters.sessions.function;
+            
+        const activeProg = activeFilters.sessions.program;
+
+        if (activeFunc !== 'all') params.set('filter', activeFunc);
+        if (activeProg !== 'all') params.set('program', activeProg);
+
+        const newUrl = `${window.location.pathname}?${params.toString()}${window.location.hash}`;
+        window.history.pushState({ path: newUrl }, '', newUrl);
+    }
+
     // === NEW: DEEP LINKING HANDLER ===
     function handleDeepLinks() {
         const urlParams = new URLSearchParams(window.location.search);
-        
-        // 1. Get parameters
         const filterParam = urlParams.get('filter') || urlParams.get('function');
         const programParam = urlParams.get('program');
 
-        // Helper to click matching buttons
         const clickFilterButton = (value, type) => {
             if (!value) return;
-            
             const buttons = document.querySelectorAll(`.filter-button[data-filter-type="${type}"]`);
             for (const btn of buttons) {
                 if (btn.getAttribute('data-filter').toLowerCase() === value.toLowerCase()) {
@@ -620,9 +648,32 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        // 2. Apply filters if present
         if (filterParam) clickFilterButton(filterParam, 'function');
         if (programParam) clickFilterButton(programParam, 'program');
+    }
+
+    // === NEW: SHARE BUTTON HANDLER ===
+    function initializeShareButton() {
+        const shareBtn = document.getElementById('share-view-btn');
+        if (!shareBtn) return;
+
+        shareBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(window.location.href)
+                .then(() => {
+                    const originalText = shareBtn.innerHTML;
+                    shareBtn.classList.add('copied');
+                    shareBtn.innerHTML = '<span class="icon">✓</span> Copied Link!';
+                    
+                    showToast('Link copied to clipboard!', 'success');
+                    fireConfetti(shareBtn.getBoundingClientRect().left, shareBtn.getBoundingClientRect().top);
+
+                    setTimeout(() => {
+                        shareBtn.classList.remove('copied');
+                        shareBtn.innerHTML = originalText;
+                    }, 2500);
+                })
+                .catch(err => console.error('Failed to copy:', err));
+        });
     }
 
     // === ENGAGEMENT & NUDGE SYSTEM ===
@@ -770,12 +821,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // 2. Analytics Helper (RESTORED)
+    // 2. Analytics Helper
     function trackBookingClick(source) {
-        // Analytics hook
         console.log('Booking CTA clicked from:', source);
-        
-        // Example: Google Analytics integration (if available)
         if (typeof gtag !== 'undefined') {
             gtag('event', 'booking_cta_click', {
                 'event_category': 'engagement',
@@ -784,7 +832,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 3. Attach Listeners with Source Tracking
+    // 3. Attach Listeners
     document.querySelectorAll('a[href="#book"], a[href*="calendly"]').forEach(link => {
         link.addEventListener('click', function() {
             const source = this.closest('.stats-bar') ? 'stats_bar' :

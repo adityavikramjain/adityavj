@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
     
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
     <link rel="stylesheet" href="style.css">
     
     <style>
@@ -20,12 +22,10 @@
 
 <div class="lab-container">
 
-    <!-- Terminal Header -->
     <div class="terminal-header">
         <span class="terminal-text"><span class="terminal-prompt">&gt;</span> adityavj.com</span><span class="cursor"></span>
     </div>
 
-    <!-- Hero Section -->
     <div class="lab-hero">
         <div class="hero-text">
             <h1 class="hero-name">Aditya V Jain</h1>
@@ -49,7 +49,6 @@
         </div>
     </div>
 
-    <!-- Quick Stats Bar with Booking CTA -->
     <div class="stats-bar">
         <div class="stat-item">
             <span class="stat-number">18+</span>
@@ -69,21 +68,18 @@
         </div>
     </div>
 
-    <!-- Sessions Section -->
     <section id="sessions">
         <div class="lab-section-header">
             <h2 class="lab-title">Session Materials</h2>
             <p class="section-subtitle">Decks, frameworks, and resources from executive education programs</p>
         </div>
 
-        <!-- Dual Filter System -->
         <div class="filter-system">
             <div class="filter-group">
                 <span class="filter-label">Program</span>
                 <div class="filter-bar" id="program-filters">
                     <button class="filter-button active" data-filter="all" data-filter-type="program" data-target="sessions">All Programs</button>
-                    <!-- Dynamically populated -->
-                </div>
+                    </div>
             </div>
             <div class="filter-group">
                 <span class="filter-label">Function</span>
@@ -109,11 +105,17 @@
         </div>
     </section>
 
-    <!-- AI Lab Section -->
     <section id="lab">
         <div class="lab-section-header">
-            <h2 class="lab-title">The AI Lab</h2>
-            <p class="section-subtitle">Prompts, Gems, and workflows I've built—yours to use</p>
+            <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px;">
+                <div>
+                    <h2 class="lab-title">The AI Lab</h2>
+                    <p class="section-subtitle">Prompts, Gems, and workflows I've built—yours to use</p>
+                </div>
+                <button id="share-view-btn" class="share-view-button">
+                    <span class="icon">🔗</span> Share this View
+                </button>
+            </div>
         </div>
 
         <div class="filter-system">
@@ -143,7 +145,6 @@
         </div>
     </section>
 
-    <!-- Lab to Booking Bridge -->
     <section class="lab-to-booking-bridge">
         <div class="bridge-card">
             <span class="bridge-label">Like these tools?</span>
@@ -167,7 +168,6 @@
         </div>
     </section>
 
-    <!-- Writings Section -->
     <section id="writings" class="writings-section hidden">
         <div class="lab-section-header">
             <h2 class="lab-title">Build Notes</h2>
@@ -176,7 +176,6 @@
         <div id="writings-grid" class="card-grid"></div>
     </section>
 
-    <!-- Contextual Booking Nudge (appears after engagement) -->
     <div id="booking-nudge" class="booking-nudge hidden">
         <div class="nudge-content">
             <span class="nudge-icon">💡</span>
@@ -189,7 +188,6 @@
         </div>
     </div>
 
-    <!-- Main Booking Section -->
     <section id="book" class="booking-section">
         <div class="booking-card">
             <div class="booking-content">
@@ -218,13 +216,11 @@
         </div>
     </section>
 
-    <!-- Sticky Booking Button (appears on scroll) -->
     <a href="#book" class="sticky-book-btn" id="sticky-book-btn">
         <span class="sticky-book-icon">📅</span>
         <span class="sticky-book-text">Book Session</span>
     </a>
 
-    <!-- Footer -->
     <footer class="site-footer">
         <div class="footer-content">
             <span class="footer-name">Aditya V Jain</span>
@@ -233,7 +229,6 @@
         </div>
     </footer>
 
-    <!-- Modal -->
     <div id="modal-overlay" class="modal-overlay">
         <div id="modal-container" class="modal-container">
             <div class="modal-header">
@@ -248,7 +243,6 @@
         </div>
     </div>
 
-    <!-- Toast -->
     <div id="toast" class="toast"></div>
 
 </div>
