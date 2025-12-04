@@ -283,8 +283,8 @@ p { color: var(--soft-grey); }
     align-items: center;
     justify-content: space-between;
     gap: 80px;
-    margin-bottom: 60px;
-    padding: 40px 0 80px 0;
+    margin-bottom: 40px;
+    padding: 40px 0 40px 0;
     min-height: 480px;
 }
 
@@ -501,7 +501,7 @@ p { color: var(--soft-grey); }
     border-radius: 16px;
     box-shadow: var(--shadow-sm);
     border: 1px solid var(--border-light);
-    margin-bottom: 80px;
+    margin-bottom: 50px;
     opacity: 0;
     animation: slideInBlur 0.8s var(--ease-smooth) 0.6s forwards;
 }
