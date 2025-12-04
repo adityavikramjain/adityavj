@@ -9,7 +9,7 @@
             "url": "https://docs.google.com/presentation/d/1cyDBSgdKCJ0rXiTFLE2FUqaoVdsrXTeMai0p7lLm7DM/edit?slide=id.p#slide=id.p",
             "desc": "How generative AI is reshaping customer journeys and what leaders need to do now.",
             "tags": ["Customer Experience", "AI"],
-            "featured": true
+            "featured": false
         },
         {
             "id": "ai-marketing-nov25",
@@ -53,7 +53,7 @@
             "url": "https://docs.google.com/presentation/d/1mmB-nvrVx48brKXIPWwOxUp50crWGy9iYYE9ieOyKNI/edit?slide=id.g3677a303623_0_321#slide=id.g3677a303623_0_321",
             "desc": "Designing experiments that yield actionable insights, not vanity metrics.",
             "tags": ["Product Management"],
-            "featured": false
+            "featured": true
         },
         {
             "id": "ai-sales-workshop-nov25",
