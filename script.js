@@ -76,27 +76,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         let html = '';
-        sorted.forEach((session, index) => {
+      sorted.forEach((session, index) => {
             const tags = session.tags || [];
             const tagsAttr = tags.join(',');
             const featuredClass = session.featured ? 'featured' : '';
             const desc = session.desc || 'Session materials and frameworks.';
             
-            // === SMART ROUTING LOGIC ===
-            // Detect if it is a Google Slides or Drive link
+            // Smart Routing Logic
             const isGoogleLink = session.url && (
                 session.url.includes('docs.google.com/presentation') || 
                 session.url.includes('drive.google.com/file')
             );
-
-            // Use viewer if explicit viewerUrl exists OR if it's a Google link
             const hasViewer = (session.viewerUrl && session.viewerUrl.trim() !== '') || isGoogleLink;
-            
-            // Construct the final URL
             const linkUrl = hasViewer ? `viewer.html?id=${session.id}` : session.url;
-            
-            // Viewer opens in same tab (_self), external links open in new tab (_blank)
             const linkTarget = hasViewer ? '_self' : '_blank';
+
+            // --- NEW LOGIC: Check for Handout ---
+            let handoutHtml = '';
+            if (session.handout) {
+                handoutHtml = `<a href="${session.handout}" target="_blank" class="handout-btn" onclick="event.stopPropagation()">📄 Notes</a>`;
+            }
 
             html += `
             <div class="session-card filterable-card ${featuredClass}"
@@ -113,11 +112,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p class="card-desc">${desc}</p>
                 <div class="card-footer">
                     <span class="card-badge program">${session.program || 'Program'}</span>
-                    <span class="card-action">${hasViewer ? 'View Presentation →' : 'Open Deck →'}</span>
+                    <div class="card-actions-group">
+                        ${handoutHtml}
+                        <span class="card-action">${hasViewer ? 'View Deck →' : 'Open Deck →'}</span>
+                    </div>
                 </div>
             </div>`;
         });
-        
         container.innerHTML = html;
 
         container.querySelectorAll('.session-card').forEach(card => {
