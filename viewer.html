@@ -144,24 +144,78 @@ document.addEventListener('DOMContentLoaded', () => {
             // Load presentation in iframe
             const iframe = document.getElementById('presentation-iframe');
             
-            iframe.onload = () => {
+ iframe.onload = () => {
     document.getElementById('loading-overlay').classList.add('hidden');
-    
-    // AUTO-FOCUS: Enable keyboard navigation in presentations
+
+    // === INJECT RESPONSIVE SCALING (NEW) ===
     try {
-        // For same-origin presentations (your local HTML files)
-        if (iframe.contentDocument && iframe.contentDocument.body) {
-            iframe.contentDocument.body.focus();
-            iframe.contentDocument.body.tabIndex = 0; // Make focusable
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        
+        // Only run if this is one of your HTML presentations
+        if (doc && doc.querySelector('.presentation-container')) {
+            
+            // 1. Inject CSS to center the slide and prevent scrollbars
+            const style = doc.createElement('style');
+            style.textContent = `
+                body {
+                    margin: 0;
+                    padding: 0;
+                    width: 100vw;
+                    height: 100vh;
+                    overflow: hidden; /* Hide scrollbars */
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    background-color: #1a1a1a; /* Dark background for letterboxing */
+                }
+                .presentation-container {
+                    transform-origin: center center; /* Scale from middle */
+                    flex-shrink: 0;
+                    margin: auto;
+                    box-shadow: 0 0 50px rgba(0,0,0,0.5); /* Nice drop shadow */
+                }
+            `;
+            doc.head.appendChild(style);
+
+            // 2. Inject JS to calculate the perfect scale
+            const script = doc.createElement('script');
+            script.textContent = `
+                function scalePresentation() {
+                    const container = document.querySelector('.presentation-container');
+                    if (!container) return;
+                    
+                    // Your fixed slide dimensions
+                    const baseWidth = 1440;
+                    const baseHeight = 932;
+                    
+                    // Available space in the iframe
+                    const availWidth = window.innerWidth;
+                    const availHeight = window.innerHeight;
+                    
+                    // Calculate ratio to fit (contain)
+                    const scale = Math.min(availWidth / baseWidth, availHeight / baseHeight);
+                    
+                    // Apply scale (cap at 1.0 to prevent pixelation on massive screens)
+                    container.style.transform = 'scale(' + Math.min(scale, 1) + ')';
+                }
+
+                // Run on load and on resize
+                window.addEventListener('resize', scalePresentation);
+                scalePresentation();
+                
+                // Keep focus for keyboard arrows
+                document.body.focus();
+            `;
+            doc.body.appendChild(script);
         }
     } catch (e) {
-        // Cross-origin (Google Drive, external links) - can't access
-        console.log('Cross-origin iframe, using fallback focus');
+        // This catches errors if you load an external Google Slide (Cross-Origin)
+        console.log('External presentation loaded (Google Slides/Drive), skipping auto-scale.');
     }
-    
-    // FALLBACK: Focus the iframe itself
+
+    // Standard focus fallback
     iframe.focus();
-    iframe.tabIndex = 0; // Make iframe focusable
+    iframe.tabIndex = 0;
 };
             
             iframe.onerror = () => {
