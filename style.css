@@ -2108,3 +2108,89 @@ p { color: var(--soft-grey); }
     transform: translateY(-1px);
     box-shadow: var(--shadow-sm);
 }
+/* === SHARE BUTTON UPDATES === */
+.session-card .card-share-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border-light);
+    background: var(--white);
+    color: var(--soft-grey);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s var(--ease-smooth);
+    z-index: 5;
+    opacity: 1; /* ALWAYS VISIBLE */
+    transform: translateY(0);
+}
+
+.session-card .card-share-btn:hover {
+    border-color: var(--electric-orange);
+    color: var(--electric-orange);
+    background: var(--mist-rose);
+    transform: scale(1.1);
+    box-shadow: var(--shadow-sm);
+}
+
+.share-icon-svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+
+/* Move the Featured Star so it doesn't overlap */
+.session-card.featured::after {
+    right: 60px; /* Moved left to make room for share button */
+    top: 22px;   /* Aligned with button center */
+    font-size: 1rem;
+}
+
+/* === NEW SHARE MODAL STYLES === */
+.share-options-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding: 20px 0;
+}
+
+.share-option-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    background: var(--mist-rose);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 20px 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: var(--charcoal);
+}
+
+.share-option-btn:hover {
+    background: var(--white);
+    border-color: var(--electric-orange);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-sm);
+}
+
+.share-option-icon {
+    font-size: 24px;
+}
+
+.share-option-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+/* Specific hover colors */
+.share-option-btn.whatsapp:hover .share-option-icon { color: #25D366; }
+.share-option-btn.gmail:hover .share-option-icon { color: #EA4335; }
+.share-option-btn.copy:hover .share-option-icon { color: var(--electric-orange); }

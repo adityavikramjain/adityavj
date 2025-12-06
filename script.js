@@ -185,93 +185,117 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // === RENDER RESOURCES ===
-    function renderResources(resources) {
-        const container = document.getElementById('resources-grid');
-        
-        if (!resources || resources.length === 0) {
-            container.innerHTML = '<p class="empty-state">No resources found.</p>';
+   // === RENDER SESSIONS ===
+    function renderSessions(sessions) {
+        const container = document.getElementById('sessions-grid');
+        if (!sessions || sessions.length === 0) {
+            container.innerHTML = '<p class="empty-state">No sessions found.</p>';
             return;
         }
 
-        const sorted = [...resources].sort((a, b) => {
+        const sorted = [...sessions].sort((a, b) => {
             if (a.featured && !b.featured) return -1;
             if (!a.featured && b.featured) return 1;
-            return 0;
+            return compareCohorts(b.cohort, a.cohort);
         });
+
+        // Standard Share Icon SVG Path
+        const shareIconSvg = `<svg class="share-icon-svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>`;
 
         let html = '';
-
-        sorted.forEach((res, index) => {
-            const tags = res.tags || [];
+        sorted.forEach((session, index) => {
+            const tags = session.tags || [];
             const tagsAttr = tags.join(',');
+            const featuredClass = session.featured ? 'featured' : '';
+            const desc = session.desc || 'Session materials and frameworks.';
             
-            // Visual Differentiation
-            const isResearch = tags.includes('Research') || tags.includes('Research Agents');
-            const researchClass = isResearch ? 'research-card' : '';
-            const featuredClass = res.featured ? 'featured' : '';
-            const cardClasses = `${featuredClass} ${researchClass}`;
+            // Smart Routing Logic
+            const isGoogleLink = session.url && (
+                session.url.includes('docs.google.com/presentation') || 
+                session.url.includes('drive.google.com/file')
+            );
+            const hasViewer = (session.viewerUrl && session.viewerUrl.trim() !== '') || isGoogleLink;
+            const linkUrl = hasViewer ? `viewer.html?id=${session.id}` : session.url;
+            const linkTarget = hasViewer ? '_self' : '_blank';
 
-            const platformBadges = generatePlatformBadges(res.platforms);
+            // Handout Logic
+            let handoutHtml = '';
+            let handoutUrlAbsolute = '';
+            
+            if (session.handout) {
+                handoutUrlAbsolute = session.handout.startsWith('http') 
+                    ? session.handout 
+                    : window.location.origin + '/' + session.handout;
+                    
+                handoutHtml = `<a href="${session.handout}" target="_blank" class="handout-btn" onclick="event.stopPropagation()">📄 Notes</a>`;
+            }
 
-            // Handle Workflow
-            if (res.type === 'Workflow' && res.steps) {
-                html += renderWorkflow(res, tagsAttr, cardClasses, platformBadges);
-            } 
-            // Handle Prompt
-            else if (res.type === 'Prompt' && res.prompt_text && res.prompt_text.trim() !== '') {
-                const promptId = 'prompt-' + index;
-                promptStorage[promptId] = res.prompt_text;
+            const shareUrlAbsolute = linkUrl.startsWith('http') 
+                ? linkUrl 
+                : window.location.origin + '/' + linkUrl;
+
+            html += `
+            <div class="session-card filterable-card ${featuredClass}"
+                 data-tags="${tagsAttr}"
+                 data-program="${session.program || ''}"
+                 data-index="${index}"
+                 data-viewer="${hasViewer ? 'true' : 'false'}"
+                 data-link="${linkUrl}">
+                 
+                <button class="card-share-btn" 
+                        title="Share Session"
+                        data-title="${escapeHtml(session.title)}"
+                        data-link="${shareUrlAbsolute}"
+                        data-handout="${handoutUrlAbsolute}">
+                    ${shareIconSvg}
+                </button>
+
+                <div class="card-meta">
+                    <span class="card-institution">${session.institution || ''}</span>
+                    <span class="card-cohort">${session.cohort || ''}</span>
+                </div>
+                <a href="${linkUrl}" target="${linkTarget}" class="card-title" onclick="trackDownload(event)">${session.title}</a>
+                <p class="card-desc">${desc}</p>
+                <div class="card-footer">
+                    <span class="card-badge program">${session.program || 'Program'}</span>
+                    <div class="card-actions-group">
+                        ${handoutHtml}
+                        <span class="card-action">${hasViewer ? 'View Deck →' : 'Open Deck →'}</span>
+                    </div>
+                </div>
+            </div>`;
+        });
+        container.innerHTML = html;
+
+        // Attach Card Click Listeners (Navigation)
+        container.querySelectorAll('.session-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                if (e.target.closest('.card-share-btn') || e.target.closest('.handout-btn')) return;
+                if (e.target.classList.contains('card-title')) return;
                 
-                html += `
-                <div class="resource-card prompt-card filterable-card ${cardClasses}" 
-                     data-modal="prompt" 
-                     data-prompt-id="${promptId}" 
-                     data-title="${escapeHtml(res.title)}" 
-                     data-type="${res.type}"
-                     data-tags="${tagsAttr}">
-                    <button class="card-copy-btn" data-prompt-id="${promptId}" title="Copy prompt">
-                        <span class="copy-icon">📋</span>
-                    </button>
-                    <div class="resource-type"><span class="icon">⚡</span> ${res.type}</div>
-                    <div class="resource-title">${res.title}</div>
-                    <p class="resource-desc">${res.desc || ''}</p>
-                    ${platformBadges}
-                    <div class="resource-footer">Preview Prompt</div>
-                </div>`;
-            }
-            // Handle Gemini Gem
-            else if (res.type === 'Gemini Gem') {
-                html += `
-                <div class="resource-card gem-card filterable-card ${cardClasses}" 
-                     data-gem-link="${res.link}"
-                     data-tags="${tagsAttr}">
-                    <div class="resource-type"><span class="icon">💎</span> ${res.type}</div>
-                    <div class="resource-title">${res.title}</div>
-                    <p class="resource-desc">${res.desc || ''}</p>
-                    <div class="resource-footer">Try Now →</div>
-                    <div class="launch-indicator">↗</div>
-                </div>`;
-            }
-            // Handle other types
-            else {
-                const icon = getResourceIcon(res.type);
-                html += `
-                <div class="resource-card filterable-card ${cardClasses}" 
-                     data-link="${res.link}"
-                     data-tags="${tagsAttr}">
-                    <div class="resource-type"><span class="icon">${icon}</span> ${res.type}</div>
-                    <div class="resource-title">${res.title}</div>
-                    <p class="resource-desc">${res.desc || ''}</p>
-                    <div class="resource-footer">Open Tool →</div>
-                </div>`;
-            }
+                const link = this.querySelector('.card-title');
+                const hasViewer = this.getAttribute('data-viewer') === 'true';
+                if (link) {
+                    trackDownload(e);
+                    if (hasViewer) window.location.href = link.href;
+                    else window.open(link.href, '_blank');
+                }
+            });
         });
 
-        container.innerHTML = html;
-        attachResourceListeners();
+        // Attach Share Button Listeners -> OPEN MODAL
+        container.querySelectorAll('.card-share-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                
+                const title = this.getAttribute('data-title');
+                const link = this.getAttribute('data-link');
+                const handout = this.getAttribute('data-handout');
+                
+                openShareModal(title, link, handout);
+            });
+        });
     }
-
     // === HELPER: GENERATE BADGES ===
     function generatePlatformBadges(platforms) {
         if (!platforms || platforms.length === 0) return '';
@@ -899,4 +923,65 @@ document.addEventListener('DOMContentLoaded', () => {
             trackBookingClick(source);
         });
     });
+    // === SHARE MODAL LOGIC ===
+    function openShareModal(title, link, handout) {
+        const modalOverlay = document.getElementById('modal-overlay');
+        const modalTitle = document.getElementById('modal-title');
+        const modalType = document.getElementById('modal-type');
+        const modalBody = document.getElementById('modal-body');
+        const modalFooter = document.getElementById('modal-footer');
+
+        modalTitle.textContent = "Share Session";
+        modalType.textContent = "Presentation";
+        modalFooter.innerHTML = ''; // Clear footer
+
+        // Construct Text
+        let shareText = `Check out this session by Aditya V Jain: "${title}"\n\n🔗 Presentation: ${link}`;
+        if (handout) {
+            shareText += `\n📄 Notes: ${handout}`;
+        }
+
+        // WhatsApp URL
+        const waText = encodeURIComponent(shareText);
+        const waLink = `https://wa.me/?text=${waText}`;
+
+        // Gmail URL
+        const mailSubject = encodeURIComponent(`Session Materials: ${title}`);
+        const mailBody = encodeURIComponent(shareText);
+        const mailLink = `mailto:?subject=${mailSubject}&body=${mailBody}`;
+
+        // Build Modal HTML
+        modalBody.innerHTML = `
+            <div style="text-align: center; margin-bottom: 20px;">
+                <p style="color: var(--soft-grey); font-size: 0.95rem;">Choose how you want to share <strong>${title}</strong></p>
+            </div>
+            <div class="share-options-grid">
+                <a href="${waLink}" target="_blank" class="share-option-btn whatsapp">
+                    <span class="share-option-icon">💬</span>
+                    <span class="share-option-label">WhatsApp</span>
+                </a>
+                <a href="${mailLink}" class="share-option-btn gmail">
+                    <span class="share-option-icon">📧</span>
+                    <span class="share-option-label">Email</span>
+                </a>
+                <button class="share-option-btn copy" id="share-copy-trigger">
+                    <span class="share-option-icon">📋</span>
+                    <span class="share-option-label">Copy Link</span>
+                </button>
+            </div>
+        `;
+
+        // Attach Copy Listener
+        setTimeout(() => {
+            const copyBtn = document.getElementById('share-copy-trigger');
+            if(copyBtn) {
+                copyBtn.addEventListener('click', function() {
+                    copyWithDelight(shareText, this);
+                });
+            }
+        }, 100);
+
+        modalOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
 });
