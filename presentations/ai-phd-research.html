@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>From Literature Chaos to Research Clarity</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --iimk-blue: #003366;
+            --iimk-blue-dark: #002244;
+            --iimk-gold: #FFCC00;
+            --dove-gray: #666666;
+            --pure-white: #FFFFFF;
+            --pure-black: #000000;
+            --light-blue: #E6EEF5;
+            --light-gold: #FFF9E6;
+            --light-gold-vivid: #FFF3CC;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--pure-white);
+            color: var(--pure-black);
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .presentation-container {
+            width: 1440px;
+            height: 932px;
+            margin: 0 auto;
+            position: relative;
+            background: var(--pure-white);
+        }
+
+        /* Base Slide Styling */
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            display: none; 
+            padding: 60px 80px;
+            flex-direction: column;
+            justify-content: flex-start;
+            overflow: hidden;
+            will-change: opacity;
+        }
+
+        /* ========== PURE CROSSFADE ANIMATIONS ========== */
+
+        .slide.active {
+            opacity: 1;
+            display: flex;
+            z-index: 2;
+            animation: crossFadeIn 0.5s ease-in-out forwards;
+        }
+
+        .slide.exiting {
+            display: flex;
+            z-index: 1;
+            animation: crossFadeOut 0.5s ease-in-out forwards;
+        }
+
+        @keyframes crossFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes crossFadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        /* Inner Content: Simple fade-in only (No movement up/down) */
+        .slide.active .animate-in, 
+        .slide.active .hero-content,
+        .slide.active .animate-scale {
+            opacity: 0;
+            animation: textFade 0.6s ease-out 0.1s forwards;
+        }
+
+        @keyframes textFade {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Hero Highlight: Static for subtlety */
+        .hero-highlight {
+            display: inline-block;
+            background: linear-gradient(120deg, var(--light-gold-vivid) 0%, var(--light-gold-vivid) 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 40%;
+            background-position: 0 85%;
+            padding: 0 10px;
+            margin: 0 -4px;
+        }
+
+        /* Slide Indicator */
+        .slide-indicator {
+            position: fixed;
+            bottom: 30px;
+            right: 40px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--dove-gray);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px 20px;
+            border-radius: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .slide-indicator:hover {
+            transform: scale(1.05);
+        }
+
+        /* ========== UPDATED WATERMARK ========== */
+        .watermark {
+            position: fixed;
+            bottom: 30px;
+            left: 40px;
+            z-index: 1000;
+        }
+
+        .watermark a {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px; /* Larger */
+            font-weight: 700; /* Bolder */
+            color: var(--iimk-blue); /* Brand Color */
+            text-decoration: none;
+            opacity: 0.9; /* More visible */
+            letter-spacing: -0.5px;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .watermark a:hover {
+            border-bottom-color: var(--iimk-gold);
+            opacity: 1;
+        }
+
+        /* Speaker Notes Panel */
+        .speaker-notes {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 51, 102, 0.97);
+            color: white;
+            padding: 24px 40px;
+            max-height: 220px;
+            overflow-y: auto;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 999;
+            font-size: 15px;
+            line-height: 1.7;
+            backdrop-filter: blur(10px);
+        }
+
+        .speaker-notes.visible {
+            transform: translateY(0);
+        }
+
+        /* ========== TYPOGRAPHY ========== */
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 72px;
+            font-weight: 700;
+            color: var(--iimk-blue);
+            margin-bottom: 35px;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 56px;
+            font-weight: 600;
+            color: var(--iimk-blue);
+            margin-bottom: 30px;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
+        }
+
+        h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--iimk-gold);
+            margin-bottom: 20px;
+        }
+
+        .subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 32px;
+            font-weight: 400;
+            color: var(--dove-gray);
+            margin-bottom: 45px;
+        }
+
+        p {
+            font-size: 26px;
+            line-height: 1.7;
+            color: var(--pure-black);
+        }
+
+        /* ========== CONTENT SECTION ========== */
+
+        .content-section {
+            margin-bottom: 35px;
+            margin-top: 25px;
+        }
+
+        /* ========== LISTS ========== */
+
+        .bullet-list {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .bullet-list li {
+            font-size: 26px;
+            line-height: 1.7;
+            margin-bottom: 24px;
+            padding-left: 45px;
+            position: relative;
+            color: var(--pure-black);
+        }
+
+        .bullet-list li:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 14px;
+            width: 12px;
+            height: 12px;
+            background: var(--iimk-gold);
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(255, 204, 0, 0.4);
+        }
+
+        .numbered-list {
+            list-style: none;
+            counter-reset: item;
+            margin-left: 0;
+        }
+
+        .numbered-list li {
+            font-size: 26px;
+            line-height: 1.7;
+            margin-bottom: 24px;
+            padding-left: 60px;
+            position: relative;
+            color: var(--pure-black);
+        }
+
+        .numbered-list li:before {
+            content: counter(item);
+            counter-increment: item;
+            position: absolute;
+            left: 0;
+            top: 2px;
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--iimk-gold) 0%, #FFD700 100%);
+            color: var(--iimk-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 20px;
+            box-shadow: 0 4px 15px rgba(255, 204, 0, 0.35);
+        }
+
+        /* ========== PROMPT & CODE BOXES ========== */
+
+        .prompt-box {
+            background: linear-gradient(135deg, #F0F5FA 0%, #FFFFFF 100%);
+            border-left: 5px solid var(--iimk-blue);
+            margin: 25px 0;
+            border-radius: 12px;
+            box-shadow: 0 6px 25px rgba(0, 51, 102, 0.08);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #E1E8ED;
+            border-left-width: 5px;
+        }
+
+        .prompt-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 24px;
+            background: rgba(0, 51, 102, 0.03);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .prompt-label {
+            display: inline-block;
+            background: var(--iimk-blue);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .copy-btn {
+            background: white;
+            border: 1px solid #CFD8DC;
+            border-radius: 6px;
+            cursor: pointer;
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--dove-gray);
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: var(--iimk-blue);
+            color: white;
+            border-color: var(--iimk-blue);
+        }
+
+        .copy-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .copy-btn.copied {
+            background: #E8F5E9;
+            color: #2E7D32;
+            border-color: #A5D6A7;
+        }
+
+        .prompt-content {
+            font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
+            font-size: 18px;
+            line-height: 1.6;
+            color: #2c3e50;
+            padding: 24px;
+            margin: 0;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        /* Output Box Styles */
+        .output-box {
+            background: linear-gradient(135deg, var(--light-gold) 0%, #FFFAED 100%);
+            border-left: 5px solid var(--iimk-gold);
+            padding: 28px 32px;
+            margin: 25px 0;
+            border-radius: 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 20px;
+            line-height: 1.9;
+            white-space: pre-wrap;
+            box-shadow: 0 6px 25px rgba(255, 204, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .output-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--iimk-gold) 0%, #FFD700 100%);
+        }
+
+        /* ========== TITLE SLIDE ========== */
+
+        .title-slide {
+            background: linear-gradient(135deg, var(--iimk-blue) 0%, #004080 50%, var(--iimk-blue-dark) 100%);
+            color: white;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .title-slide h1 {
+            color: white;
+            font-size: 76px;
+            margin-bottom: 35px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .title-slide .subtitle {
+            color: var(--iimk-gold);
+            font-size: 36px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .title-slide p {
+            color: rgba(255, 255, 255, 0.85);
+            position: relative;
+            z-index: 1;
+        }
+
+        .title-slide .hero-highlight {
+            background: linear-gradient(120deg, rgba(255, 204, 0, 0.3) 0%, rgba(255, 204, 0, 0.3) 100%);
+        }
+
+        /* ========== SECTION SLIDE ========== */
+
+        .section-slide {
+            background: linear-gradient(135deg, var(--light-blue) 0%, var(--pure-white) 50%, var(--light-gold) 100%);
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-slide h1 {
+            font-size: 68px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-slide .subtitle {
+            font-size: 30px;
+            color: var(--dove-gray);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ========== TWO COLUMN LAYOUT ========== */
+
+        .two-column {
+            display: flex;
+            gap: 50px;
+            margin-top: 35px;
+            align-items: stretch;
+        }
+
+        .two-column .column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, var(--light-blue) 0%, var(--pure-white) 100%);
+            padding: 35px;
+            border-radius: 16px;
+            border: 2px solid rgba(0, 51, 102, 0.1);
+            box-shadow: 0 8px 30px rgba(0, 51, 102, 0.06);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+        }
+
+        .two-column .column:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 51, 102, 0.1);
+        }
+
+        .two-column .column h3 {
+            color: var(--iimk-blue);
+            margin-bottom: 22px;
+            font-size: 28px;
+        }
+
+        .two-column .column .bullet-list li {
+            font-size: 22px;
+            margin-bottom: 18px;
+        }
+
+        /* ========== QUOTE SLIDE ========== */
+
+        .quote-slide {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 80px 120px;
+            background: linear-gradient(135deg, var(--pure-white) 0%, var(--light-gold) 100%);
+            position: relative;
+        }
+
+        .quote-slide blockquote {
+            font-family: 'Playfair Display', serif;
+            font-size: 46px;
+            font-style: italic;
+            color: var(--iimk-blue);
+            line-height: 1.5;
+            margin-bottom: 45px;
+            position: relative;
+            max-width: 1000px;
+        }
+
+        .quote-slide blockquote:before {
+            content: '"';
+            font-size: 140px;
+            position: absolute;
+            top: -50px;
+            left: -60px;
+            color: var(--iimk-gold);
+            opacity: 0.35;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .quote-slide .attribution {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 26px;
+            color: var(--dove-gray);
+            font-weight: 500;
+        }
+
+        /* ========== ACTIVITY SLIDE ========== */
+
+        .activity-header {
+            background: linear-gradient(135deg, var(--iimk-blue) 0%, var(--iimk-blue-dark) 100%);
+            color: white;
+            padding: 20px 35px;
+            margin: -60px -80px 40px -80px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            box-shadow: 0 4px 20px rgba(0, 51, 102, 0.2);
+        }
+
+        /* ========== BREAK SLIDE ========== */
+
+        .break-slide {
+            background: linear-gradient(135deg, var(--iimk-gold) 0%, #FFD700 50%, #FFDB4D 100%);
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .break-slide h1 {
+            color: var(--iimk-blue);
+            font-size: 90px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 4px 20px rgba(0, 51, 102, 0.1);
+        }
+
+        .break-slide p {
+            color: var(--iimk-blue);
+            font-size: 32px;
+            opacity: 0.85;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ========== CLOSING SLIDE ========== */
+
+        .closing-slide {
+            background: linear-gradient(135deg, var(--light-blue) 0%, var(--pure-white) 50%, var(--light-gold) 100%);
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .closing-slide h1 {
+            font-size: 68px;
+            margin-bottom: 55px;
+        }
+
+        .closing-slide p {
+            font-size: 28px;
+            color: var(--dove-gray);
+            margin-bottom: 18px;
+        }
+
+        .closing-slide p strong {
+            color: var(--iimk-blue);
+        }
+
+        /* ========== EMPHASIS BOX ========== */
+
+        .emphasis-box {
+            background: linear-gradient(135deg, var(--light-gold) 0%, var(--light-gold-vivid) 100%);
+            border: 3px solid var(--iimk-gold);
+            border-radius: 16px;
+            padding: 40px;
+            margin: 35px 0;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(255, 204, 0, 0.15);
+        }
+
+        .emphasis-box p {
+            font-size: 28px;
+            line-height: 1.7;
+            color: var(--pure-black);
+            font-weight: 500;
+        }
+
+        /* ========== RESPONSIVE SCALING ========== */
+
+        @media (max-width: 1440px) {
+            .presentation-container {
+                transform: scale(0.85);
+                transform-origin: top center;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .presentation-container {
+                transform: scale(0.7);
+                transform-origin: top center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="slide-indicator">
+            <span id="current-slide">1</span> / <span id="total-slides">40</span>
+        </div>
+        
+        <div class="watermark">
+            <a href="https://adityavj.com" target="_blank">adityavj.com</a>
+        </div>
+        
+        <div class="speaker-notes" id="speaker-notes">
+            <p id="notes-content">Press 'S' to toggle speaker notes</p>
+        </div>
+
+        <div class="slide title-slide active">
+            <h1 class="hero-content">From Literature <span class="hero-highlight">Chaos</span> to Research Clarity</h1>
+            <p class="subtitle animate-in" style="animation-delay: 0.2s;">Using Gemini Deep Research + NotebookLM for Your PhD Journey</p>
+            <div class="animate-in" style="animation-delay: 0.4s;">
+                <p>Aditya V Jain | Product Lead at Google | IIMK 06-08</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">The <span class="hero-highlight">Reading</span> Never Stops</h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list">
+                    <li>Hundreds of papers to read in your field</li>
+                    <li>Each has its own definitions, methods, and findings</li>
+                    <li>Need to keep track of how they all connect</li>
+                    <li>Need to figure out where <strong>YOUR</strong> work fits</li>
+                    <li>Tools won't solve it entirely—but they make it less painful</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Two Tools, <span class="hero-highlight">One Workflow</span></h2>
+            <div class="two-column animate-in" style="animation-delay: 0.2s;">
+                <div class="column">
+                    <h3>Discovery: Deep Research</h3>
+                    <ul class="bullet-list">
+                        <li>Map the landscape</li>
+                        <li>Find papers you should read</li>
+                        <li>Understand the big debates</li>
+                    </ul>
+                </div>
+                <div class="column">
+                    <h3>Analysis: NotebookLM</h3>
+                    <ul class="bullet-list">
+                        <li>Upload the papers you've found</li>
+                        <li>Synthesize across sources</li>
+                        <li>Find patterns, gaps, contradictions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Session <span class="hero-highlight">Roadmap</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ol class="numbered-list">
+                    <li>Gemini Deep Research — 30 min (demo + hands-on)</li>
+                    <li>NotebookLM — 60 min (demos)</li>
+                    <li>Your Practice + Q&A — 15 min</li>
+                    <li>Test case: Personalization in Digital Marketing</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="slide section-slide">
+            <h1 class="hero-content">Phase 1: <span class="hero-highlight">Discovery</span></h1>
+            <p class="subtitle animate-in" style="animation-delay: 0.2s;">Using Gemini Deep Research</p>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content"><span class="hero-highlight">Autonomous</span> Research</h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list">
+                    <li>You give it a question; it creates a research plan</li>
+                    <li>Searches multiple times across many sources</li>
+                    <li>Synthesizes into a structured report with citations</li>
+                    <li><strong>Good for:</strong> Getting oriented on unfamiliar topics</li>
+                    <li><strong>Good for:</strong> Finding foundational and recent papers</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Demo: The <span class="hero-highlight">Mapping Prompt</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="prompt-box">
+                    <div class="prompt-header">
+                        <span class="prompt-label">Prompt</span>
+                        <button class="copy-btn">
+                            <svg viewBox="0 0 24 24"><path d="M16 1H4C2.9 1 2 1.9 2 3V17H4V3H16V1ZM19 5H8C6.9 5 6 5.9 6 7V21C6 22.1 6.9 23 8 23H19C20.1 23 21 22.1 21 21V7C21 5.9 20.1 5 19 5ZM19 21H8V7H19V21Z"/></svg>
+                            Copy
+                        </button>
+                    </div>
+                    <pre class="prompt-content">Map the academic literature on personalization in digital marketing. I want to understand:
+
+- Foundational theoretical frameworks
+- Key findings on when personalization works vs. backfires
+- Major debates and contradictions
+- Research gaps
+- Most influential papers to read
+
+Focus on marketing and information systems journals.</pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Watch: It Creates a <span class="hero-highlight">Plan</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list">
+                    <li>Notice: It breaks the question into sub-questions</li>
+                    <li>It shows you exactly what it will search for</li>
+                    <li>You can modify the plan before it runs</li>
+                    <li>This transparency ensures it targets your specific needs</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">The <span class="hero-highlight">Research Report</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list">
+                    <li><strong>Structured Overview:</strong> A high-level summary of the field</li>
+                    <li><strong>Key Theories:</strong> Identified with context</li>
+                    <li><strong>Major Papers:</strong> Cited directly in the text</li>
+                    <li><strong>Debates:</strong> Surfaced contradictions in findings</li>
+                    <li><strong>Links:</strong> Direct access to the source material</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Trust But <span class="hero-highlight">Verify</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list">
+                    <li>Deep Research is useful but not perfect</li>
+                    <li><strong>Always:</strong> Click through to cited papers</li>
+                    <li><strong>Always:</strong> Verify papers say what's claimed</li>
+                    <li><strong>Check:</strong> Look for what might be missing</li>
+                    <li>The output is a starting point, not the final answer</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">From Report to <span class="hero-highlight">Reading List</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list">
+                    <li>Foundational papers to read</li>
+                    <li>Recent work to review</li>
+                    <li>Theories to understand</li>
+                    <li>A sense of the major debates</li>
+                    <li><strong>Next Step:</strong> Download PDFs → Upload to NotebookLM</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Templates for <span class="hero-highlight">Deep Research</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list">
+                    <li><strong>Literature mapping:</strong> "Map the academic literature on [topic]. Identify foundational papers, key debates, and recent developments."</li>
+                    <li><strong>Finding gaps:</strong> "What research gaps have scholars identified in the [topic] literature?"</li>
+                    <li><strong>Theoretical landscape:</strong> "What theoretical frameworks have been applied to [topic]?"</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="activity-header">Activity: 10 Min</div>
+            <h2 class="hero-content">Your Turn: <span class="hero-highlight">Map Your Literature</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ol class="numbered-list">
+                    <li>Go to <strong>gemini.google.com</strong> (Gemini Advanced)</li>
+                    <li>Enter a prompt about YOUR topic</li>
+                    <li>Example: "Map the academic literature on [your topic]. Identify foundational papers, debates, and gaps. Focus on [your discipline]."</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">What Did You <span class="hero-highlight">Find?</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list">
+                    <li>Papers you already knew?</li>
+                    <li>Papers you didn't know existed?</li>
+                    <li>Anything surprising in the structure?</li>
+                    <li>Anything clearly missing?</li>
+                    <li>Deep Research is your scout. For deep analysis, we switch tools.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide section-slide">
+            <h1 class="hero-content">Phase 2: <span class="hero-highlight">Deep Analysis</span></h1>
+            <p class="subtitle animate-in" style="animation-delay: 0.2s;">Using NotebookLM</p>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Your Papers, <span class="hero-highlight">Searchable</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list">
+                    <li>Upload your PDFs/Sources</li>
+                    <li>Ask questions about them</li>
+                    <li>It answers using <strong>ONLY</strong> what you uploaded</li>
+                    <li>Every answer cites the exact source passage</li>
+                    <li><strong>Key Difference:</strong> Regular AI knows everything but cites nothing. NotebookLM knows only your papers but cites everything.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">How They <span class="hero-highlight">Work Together</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="emphasis-box">
+                    <p><strong>Deep Research</strong> → Finds papers</p>
+                    <p>↓</p>
+                    <p><strong>You</strong> → Download PDFs</p>
+                    <p>↓</p>
+                    <p><strong>NotebookLM</strong> → Deep analysis with citations</p>
+                </div>
+                <p style="text-align: center;">Discovery feeds into analysis.</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Demo: Building a <span class="hero-highlight">Notebook</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list">
+                    <li>Creating a new notebook</li>
+                    <li>Uploading papers found via Deep Research</li>
+                    <li><strong>Papers I'm uploading:</strong></li>
+                    <li>Aguirre et al. (2015) — Personalization Paradox</li>
+                    <li>White et al. (2008) — Reactance</li>
+                    <li>Tam & Ho (2006) — Web Personalization</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">The <span class="hero-highlight">Citation System</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list">
+                    <li><strong>Level 1: AI Response</strong> — Synthesis across papers</li>
+                    <li><strong>Level 2: Citation Preview</strong> — Hover to see source text</li>
+                    <li><strong>Level 3: Deep Link</strong> — Click to jump to exact PDF passage</li>
+                    <li>This is how you verify every claim.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Visualizing the <span class="hero-highlight">Literature</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list">
+                    <li>The mind map shows themes across all papers</li>
+                    <li>See how concepts connect visually</li>
+                    <li>Click any theme → get synthesis → trace to source</li>
+                    <li>Helps identifying common threads immediately</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide section-slide">
+            <h1 class="hero-content">Better <span class="hero-highlight">Questions</span></h1>
+            <p class="subtitle animate-in" style="animation-delay: 0.2s;">Better Answers</p>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">The Prompting <span class="hero-highlight">Principle</span></h2>
+            <div class="two-column animate-in" style="animation-delay: 0.2s;">
+                <div class="column">
+                    <h3>Weak Input</h3>
+                    <ul class="bullet-list">
+                        <li>"Summarize these papers"</li>
+                        <li>Result: Generic output</li>
+                        <li>Vague summaries</li>
+                    </ul>
+                </div>
+                <div class="column">
+                    <h3>Strong Input</h3>
+                    <ul class="bullet-list">
+                        <li>"Compare how each paper defines [X]"</li>
+                        <li>Result: Useful output</li>
+                        <li>Structured comparison</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Live Demo: <span class="hero-highlight">The Difference</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list">
+                    <li><strong>First:</strong> "Summarize these papers on personalization"</li>
+                    <li><strong>Then:</strong> "Compare how each paper defines 'personalization.' For each: quote the definition, note how it's used, identify dimensions. Where do they differ?"</li>
+                    <li>Watch how the tool responds to structure.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Prompt 1: <span class="hero-highlight">Construct Clarity</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="prompt-box">
+                    <div class="prompt-header">
+                        <span class="prompt-label">Prompt</span>
+                        <button class="copy-btn">
+                            <svg viewBox="0 0 24 24"><path d="M16 1H4C2.9 1 2 1.9 2 3V17H4V3H16V1ZM19 5H8C6.9 5 6 5.9 6 7V21C6 22.1 6.9 23 8 23H19C20.1 23 21 22.1 21 21V7C21 5.9 20.1 5 19 5ZM19 21H8V7H19V21Z"/></svg>
+                            Copy
+                        </button>
+                    </div>
+                    <pre class="prompt-content">For the term '[X]' across these papers:
+
+1. How does each paper define it?
+2. What dimensions or types appear?
+3. How is it measured?
+4. What similar terms might it be confused with?
+
+Show differences with citations.</pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Demo: <span class="hero-highlight">Construct Clarity</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list">
+                    <li>Running the prompt on "personalization"</li>
+                    <li>Output shows:</li>
+                    <li>Definitional differences between authors</li>
+                    <li>Specific dimensions used in studies</li>
+                    <li>Measurement approaches</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Prompt 2: <span class="hero-highlight">Gap Hunter</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="prompt-box">
+                    <div class="prompt-header">
+                        <span class="prompt-label">Prompt</span>
+                        <button class="copy-btn">
+                            <svg viewBox="0 0 24 24"><path d="M16 1H4C2.9 1 2 1.9 2 3V17H4V3H16V1ZM19 5H8C6.9 5 6 5.9 6 7V21C6 22.1 6.9 23 8 23H19C20.1 23 21 22.1 21 21V7C21 5.9 20.1 5 19 5ZM19 21H8V7H19V21Z"/></svg>
+                            Copy
+                        </button>
+                    </div>
+                    <pre class="prompt-content">What gaps or unanswered questions do these papers mention?
+
+Categories:
+- Methods not yet tried
+- Questions not yet answered
+- Contexts not yet studied
+
+For each gap, cite which paper mentioned it.</pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Demo: <span class="hero-highlight">Gap Hunter</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list">
+                    <li>Running the prompt</li>
+                    <li>Output identifies specific future research directions</li>
+                    <li>Highlights gaps explicitly called out by authors</li>
+                    <li>Perfect for finding "Future Research" suggestions without reading every conclusion again</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Prompt 3: <span class="hero-highlight">Contradiction Finder</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="prompt-box">
+                    <div class="prompt-header">
+                        <span class="prompt-label">Prompt</span>
+                        <button class="copy-btn">
+                            <svg viewBox="0 0 24 24"><path d="M16 1H4C2.9 1 2 1.9 2 3V17H4V3H16V1ZM19 5H8C6.9 5 6 5.9 6 7V21C6 22.1 6.9 23 8 23H19C20.1 23 21 22.1 21 21V7C21 5.9 20.1 5 19 5ZM19 21H8V7H19V21Z"/></svg>
+                            Copy
+                        </button>
+                    </div>
+                    <pre class="prompt-content">Where do these papers contradict each other?
+
+For each contradiction:
+- What does each side say?
+- Why might they disagree?
+- What would resolve it?
+
+Cite both positions.</pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Demo: <span class="hero-highlight">Contradiction Finder</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list">
+                    <li>Running the prompt</li>
+                    <li>Output reveals the "Personalization Paradox"</li>
+                    <li>Shows when personalization helps vs. when it hurts</li>
+                    <li>Identifies the tension between utility and privacy</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Prompt 4: <span class="hero-highlight">Theoretical Landscape</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="prompt-box">
+                    <div class="prompt-header">
+                        <span class="prompt-label">Prompt</span>
+                        <button class="copy-btn">
+                            <svg viewBox="0 0 24 24"><path d="M16 1H4C2.9 1 2 1.9 2 3V17H4V3H16V1ZM19 5H8C6.9 5 6 5.9 6 7V21C6 22.1 6.9 23 8 23H19C20.1 23 21 22.1 21 21V7C21 5.9 20.1 5 19 5ZM19 21H8V7H19V21Z"/></svg>
+                            Copy
+                        </button>
+                    </div>
+                    <pre class="prompt-content">What theories do these papers use to explain [topic]?
+
+For each theory:
+- What does it predict?
+- Where do theories agree?
+- Where do they conflict?</pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Demo: <span class="hero-highlight">Theoretical Landscape</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list">
+                    <li>Running the prompt</li>
+                    <li>Identifies core theories: Privacy Calculus, Reactance Theory</li>
+                    <li>Shows how different lenses explain the same phenomenon</li>
+                    <li>Maps the theoretical conversation</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Prompt 5: <span class="hero-highlight">Contribution Finder</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="prompt-box">
+                    <div class="prompt-header">
+                        <span class="prompt-label">Prompt</span>
+                        <button class="copy-btn">
+                            <svg viewBox="0 0 24 24"><path d="M16 1H4C2.9 1 2 1.9 2 3V17H4V3H16V1ZM19 5H8C6.9 5 6 5.9 6 7V21C6 22.1 6.9 23 8 23H19C20.1 23 21 22.1 21 21V7C21 5.9 20.1 5 19 5ZM19 21H8V7H19V21Z"/></svg>
+                            Copy
+                        </button>
+                    </div>
+                    <pre class="prompt-content">Based on these papers:
+
+1. What do they agree on?
+2. Where do they disagree?
+3. What's still unanswered?
+4. What would be valuable to add?
+
+Cite sources.</pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="activity-header">Activity: Try It</div>
+            <h2 class="hero-content">Your Turn: <span class="hero-highlight">NotebookLM</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ol class="numbered-list">
+                    <li>Go to <strong>notebooklm.google.com</strong></li>
+                    <li>Create a notebook and upload 2-3 papers</li>
+                    <li>Try one prompt:</li>
+                    <li><strong>Construct Clarity</strong> (Definitions)</li>
+                    <li><strong>Gap Hunter</strong> (Missing pieces)</li>
+                    <li><strong>Contradiction Finder</strong> (Debates)</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Common <span class="hero-highlight">Issues</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list">
+                    <li><strong>PDF won't upload?</strong> Try a text-based PDF, not a scanned image.</li>
+                    <li><strong>Output too generic?</strong> Add more structure and specific questions to your prompt.</li>
+                    <li><strong>No papers on laptop?</strong> Pair up or grab a few from Google Scholar now.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">The Complete <span class="hero-highlight">Workflow</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list">
+                    <li><strong>Week 1:</strong> Deep Research → Find papers → Download</li>
+                    <li><strong>Week 2-3:</strong> NotebookLM → Upload → Run Prompts → Document</li>
+                    <li><strong>Week 4+:</strong> Write → Use NotebookLM to verify claims and pull quotes</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Honest <span class="hero-highlight">Limitations</span></h2>
+            <div class="two-column animate-in" style="animation-delay: 0.2s;">
+                <div class="column">
+                    <h3>They Don't:</h3>
+                    <ul class="bullet-list">
+                        <li>Tell you <em>what</em> to research</li>
+                        <li>Replace reading carefully</li>
+                        <li>Make judgment calls</li>
+                    </ul>
+                </div>
+                <div class="column">
+                    <h3>They Do:</h3>
+                    <ul class="bullet-list">
+                        <li>Find patterns quickly</li>
+                        <li>Retrieve information instantly</li>
+                        <li>Surface connections</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Best <span class="hero-highlight">Practices</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list">
+                    <li><strong>Verify citations:</strong> Always click through</li>
+                    <li><strong>Save prompts:</strong> NotebookLM doesn't save chat history permanently</li>
+                    <li><strong>Curate sources:</strong> Garbage in, garbage out</li>
+                    <li><strong>Iterate:</strong> Refine your prompts based on the outputs</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Where to <span class="hero-highlight">Go</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list">
+                    <li><strong>Tools:</strong> gemini.google.com (Deep Research)</li>
+                    <li><strong>Tools:</strong> notebooklm.google.com</li>
+                    <li><strong>Your Handout:</strong> Includes all prompts from today</li>
+                    <li><strong>Guide:</strong> Troubleshooting tips included</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Questions?</h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list">
+                    <li>What worked for you?</li>
+                    <li>What didn't work?</li>
+                    <li>What would you want these tools to do for your specific topic?</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide closing-slide">
+            <h1 class="hero-content">Try Them This <span class="hero-highlight">Week</span></h1>
+            <div class="animate-in" style="animation-delay: 0.2s;">
+                <p>Run Deep Research. Upload papers. See if they're useful.</p>
+                <br>
+                <p><strong>adityavj.com</strong></p>
+                <p>Session Material & Free AI Resources</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const currentSlideElement = document.getElementById('current-slide');
+        const speakerNotes = document.getElementById('speaker-notes');
+        let isAnimating = false;
+
+        function showSlide(n) {
+            if (isAnimating) return;
+            isAnimating = true;
+
+            const currentEl = slides[currentSlide];
+            currentEl.classList.add('exiting');
+            
+            setTimeout(() => {
+                currentEl.classList.remove('active', 'exiting');
+                currentSlide = (n + totalSlides) % totalSlides;
+                slides[currentSlide].classList.add('active');
+                currentSlideElement.textContent = currentSlide + 1;
+                
+                setTimeout(() => { isAnimating = false; }, 300);
+            }, 350);
+        }
+
+        function nextSlide() { showSlide(currentSlide + 1); }
+        function prevSlide() { showSlide(currentSlide - 1); }
+        function toggleSpeakerNotes() { speakerNotes.classList.toggle('visible'); }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+            else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+            else if (e.key === 's' || e.key === 'S') { e.preventDefault(); toggleSpeakerNotes(); }
+            else if (e.key === 'Home') { e.preventDefault(); showSlide(0); }
+            else if (e.key === 'End') { e.preventDefault(); showSlide(totalSlides - 1); }
+        });
+
+        // Click navigation - DISABLED for better copy experience
+        // Note: Clicks on interactive elements (buttons, links) are handled by their own listeners.
+
+        // Copy functionality
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.stopPropagation(); // Prevent slide navigation
+                const pre = btn.closest('.prompt-box').querySelector('.prompt-content');
+                const text = pre.innerText;
+                
+                try {
+                    await navigator.clipboard.writeText(text);
+                    
+                    // Visual feedback
+                    const originalContent = btn.innerHTML;
+                    const checkmark = `<svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>`;
+                    
+                    btn.innerHTML = checkmark + ' Copied!';
+                    btn.classList.add('copied');
+                    
+                    setTimeout(() => {
+                        btn.innerHTML = originalContent;
+                        btn.classList.remove('copied');
+                    }, 2000);
+                } catch (err) {
+                    console.error('Failed to copy', err);
+                }
+            });
+        });
+
+        // Initialize
+        document.getElementById('total-slides').textContent = totalSlides;
+        slides[0].classList.add('active');
+    </script>
+</body>
+</html>
