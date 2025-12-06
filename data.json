@@ -7,7 +7,8 @@
     "program": "DPM",
     "cohort": "Dec 2025",
     "url": "presentations/ai-phd-research.html",
-    "handout": "presentations/ai-phd-handout.html", 
+  "viewerUrl": "presentations/ai-phd-research.html",
+            "handout": "presentations/ai-phd-handout.html",
     "desc": "A comprehensive guide on leveraging AI tools and strategies for the doctoral research lifecycle.",
     "tags": ["AI", "NotebookLM", "Research"],
     "featured": true
