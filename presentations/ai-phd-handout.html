@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Management Scholar's AI Prompt Toolkit</title>
+    <style>
+        /* --- IIM Kozhikode Inspired Palette --- */
+        :root {
+            --iimk-blue: #122B40;    /* Official Deep Elephant Blue */
+            --iimk-gold: #C5A059;    /* Institutional Gold */
+            --iimk-light-gold: #fcfbf7;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --bg-light: #F8F9FA;
+            --code-bg: #F1F3F5;
+            --border: #DEE2E6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-main);
+            background-color: var(--bg-light);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* --- Layout --- */
+        .container {
+            max-width: 950px;
+            margin: 40px auto;
+            background: white;
+            padding: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-top: 8px solid var(--iimk-blue);
+        }
+
+        /* --- Typography --- */
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 30px;
+        }
+
+        h1 {
+            color: var(--iimk-blue);
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        h2 {
+            color: var(--iimk-blue);
+            font-size: 1.8rem;
+            margin-top: 70px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--iimk-gold);
+            padding-bottom: 10px;
+        }
+        
+        h2 span {
+            font-size: 1rem;
+            margin-left: 15px;
+            color: var(--text-muted);
+            font-weight: 400;
+            text-transform: none;
+        }
+
+        /* --- Strategy Box --- */
+        .strategy-box {
+            background-color: var(--iimk-light-gold);
+            border-left: 5px solid var(--iimk-gold);
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 4px;
+        }
+
+        .strategy-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .strategy-item strong { 
+            display: block; 
+            color: var(--iimk-blue); 
+            font-size: 1.1rem; 
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- Prompt Cards --- */
+        .prompt-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 40px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+            transition: all 0.2s ease;
+        }
+
+        .prompt-card:hover {
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            border-color: var(--iimk-blue);
+        }
+
+        .prompt-header {
+            background-color: #f8f9fa;
+            padding: 12px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .prompt-title {
+            font-weight: 700;
+            color: var(--iimk-blue);
+            font-size: 1.1rem;
+        }
+
+        .tag {
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .tag.gemini { background-color: #8E44AD; color: white; }
+        .tag.notebook { background-color: var(--iimk-blue); color: white; }
+        .tag.audio { background-color: var(--iimk-gold); color: white; }
+
+        /* --- Context Panel (The New Section) --- */
+        .context-panel {
+            padding: 18px 25px;
+            background-color: #fff;
+            font-size: 0.9rem;
+            color: #555;
+            border-bottom: 1px dashed var(--border);
+        }
+
+        .context-row {
+            margin-bottom: 8px;
+            display: grid;
+            grid-template-columns: 110px 1fr;
+            gap: 15px;
+        }
+        
+        .context-row:last-child { margin-bottom: 0; }
+
+        .context-label {
+            font-weight: 700;
+            color: var(--iimk-blue);
+            text-align: right;
+            font-size: 0.85rem;
+            padding-top: 1px;
+        }
+        
+        .context-val {
+            color: #444;
+        }
+
+        /* --- Code Block --- */
+        .code-wrapper {
+            position: relative;
+            background-color: var(--code-bg);
+        }
+
+        pre {
+            margin: 0;
+            padding: 25px;
+            padding-right: 90px;
+            white-space: pre-wrap;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.95rem;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: white;
+            border: 1px solid var(--border);
+            color: var(--iimk-blue);
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--iimk-blue);
+            color: white;
+            border-color: var(--iimk-blue);
+        }
+
+        /* --- Footer --- */
+        footer {
+            margin-top: 80px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        /* --- Print Styles --- */
+        @media print {
+            body { background: white; -webkit-print-color-adjust: exact; }
+            .container { box-shadow: none; margin: 0; padding: 0; width: 100%; max-width: 100%; border: none; }
+            .copy-btn { display: none; }
+            .strategy-box { background-color: #fff; border: 1px solid #ccc; }
+            .prompt-header { background-color: #eee; }
+            .context-panel { border-bottom: 1px solid #ccc; }
+            .prompt-card { page-break-inside: avoid; border: 1px solid #aaa; margin-bottom: 25px; }
+            h2 { page-break-before: always; border-bottom: 2px solid #000; margin-top: 30px; }
+            h2:first-of-type { page-break-before: avoid; margin-top: 0; }
+            a { text-decoration: none; color: black; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>AI-Augmented Research Toolkit</h1>
+        <div class="subtitle">Complete Prompt Library & Context Guide for Management Scholars</div>
+        <div class="subtitle">Authour: Aditya V Jain | adityavj.com</div>
+    </header>
+
+    <div class="strategy-box">
+        <h3 style="margin-top:0; color:var(--iimk-blue);">The "Sandwich" Strategy</h3>
+        <p>Academic rigor requires using the right tool for the right stage. Do not confuse them.</p>
+        <div class="strategy-grid">
+            <div class="strategy-item">
+                <strong>1. Discover (Gemini)</strong>
+                Use <em>Deep Research</em> to map the landscape, find citations, and identify keywords using the live web.
+            </div>
+            <div class="strategy-item">
+                <strong>2. Analyze (NotebookLM)</strong>
+                Upload specific PDFs (Source-Grounded) to deconstruct theory and verify claims without hallucinations.
+            </div>
+            <div class="strategy-item">
+                <strong>3. Synthesize (You)</strong>
+                Use the AI outputs to construct your own theoretical contribution. AI makes the bricks; you build the wall.
+            </div>
+        </div>
+    </div>
+
+    <h2>Phase 1: Discovery <span>(Gemini Advanced)</span></h2>
+    <p><em>Use these prompts to scour the live web and build your reading list.</em></p>
+
+    <div class="prompt-card">
+        <div class="prompt-header">
+            <span class="prompt-title">01. The Landscape Mapper</span>
+            <span class="tag gemini">Gemini</span>
+        </div>
+        <div class="context-panel">
+            <div class="context-row">
+                <span class="context-label">🎯 When to use:</span>
+                <span class="context-val">Week 1 of a new seminar paper or exploring a potential dissertation topic.</span>
+            </div>
+            <div class="context-row">
+                <span class="context-label">🧠 Why it works:</span>
+                <span class="context-val">Prevents "rabbit holes" by giving you a high-level aerial view before you dive into specific papers. Helps you distinguish "Settled Science" from "Active Debates."</span>
+            </div>
+        </div>
+        <div class="code-wrapper">
+            <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            <pre>Map the academic literature on [topic]. I want to understand:
+- Foundational theoretical frameworks
+- Key empirical findings and "settled science"
+- Major debates and contradictions
+- Research gaps identified by scholars in the last 5 years
+- Most influential papers to read (provide citations)
+
+Focus specifically on peer-reviewed journals in [discipline, e.g., Strategic Management, OB, IS].</pre>
+        </div>
+    </div>
+
+    <div class="prompt-card">
+        <div class="prompt-header">
+            <span class="prompt-title">02. The Macro Gap Hunter</span>
+            <span class="tag gemini">Gemini</span>
+        </div>
+        <div class="context-panel">
+            <div class="context-row">
+                <span class="context-label">🎯 When to use:</span>
+                <span class="context-val">Brainstorming Dissertation ideas or Proposal writing.</span>
+            </div>
+            <div class="context-row">
+                <span class="context-label">🧠 Why it works:</span>
+                <span class="context-val">Moves you from passive reading to active problem seeking. It categorizes gaps so you can choose a path (e.g., "I want to apply a new method" vs "I want to study a new context").</span>
+            </div>
+        </div>
+        <div class="code-wrapper">
+            <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            <pre>What research gaps have scholars recently identified in the [topic] literature? Cite specific papers that call for future research. Organize by:
+1. **Theoretical Gaps:** Mechanisms or boundary conditions that remain unexplained.
+2. **Methodological Gaps:** Designs that haven't been applied (e.g., need for longitudinal, experimental).
+3. **Contextual Gaps:** Settings, populations, or industries that are understudied.</pre>
+        </div>
+    </div>
+
+    <div class="prompt-card">
+        <div class="prompt-header">
+            <span class="prompt-title">03. Methodological Landscape</span>
+            <span class="tag gemini">Gemini</span>
+        </div>
+        <div class="context-panel">
+            <div class="context-row">
+                <span class="context-label">🎯 When to use:</span>
+                <span class="context-val">Designing your own study (Methodology Chapter).</span>
+            </div>
+            <div class="context-row">
+                <span class="context-label">🧠 Why it works:</span>
+                <span class="context-val">You need to know the "standard" methods to either follow them (for legitimacy) or break them (for novelty).</span>
+            </div>
+        </div>
+        <div class="code-wrapper">
+            <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            <pre>What research methods have been dominant in studying [topic]? 
+- Split between Quantitative vs. Qualitative.
+- Common experimental designs or survey instruments.
+- Archival data sources frequently used.
+- Note the strengths and limitations scholars have noted about these standard approaches.</pre>
+        </div>
+    </div>
+
+    <h2>Phase 2a: Textbooks & Theory <span>(NotebookLM)</span></h2>
+    <p><em>Use these for deep analysis of Textbooks or Seminal Articles. <strong>Tip:</strong> Upload 1 chapter + 1 seminal paper.</em></p>
+
+    <div class="prompt-card">
+        <div class="prompt-header">
+            <span class="prompt-title">04. The "Whetten's Criteria" Audit</span>
+            <span class="tag notebook">Theory</span>
+        </div>
+        <div class="context-panel">
+            <div class="context-row">
+                <span class="context-label">🎯 When to use:</span>
+                <span class="context-val">Core Theory Seminars and understanding "what makes a theory."</span>
+            </div>
+            <div class="context-row">
+                <span class="context-label">🧠 Why it works:</span>
+                <span class="context-val">Based on David Whetten’s (1989) classic AMR article. It forces the AI to strip away the narrative "fluff" and reveal the logical skeleton (What/How/Why).</span>
+            </div>
+        </div>
+        <div class="code-wrapper">
+            <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            <pre>Analyze the theoretical framework in this source using David Whetten’s (1989) criteria. Specifically extract:
+1. **WHAT** are the key constructs and variables?
+2. **HOW** are they related (proposed causality/patterns)?
+3. **WHY** are they related (the underlying psychological, economic, or social mechanisms)?
+4. **WHO/WHERE/WHEN** (Boundary Conditions): Under what specific contexts does the author claim this theory applies?</pre>
+        </div>
+    </div>
+
+    <div class="prompt-card">
+        <div class="prompt-header">
+            <span class="prompt-title">05. The Paradigm Excavator</span>
+            <span class="tag notebook">Philosophy</span>
+        </div>
+        <div class="context-panel">
+            <div class="context-row">
+                <span class="context-label">🎯 When to use:</span>
+                <span class="context-val">Philosophy of Science courses or when critiquing a paper's assumptions.</span>
+            </div>
+            <div class="context-row">
+                <span class="context-label">🧠 Why it works:</span>
+                <span class="context-val">Many authors hide their epistemological stance. This prompt reveals whether they view reality as objective (Positivism) or socially constructed (Interpretivism).</span>
+            </div>
+        </div>
+        <div class="code-wrapper">
+            <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            <pre>Critique the philosophical assumptions in this chapter. Does the author approach [Topic] from a **positivist** (objective reality, measurable laws) or **interpretivist** (socially constructed meaning) perspective? Quote specific sentences that reveal their stance on how knowledge is created.</pre>
+        </div>
+    </div>
+
+    <div class="prompt-card">
+        <div class="prompt-header">
+            <span class="prompt-title">06. Construct & Operationalization Map</span>
+            <span class="tag notebook">Measurement</span>
+        </div>
+        <div class="context-panel">
+            <div class="context-row">
+                <span class="context-label">🎯 When to use:</span>
+                <span class="context-val">Finding scales for a Survey or defining codes for Qualitative work.</span>
+            </div>
+            <div class="context-row">
+                <span class="context-label">💡 Pro-Tip:</span>
+                <span class="context-val">Use this to write your "Measures" section. Prevents "Construct Proliferation" by linking to established definitions.</span>
+            </div>
+        </div>
+        <div class="code-wrapper">
+            <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            <pre>For the construct "[X]" across these sources:
+1. **DEFINITIONS:** List the formal conceptual definitions provided. Note semantic differences.
+2. **DIMENSIONALITY:** Is it unidimensional or multidimensional? What sub-dimensions appear?
+3. **MEASUREMENT:** How has it been operationalized? List specific survey items, proxies, or qualitative indicators.
+4. **ADJACENT CONSTRUCTS:** What is it confused with? How do authors distinguish it?</pre>
+        </div>
+    </div>
+
+    <div class="prompt-card">
+        <div class="prompt-header">
+            <span class="prompt-title">07. The "Reviewer 2" Simulator</span>
+            <span class="tag notebook">Critique</span>
+        </div>
+        <div class="context-panel">
+            <div class="context-row">
+                <span class="context-label">🎯 When to use:</span>
+                <span class="context-val">Before submitting a paper or preparing for a Defense.</span>
+            </div>
+            <div class="context-row">
+                <span class="context-label">🧠 Why it works:</span>
+                <span class="context-val">Simulates a hostile peer reviewer. It forces you to anticipate alternative explanations (Rival Hypotheses) before a human critic points them out.</span>
+            </div>
+        </div>
+        <div class="code-wrapper">
+            <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            <pre>The text argues that [Variable A] leads to [Outcome B]. Act as a critical peer reviewer ("Reviewer 2"). 
+1. Use a contrasting theoretical lens (e.g., if the text uses Agency Theory, use Stewardship Theory) to propose a **Rival Hypothesis** that argues the opposite.
+2. What specific empirical evidence would differentiate between these two explanations?</pre>
+        </div>
+    </div>
+
+    <h2>Phase 2b: Paper Collections <span>(NotebookLM)</span></h2>
+    <p><em>Use these for Literature Reviews. <strong>Tip:</strong> Rename files to `Year - Author - Title.pdf` before uploading.</em></p>
+
+    <div class="prompt-card">
+        <div class="prompt-header">
+            <span class="prompt-title">08. The TCCM Framework (SLR)</span>
+            <span class="tag notebook">Synthesis</span>
+        </div>
+        <div class="context-panel">
+            <div class="context-row">
+                <span class="context-label">🎯 When to use:</span>
+                <span class="context-val">Writing a Systematic Literature Review (SLR) paper.</span>
+            </div>
+            <div class="context-row">
+                <span class="context-label">🧠 Why it works:</span>
+                <span class="context-val">Paul & Rosado-Serrano's TCCM (Theory, Context, Characteristics, Methods) is the standard framework for organizing review papers in top business journals.</span>
+            </div>
+        </div>
+        <div class="code-wrapper">
+            <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            <pre>Analyze the uploaded papers using the TCCM Framework. Summarize the collection into:
+1. **Theories:** What are the dominant theoretical lenses used?
+2. **Contexts:** Which industries, countries, or cultural contexts are over-studied vs. under-studied?
+3. **Characteristics:** What are the independent, dependent, and moderating variables most frequently studied?
+4. **Methods:** What is the split between Qual/Quant? Which specific analytical techniques are dominant?</pre>
+        </div>
+    </div>
+
+    <div class="prompt-card">
+        <div class="prompt-header">
+            <span class="prompt-title">09. The Nomological Network Builder</span>
+            <span class="tag notebook">Modeling</span>
+        </div>
+        <div class="context-panel">
+            <div class="context-row">
+                <span class="context-label">🎯 When to use:</span>
+                <span class="context-val">Building the conceptual framework (Figure 1) for your dissertation.</span>
+            </div>
+            <div class="context-row">
+                <span class="context-label">🧠 Why it works:</span>
+                <span class="context-val">Moves you from reading to "drawing boxes and arrows." It helps you visualize how your variable of interest fits into the broader web of established relationships.</span>
+            </div>
+        </div>
+        <div class="code-wrapper">
+            <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            <pre>I am trying to build the Nomological Network for [Construct X]. Based on the consensus in these papers:
+1. **Antecedents:** What variables consistently predict or cause X?
+2. **Consequences:** What outcomes does X lead to?
+3. **Mechanisms:** What mediators explain *why* X leads to these outcomes?
+4. **Boundary Conditions:** What moderators strengthen or weaken these relationships?</pre>
+        </div>
+    </div>
+
+    <div class="prompt-card">
+        <div class="prompt-header">
+            <span class="prompt-title">10. The Level of Analysis Auditor</span>
+            <span class="tag notebook">Rigor Check</span>
+        </div>
+        <div class="context-panel">
+            <div class="context-row">
+                <span class="context-label">🎯 When to use:</span>
+                <span class="context-val">Checking for Ecological Fallacies in your lit review.</span>
+            </div>
+            <div class="context-row">
+                <span class="context-label">💡 Pro-Tip:</span>
+                <span class="context-val">Management research is often multi-level (Individual, Team, Firm). Mixing them up (e.g., using CEO personality to predict Firm Stock Price without aggregation) is a fatal flaw.</span>
+            </div>
+        </div>
+        <div class="code-wrapper">
+            <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            <pre>Classify each paper by its **Level of Analysis** (Individual, Team, Firm, or Industry).
+* Are there theoretical inconsistencies? (e.g., using individual-level theory to explain firm-level outcomes).
+* Identify if any 'Multi-level' (HLM) studies exist in this collection. If not, mark this as a potential methodological gap.</pre>
+        </div>
+    </div>
+
+    <div class="prompt-card">
+        <div class="prompt-header">
+            <span class="prompt-title">11. The Endogeneity Police</span>
+            <span class="tag notebook">Quant Rigor</span>
+        </div>
+        <div class="context-panel">
+            <div class="context-row">
+                <span class="context-label">🎯 When to use:</span>
+                <span class="context-val">Critiquing quantitative empirical papers.</span>
+            </div>
+            <div class="context-row">
+                <span class="context-label">🧠 Why it works:</span>
+                <span class="context-val">Correlation is not causation. This prompt identifies which papers actually addressed causality (IVs, Experiments) vs those that just claim it.</span>
+            </div>
+        </div>
+        <div class="code-wrapper">
+            <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            <pre>Scan the methodology sections of the empirical papers.
+1. Which papers explicitly address **endogeneity** or **reverse causality**?
+2. What techniques did they use (e.g., Instrumental Variables, Lagged Models, Experiments)?
+3. Which papers make strong causal claims based only on cross-sectional data? Flag these as 'weak evidence'.</pre>
+        </div>
+    </div>
+
+    <div class="prompt-card">
+        <div class="prompt-header">
+            <span class="prompt-title">12. The Inconsistency Spotter</span>
+            <span class="tag notebook">Gap Finding</span>
+        </div>
+        <div class="context-panel">
+            <div class="context-row">
+                <span class="context-label">🎯 When to use:</span>
+                <span class="context-val">Finding a "Moderator" hypothesis (the easiest path to publication).</span>
+            </div>
+            <div class="context-row">
+                <span class="context-label">🧠 Why it works:</span>
+                <span class="context-val">When Paper A says "Good" and Paper B says "Bad," that isn't a mistake—it's a thesis. The reason *why* they differ (context, time, measure) is your contribution.</span>
+            </div>
+        </div>
+        <div class="code-wrapper">
+            <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            <pre>Identify contradictions in this literature:
+1. Where do studies reach opposite conclusions about the same relationship (e.g., Paper A says positive, Paper B says negative)?
+2. Hypothesize *why* based on the text (Different measures? Different industry context? Time periods?).
+3. This 'reason' is my potential **Moderator**. Create a table of these conflicting papers.</pre>
+        </div>
+    </div>
+
+    <h2>Phase 3: Output & Audio <span>(Writing & Learning)</span></h2>
+    <p><em>Turn synthesis into writing and listening.</em></p>
+
+    <div class="prompt-card">
+        <div class="prompt-header">
+            <span class="prompt-title">13. The Contribution Articulator</span>
+            <span class="tag notebook">Writing</span>
+        </div>
+        <div class="context-panel">
+            <div class="context-row">
+                <span class="context-label">🎯 When to use:</span>
+                <span class="context-val">Writing the "Introduction" or "Discussion" of your paper.</span>
+            </div>
+            <div class="context-row">
+                <span class="context-label">🧠 Why it works:</span>
+                <span class="context-val">Helps you answer the "So What?" question by clearly positioning your work against the "Settled Science."</span>
+            </div>
+        </div>
+        <div class="code-wrapper">
+            <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            <pre>Based on these sources representing current knowledge on [topic]:
+1. **WHAT'S ESTABLISHED:** What do researchers agree on? (The 'settled science')
+2. **WHAT'S CONTESTED:** Where is there active disagreement?
+3. **WHAT'S MISSING:** What questions remain unanswered?
+4. **MY ENTRY POINT:** Suggest 3 specific contribution opportunities that would be valuable to add to this conversation.</pre>
+        </div>
+    </div>
+
+    <div class="prompt-card">
+        <div class="prompt-header">
+            <span class="prompt-title">14. Audio: The "Debate Club"</span>
+            <span class="tag audio">Audio</span>
+        </div>
+        <div class="context-panel">
+            <div class="context-row">
+                <span class="context-label">🎯 When to use:</span>
+                <span class="context-val">Commuting or Gym listening. Understanding the tensions in a field.</span>
+            </div>
+            <div class="context-row">
+                <span class="context-label">💡 Pro-Tip:</span>
+                <span class="context-val">Standard summaries are boring. Click <strong>"Audio Overview" -> "Customize"</strong> and paste this to make the hosts argue. It reveals the nuance.</span>
+            </div>
+        </div>
+        <div class="code-wrapper">
+            <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            <pre>Don't just summarize. Act as two scholars debating the findings. Host 1 should support the dominant theory, while Host 2 should be skeptical and point out methodological flaws or alternative explanations. Focus heavily on where these papers disagree.</pre>
+        </div>
+    </div>
+
+    <footer>
+        <p>IIM Kozhikode PhD Support | Leveraging AI for Academic Rigor</p>
+    </footer>
+</div>
+
+<script>
+    function copyText(button) {
+        const pre = button.parentElement.querySelector('pre');
+        const text = pre.innerText;
+
+        navigator.clipboard.writeText(text).then(() => {
+            const originalText = button.innerText;
+            button.innerText = "COPIED";
+            button.style.backgroundColor = "#122B40";
+            button.style.color = "white";
+
+            setTimeout(() => {
+                button.innerText = originalText;
+                button.style.backgroundColor = "white";
+                button.style.color = "#122B40";
+            }, 2000);
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+        });
+    }
+</script>
+
+</body>
+</html>
