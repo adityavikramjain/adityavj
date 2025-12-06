@@ -905,7 +905,49 @@ p { color: var(--soft-grey); }
     50% { transform: scale(1.2); }
     100% { transform: scale(1); }
 }
+/* === SHARE BUTTON (Top Right of Card) === */
+.session-card .card-share-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border-light);
+    background: var(--white);
+    color: var(--light-grey);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    transition: all 0.2s var(--ease-smooth);
+    z-index: 5; /* Ensure it sits above the card link */
+    opacity: 0; /* Hidden by default until hover */
+    transform: translateY(5px);
+}
 
+.session-card:hover .card-share-btn {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* On mobile, always show it */
+@media (max-width: 768px) {
+    .session-card .card-share-btn {
+        opacity: 1;
+        transform: translateY(0);
+        background: var(--mist-rose); /* clearer visibility on mobile */
+    }
+}
+
+.session-card .card-share-btn:hover {
+    border-color: var(--electric-orange);
+    background: var(--electric-orange);
+    color: var(--white);
+    transform: scale(1.1) rotate(-10deg);
+    box-shadow: var(--shadow-sm);
+}
 /* === GEM CARDS (DISTINCT LAUNCHABLE TOOL STYLE) === */
 .resource-card.gem-card {
     background: var(--gem-gradient);

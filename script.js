@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // === RENDER SESSIONS ===
+  // === RENDER SESSIONS ===
     function renderSessions(sessions) {
         const container = document.getElementById('sessions-grid');
         if (!sessions || sessions.length === 0) {
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         let html = '';
-      sorted.forEach((session, index) => {
+        sorted.forEach((session, index) => {
             const tags = session.tags || [];
             const tagsAttr = tags.join(',');
             const featuredClass = session.featured ? 'featured' : '';
@@ -91,11 +91,23 @@ document.addEventListener('DOMContentLoaded', () => {
             const linkUrl = hasViewer ? `viewer.html?id=${session.id}` : session.url;
             const linkTarget = hasViewer ? '_self' : '_blank';
 
-            // --- NEW LOGIC: Check for Handout ---
+            // Handout Logic
             let handoutHtml = '';
+            let handoutUrlAbsolute = '';
+            
             if (session.handout) {
+                // Create absolute URL for sharing
+                handoutUrlAbsolute = session.handout.startsWith('http') 
+                    ? session.handout 
+                    : window.location.origin + '/' + session.handout;
+                    
                 handoutHtml = `<a href="${session.handout}" target="_blank" class="handout-btn" onclick="event.stopPropagation()">📄 Notes</a>`;
             }
+
+            // Create absolute URL for the main link (for sharing)
+            const shareUrlAbsolute = linkUrl.startsWith('http') 
+                ? linkUrl 
+                : window.location.origin + '/' + linkUrl;
 
             html += `
             <div class="session-card filterable-card ${featuredClass}"
@@ -104,6 +116,15 @@ document.addEventListener('DOMContentLoaded', () => {
                  data-index="${index}"
                  data-viewer="${hasViewer ? 'true' : 'false'}"
                  data-link="${linkUrl}">
+                 
+                <button class="card-share-btn" 
+                        title="Share Session"
+                        data-title="${escapeHtml(session.title)}"
+                        data-link="${shareUrlAbsolute}"
+                        data-handout="${handoutUrlAbsolute}">
+                    <span class="share-icon">➦</span>
+                </button>
+
                 <div class="card-meta">
                     <span class="card-institution">${session.institution || ''}</span>
                     <span class="card-cohort">${session.cohort || ''}</span>
@@ -121,9 +142,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         container.innerHTML = html;
 
+        // Attach Card Click Listeners (Navigation)
         container.querySelectorAll('.session-card').forEach(card => {
             card.addEventListener('click', function(e) {
-                if (e.target.classList.contains('card-title')) return;
+                // If we clicked the share button or handout button, do nothing here
+                if (e.target.closest('.card-share-btn') || e.target.closest('.handout-btn')) return;
+                
+                if (e.target.classList.contains('card-title')) return; // Let default link behavior happen
+                
                 const link = this.querySelector('.card-title');
                 const hasViewer = this.getAttribute('data-viewer') === 'true';
                 if (link) {
@@ -134,6 +160,27 @@ document.addEventListener('DOMContentLoaded', () => {
                         window.open(link.href, '_blank');
                     }
                 }
+            });
+        });
+
+        // Attach Share Button Listeners
+        container.querySelectorAll('.card-share-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation(); // Stop card from opening
+                
+                const title = this.getAttribute('data-title');
+                const link = this.getAttribute('data-link');
+                const handout = this.getAttribute('data-handout');
+                
+                // Construct rich share text
+                let shareText = `Check out this session: ${title}\n🔗 Deck: ${link}`;
+                
+                if (handout) {
+                    shareText += `\n📄 Notes: ${handout}`;
+                }
+
+                // Use the existing fancy copy function
+                copyWithDelight(shareText, this);
             });
         });
     }
