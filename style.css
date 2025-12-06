@@ -2038,3 +2038,31 @@ p { color: var(--soft-grey); }
 .share-view-button .icon {
     font-size: 1rem;
 }
+/* === UPDATED CARD FOOTER LAYOUT === */
+.card-actions-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Style for the new Handout Button */
+.handout-btn {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--soft-grey);
+    background: var(--mist-rose);
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border-light);
+    transition: all 0.2s ease;
+}
+
+.handout-btn:hover {
+    background: var(--white);
+    color: var(--electric-orange);
+    border-color: var(--electric-orange);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
