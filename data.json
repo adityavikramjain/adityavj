@@ -1,6 +1,29 @@
 {
     "sessions": [
         {
+    "id": "ai-phd-research",
+    "title": "AI for PhD Research",
+    "institution": "IIM Kozhikode",
+    "program": "DPM",
+    "cohort": "2025",
+    "url": "presentations/ai-phd-research.html",
+    "handout": "presentations/ai-phd-handout.html", 
+    "desc": "A comprehensive guide on leveraging AI tools and strategies for the doctoral research lifecycle.",
+    "tags": ["AI", "NotebookLM", "Research"],
+    "featured": true
+        },
+        {
+            "id": "ai-phd-research",
+            "title": "AI for PhD Research",
+            "institution": "IIM Kozhikode",
+            "program": "DPM",
+            "cohort": "2025",
+            "url": "presentations/ai-phd-research.html",
+            "desc": "A comprehensive guide on leveraging AI tools and strategies for the doctoral research lifecycle.",
+            "tags": ["AI", "NotebookLM" "Research"],
+            "featured": true
+        },
+        {
             "id": "cx-genai-nov25",
             "title": "Customer Experience in the Age of GenAI",
             "institution": "IIM Kozhikode",
