@@ -11,34 +11,63 @@
     
     <link rel="stylesheet" href="viewer.css">
     <style>
-        /* Fullscreen Button Styles */
+        /* === FULLSCREEN TOGGLE STYLES === */
+        
+        /* 1. Header Button (Visible normally) */
         .fs-btn {
             background: none;
             border: none;
             cursor: pointer;
-            padding: 6px; /* Reduced padding to fit mobile headers */
+            padding: 6px;
             border-radius: 4px;
             color: var(--charcoal);
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-left: auto; /* Pushes button to far right */
+            margin-left: auto;
         }
         .fs-btn:hover {
             background-color: var(--mist-rose);
             color: var(--electric-orange);
         }
-        .fs-icon {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
+        
+        /* 2. Floating Exit Button (Hidden by default) */
+        .exit-fs-btn {
+            display: none; /* Hidden normally */
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 2000; /* Above everything */
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
         
-        /* Hide UI when in Fullscreen Mode */
+        .exit-fs-btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+            color: #000;
+            transform: scale(1.1);
+        }
+
+        .fs-icon { width: 24px; height: 24px; fill: currentColor; }
+        
+        /* 3. Fullscreen Logic */
         :fullscreen .top-nav, :fullscreen .metadata-bar { display: none; }
-        /* Ensure black background in fullscreen */
         ::backdrop { background-color: black; }
+        
+        /* SHOW Exit Button ONLY in Fullscreen */
+        :fullscreen .exit-fs-btn { display: flex; }
+        
     </style>
 </head>
 <body>
@@ -68,8 +97,8 @@
             <h1 class="presentation-title" id="presentation-title">Loading...</h1>
             <p class="presentation-desc" id="presentation-desc"></p>
             
-            <button id="fullscreen-trigger" class="fs-btn" title="Toggle Fullscreen">
-                <svg class="fs-icon" viewBox="0 0 24 24">
+            <button id="fullscreen-trigger" class="fs-btn" title="Enter Fullscreen">
+                <svg class="fs-icon" viewBox="0 0 24 24" style="width:20px; height:20px;">
                     <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
                 </svg>
             </button>
@@ -77,6 +106,13 @@
     </div>
 
     <main class="presentation-frame" id="presentation-frame">
+        
+        <button id="exit-fullscreen-btn" class="exit-fs-btn" title="Exit Fullscreen">
+            <svg class="fs-icon" viewBox="0 0 24 24">
+                <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>
+            </svg>
+        </button>
+
         <div class="keyboard-hint">Use ← → arrow keys (or swipe) to navigate</div>
         <iframe 
             id="presentation-iframe"
@@ -106,13 +142,7 @@
                 <div class="email-capture-icon">📬</div>
                 <h3>Want the key takeaways and resources from this session?</h3>
                 <form id="email-capture-form" class="email-capture-form">
-                    <input 
-                        type="email" 
-                        id="email-input" 
-                        placeholder="your@email.com" 
-                        required
-                        autocomplete="email"
-                    />
+                    <input type="email" id="email-input" placeholder="your@email.com" required autocomplete="email"/>
                     <button type="submit" class="email-submit-btn">
                         <span class="btn-text">Send it to me</span>
                         <span class="btn-loading hidden">Sending...</span>
@@ -120,7 +150,6 @@
                 </form>
                 <button class="email-dismiss" id="email-dismiss">No thanks</button>
             </div>
-            
             <div class="email-capture-success hidden" id="email-success">
                 <div class="success-icon">✨</div>
                 <h3>You're on the list!</h3>
@@ -145,10 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => {
             const presentation = data.sessions.find(s => s.id === presentationId);
-            if (!presentation) {
-                showError(`Presentation "${presentationId}" not found.`);
-                return;
-            }
+            if (!presentation) { showError(`Presentation "${presentationId}" not found.`); return; }
             
             document.title = `${presentation.title} | Aditya V Jain`;
             document.getElementById('presentation-title').textContent = presentation.title;
@@ -157,43 +183,27 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('cohort-badge').textContent = presentation.cohort || '';
             
             const presentationUrl = presentation.viewerUrl || presentation.url;
-            if (!presentationUrl) {
-                showError('No presentation URL available.');
-                return;
-            }
+            if (!presentationUrl) { showError('No presentation URL available.'); return; }
             
             const iframe = document.getElementById('presentation-iframe');
             
-            // === 1. INJECT RESPONSIVE LOGIC (SCALING + TOUCH + FULLSCREEN SUPPORT) ===
+            // === 1. INJECT RESPONSIVE & TOUCH LOGIC ===
             iframe.onload = () => {
                 document.getElementById('loading-overlay').classList.add('hidden');
-                forceFocus(); // Immediate focus attempt
+                forceFocus();
 
                 try {
                     const doc = iframe.contentDocument || iframe.contentWindow.document;
-                    
                     if (doc && doc.querySelector('.presentation-container')) {
-                        // A. Inject CSS for Absolute Centering
+                        // Inject CSS for Absolute Centering
                         const style = doc.createElement('style');
                         style.textContent = `
-                            body {
-                                margin: 0; padding: 0;
-                                width: 100vw; height: 100vh;
-                                overflow: hidden;
-                                background-color: #000;
-                                position: relative;
-                            }
-                            .presentation-container {
-                                margin: 0 !important;
-                                position: absolute;
-                                top: 50%; left: 50%;
-                                transform-origin: center center;
-                                box-shadow: 0 0 40px rgba(0,0,0,0.5);
-                            }
+                            body { margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden; background-color: #000; position: relative; }
+                            .presentation-container { margin: 0 !important; position: absolute; top: 50%; left: 50%; transform-origin: center center; box-shadow: 0 0 40px rgba(0,0,0,0.5); }
                         `;
                         doc.head.appendChild(style);
 
-                        // B. Inject JS for Logic
+                        // Inject JS for Logic
                         const script = doc.createElement('script');
                         script.textContent = `
                             function updateLayout() {
@@ -204,7 +214,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                 const scale = Math.min(screenW / baseW, screenH / baseH);
                                 container.style.transform = 'translate(-50%, -50%) scale(' + scale + ')';
                             }
-                            // TOUCH NAVIGATION
                             let touchStartX = 0;
                             document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
                             document.addEventListener('touchend', e => {
@@ -224,9 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         `;
                         doc.body.appendChild(script);
                     }
-                } catch (e) {
-                    console.log('External presentation, skipping injection.');
-                }
+                } catch (e) { console.log('External presentation, skipping injection.'); }
             };
             
             // Handle URL loading logic
@@ -241,52 +248,45 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             iframe.src = embedUrl;
 
-            // === 2. NAVIGATION & FOCUS FIXES ===
-            function forceFocus() {
-                iframe.focus();
-                if (iframe.contentWindow) iframe.contentWindow.focus();
-            }
+            // === 2. NAVIGATION & FULLSCREEN LOGIC ===
+            function forceFocus() { iframe.focus(); if (iframe.contentWindow) iframe.contentWindow.focus(); }
 
-            // A. Global Key Forwarder (Catches keys if focus is lost and sends to iframe)
+            // Global Key Forwarder
             document.addEventListener('keydown', (e) => {
                 if (['ArrowRight', 'ArrowLeft', ' ', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
                     if(e.key === ' ' || e.key === 'ArrowUp' || e.key === 'ArrowDown') e.preventDefault();
                     try {
-                        const eventClone = new KeyboardEvent('keydown', {
-                            key: e.key,
-                            code: e.code,
-                            keyCode: e.keyCode,
-                            bubbles: true
-                        });
+                        const eventClone = new KeyboardEvent('keydown', { key: e.key, code: e.code, keyCode: e.keyCode, bubbles: true });
                         iframe.contentDocument.dispatchEvent(eventClone);
-                    } catch(err) { /* Ignore cross-origin */ }
+                    } catch(err) { /* Ignore */ }
                 }
             });
 
-            // B. Fullscreen Trigger Logic
             const fsBtn = document.getElementById('fullscreen-trigger');
+            const exitFsBtn = document.getElementById('exit-fullscreen-btn'); // NEW BUTTON
             const presentationFrame = document.getElementById('presentation-frame');
 
+            // Enter Fullscreen
             if (fsBtn && presentationFrame) {
                 fsBtn.addEventListener('click', () => {
                     if (!document.fullscreenElement) {
-                        presentationFrame.requestFullscreen().then(() => {
-                            // Vital: Re-focus after transition so keys work immediately
-                            setTimeout(forceFocus, 100); 
-                        }).catch(err => console.error(err));
-                    } else {
+                        presentationFrame.requestFullscreen().then(() => setTimeout(forceFocus, 100)).catch(err => console.error(err));
+                    }
+                });
+            }
+
+            // Exit Fullscreen (The new logic)
+            if (exitFsBtn) {
+                exitFsBtn.addEventListener('click', () => {
+                    if (document.fullscreenElement) {
                         document.exitFullscreen();
                     }
                 });
             }
             
-            // C. Ensure clicks anywhere re-focus the presentation
             document.addEventListener('click', forceFocus);
         })
-        .catch(error => {
-            console.error(error);
-            showError('Failed to load data.');
-        });
+        .catch(error => { console.error(error); showError('Failed to load data.'); });
     
     function showError(message) {
         document.getElementById('loading-overlay').classList.add('hidden');
