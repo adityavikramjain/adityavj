@@ -13,7 +13,6 @@
 </head>
 <body>
 
-<!-- Top Navigation Bar -->
 <nav class="top-nav">
     <div class="nav-container">
         <a href="index.html" class="nav-brand">
@@ -30,7 +29,6 @@
 
 <div class="viewer-container">
 
-    <!-- Metadata Bar -->
     <div class="metadata-bar" id="metadata-bar">
         <div class="metadata-content">
             <div class="metadata-badges">
@@ -42,9 +40,8 @@
         </div>
     </div>
 
-    <!-- Presentation Frame -->
     <main class="presentation-frame">
-    <div class="keyboard-hint">Use ← → arrow keys to navigate</div>
+    <div class="keyboard-hint">Use ← → arrow keys (or swipe) to navigate</div>
     <iframe 
         id="presentation-iframe"
         src="about:blank"
@@ -53,13 +50,11 @@
         allow="autoplay; fullscreen"
     ></iframe>
         
-        <!-- Loading State -->
         <div class="loading-overlay" id="loading-overlay">
             <div class="loading-spinner"></div>
             <p>Loading presentation...</p>
         </div>
         
-        <!-- Error State -->
         <div class="error-overlay hidden" id="error-overlay">
             <div class="error-icon">⚠️</div>
             <h2>Presentation Not Found</h2>
@@ -68,7 +63,6 @@
         </div>
     </main>
 
-    <!-- Email Capture Popup -->
     <div class="email-capture-overlay hidden" id="email-capture">
         <div class="email-capture-card">
             <button class="email-capture-close" id="email-capture-close" aria-label="Close">×</button>
@@ -91,7 +85,6 @@
                 <button class="email-dismiss" id="email-dismiss">No thanks</button>
             </div>
             
-            <!-- Success State -->
             <div class="email-capture-success hidden" id="email-success">
                 <div class="success-icon">✨</div>
                 <h3>You're on the list!</h3>
@@ -133,7 +126,6 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('cohort-badge').textContent = presentation.cohort || '';
             
             // Determine which URL to use
-            // Priority: viewerUrl (hosted HTML/PDF) > url (external link)
             const presentationUrl = presentation.viewerUrl || presentation.url;
             
             if (!presentationUrl) {
@@ -144,108 +136,122 @@ document.addEventListener('DOMContentLoaded', () => {
             // Load presentation in iframe
             const iframe = document.getElementById('presentation-iframe');
             
- iframe.onload = () => {
-    document.getElementById('loading-overlay').classList.add('hidden');
+            // === MODIFIED: RESPONSIVE & TOUCH LOGIC ===
+            iframe.onload = () => {
+                document.getElementById('loading-overlay').classList.add('hidden');
 
-    // === INJECT RESPONSIVE SCALING (NEW) ===
-    try {
-        const doc = iframe.contentDocument || iframe.contentWindow.document;
-        
-        // Only run if this is one of your HTML presentations
-        if (doc && doc.querySelector('.presentation-container')) {
-            
-            // 1. Inject CSS to center the slide and prevent scrollbars
-            const style = doc.createElement('style');
-            style.textContent = `
-                body {
-                    margin: 0;
-                    padding: 0;
-                    width: 100vw;
-                    height: 100vh;
-                    overflow: hidden; /* Hide scrollbars */
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    background-color: #1a1a1a; /* Dark background for letterboxing */
+                try {
+                    const doc = iframe.contentDocument || iframe.contentWindow.document;
+                    
+                    // Only apply to local HTML presentations
+                    if (doc && doc.querySelector('.presentation-container')) {
+                        
+                        // 1. INJECT ROBUST CSS (Absolute Centering)
+                        const style = doc.createElement('style');
+                        style.textContent = `
+                            body {
+                                margin: 0;
+                                padding: 0;
+                                width: 100vw;
+                                height: 100vh;
+                                overflow: hidden;
+                                background-color: #000;
+                                position: relative;
+                            }
+                            .presentation-container {
+                                margin: 0 !important;
+                                position: absolute;
+                                top: 50%;
+                                left: 50%;
+                                transform-origin: center center;
+                                box-shadow: 0 0 40px rgba(0,0,0,0.5);
+                            }
+                        `;
+                        doc.head.appendChild(style);
+
+                        // 2. INJECT JS (Scaling + Touch Controls)
+                        const script = doc.createElement('script');
+                        script.textContent = `
+                            function updateLayout() {
+                                const container = document.querySelector('.presentation-container');
+                                if (!container) return;
+                                
+                                const baseW = 1440;
+                                const baseH = 932;
+                                const screenW = window.innerWidth;
+                                const screenH = window.innerHeight;
+                                
+                                const scale = Math.min(screenW / baseW, screenH / baseH);
+                                
+                                // ABSOLUTE CENTERING + SCALING
+                                container.style.transform = 'translate(-50%, -50%) scale(' + scale + ')';
+                            }
+
+                            // TOUCH BRIDGE (Tap/Swipe -> Arrow Keys)
+                            let touchStartX = 0;
+                            let touchStartY = 0;
+
+                            document.addEventListener('touchstart', e => {
+                                touchStartX = e.changedTouches[0].screenX;
+                                touchStartY = e.changedTouches[0].screenY;
+                            }, {passive: true});
+
+                            document.addEventListener('touchend', e => {
+                                const touchEndX = e.changedTouches[0].screenX;
+                                const touchEndY = e.changedTouches[0].screenY;
+                                const diffX = touchEndX - touchStartX;
+                                const diffY = touchEndY - touchStartY;
+
+                                if (Math.abs(diffY) > Math.abs(diffX)) return; // Ignore vertical
+
+                                if (Math.abs(diffX) > 50) { // SWIPE
+                                    if (diffX < 0) dispatchKey('ArrowRight');
+                                    else dispatchKey('ArrowLeft');
+                                } else { // TAP
+                                    if (touchEndX > window.innerWidth * 0.6) dispatchKey('ArrowRight');
+                                    else if (touchEndX < window.innerWidth * 0.4) dispatchKey('ArrowLeft');
+                                }
+                            });
+
+                            function dispatchKey(key) {
+                                document.dispatchEvent(new KeyboardEvent('keydown', {'key': key}));
+                            }
+
+                            window.addEventListener('resize', updateLayout);
+                            window.addEventListener('orientationchange', () => setTimeout(updateLayout, 100));
+                            updateLayout();
+                            document.body.focus();
+                        `;
+                        doc.body.appendChild(script);
+                    }
+                } catch (e) {
+                    console.log('External presentation, skipping auto-scale.');
                 }
-                .presentation-container {
-                    transform-origin: center center; /* Scale from middle */
-                    flex-shrink: 0;
-                    margin: auto;
-                    box-shadow: 0 0 50px rgba(0,0,0,0.5); /* Nice drop shadow */
-                }
-            `;
-            doc.head.appendChild(style);
 
-            // 2. Inject JS to calculate the perfect scale
-            const script = doc.createElement('script');
-            script.textContent = `
-                function scalePresentation() {
-                    const container = document.querySelector('.presentation-container');
-                    if (!container) return;
-                    
-                    // Your fixed slide dimensions
-                    const baseWidth = 1440;
-                    const baseHeight = 932;
-                    
-                    // Available space in the iframe
-                    const availWidth = window.innerWidth;
-                    const availHeight = window.innerHeight;
-                    
-                    // Calculate ratio to fit (contain)
-                    const scale = Math.min(availWidth / baseWidth, availHeight / baseHeight);
-                    
-                    // Apply scale (cap at 1.0 to prevent pixelation on massive screens)
-                    container.style.transform = 'scale(' + Math.min(scale, 1) + ')';
-                }
-
-                // Run on load and on resize
-                window.addEventListener('resize', scalePresentation);
-                scalePresentation();
-                
-                // Keep focus for keyboard arrows
-                document.body.focus();
-            `;
-            doc.body.appendChild(script);
-        }
-    } catch (e) {
-        // This catches errors if you load an external Google Slide (Cross-Origin)
-        console.log('External presentation loaded (Google Slides/Drive), skipping auto-scale.');
-    }
-
-    // Standard focus fallback
-    iframe.focus();
-    iframe.tabIndex = 0;
-};
+                iframe.focus();
+                iframe.tabIndex = 0;
+            };
             
             iframe.onerror = () => {
                 showError('Failed to load the presentation. Please try again.');
             };
             
-            // Handle Google Drive URLs - convert to embed format
+            // Handle Google Drive URLs
             let embedUrl = presentationUrl;
-            
-            // Google Drive file link → preview embed
             if (presentationUrl.includes('drive.google.com/file/d/')) {
                 const fileId = presentationUrl.match(/\/d\/([a-zA-Z0-9_-]+)/)?.[1];
-                if (fileId) {
-                    embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
-                }
+                if (fileId) embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
             }
-            
-            // Google Slides link → embed format
             if (presentationUrl.includes('docs.google.com/presentation')) {
                 embedUrl = presentationUrl.replace('/edit', '/embed').replace('/view', '/embed');
-                if (!embedUrl.includes('/embed')) {
-                    embedUrl = embedUrl.split('?')[0] + '/embed';
-                }
+                if (!embedUrl.includes('/embed')) embedUrl = embedUrl.split('?')[0] + '/embed';
             }
             
             iframe.src = embedUrl;
         })
         .catch(error => {
             console.error('Error loading data:', error);
-            showError('Failed to load presentation data. Please try again.');
+            showError('Failed to load presentation data.');
         });
     
     function showError(message) {
@@ -259,147 +265,82 @@ document.addEventListener('DOMContentLoaded', () => {
     initEmailCapture(presentationId);
 });
 
-// Email Capture Logic
+// Email Capture Logic (unchanged from your original)
 function initEmailCapture(presentationId) {
-    // Google Form configuration
-    // Form ID: 1kov-UO7M_dKERQ3oKJm6M76pxEDp_NEfLT69XJWqPAc
     const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1kov-UO7M_dKERQ3oKJm6M76pxEDp_NEfLT69XJWqPAc/formResponse';
-    
-    // TODO: Update this with your actual entry ID
-    // To find it: Open form → Right-click email field → Inspect → find name="entry.XXXXXX"
     const EMAIL_FIELD_NAME = 'entry.2094806374';
-    
-    const TIME_THRESHOLD = 90; // seconds before popup can show
+    const TIME_THRESHOLD = 90; 
     const STORAGE_KEY = `email_capture_${presentationId}`;
     
-    // Check if already shown/submitted for this presentation
-    if (localStorage.getItem(STORAGE_KEY)) {
-        return; // Don't initialize if already captured/dismissed
-    }
+    if (localStorage.getItem(STORAGE_KEY)) return;
     
     let timeSpent = 0;
     let canShow = false;
     let hasShown = false;
     
-    // Timer to track time spent
     const timer = setInterval(() => {
         timeSpent++;
-        if (timeSpent >= TIME_THRESHOLD) {
-            canShow = true;
-        }
+        if (timeSpent >= TIME_THRESHOLD) canShow = true;
     }, 1000);
     
-    // Exit intent detection (cursor leaves viewport at top)
     document.addEventListener('mouseleave', (e) => {
-        if (e.clientY < 10 && canShow && !hasShown) {
-            showEmailCapture();
-        }
+        if (e.clientY < 10 && canShow && !hasShown) showEmailCapture();
     });
     
-    // Fallback: show after 3 minutes regardless
     setTimeout(() => {
-        if (canShow && !hasShown) {
-            showEmailCapture();
-        }
-    }, 180000); // 3 minutes
+        if (canShow && !hasShown) showEmailCapture();
+    }, 180000); 
     
     function showEmailCapture() {
         hasShown = true;
         clearInterval(timer);
-        
         const overlay = document.getElementById('email-capture');
         overlay.classList.remove('hidden');
-        
-        // Focus the input after animation
-        setTimeout(() => {
-            document.getElementById('email-input').focus();
-        }, 300);
+        setTimeout(() => document.getElementById('email-input').focus(), 300);
     }
     
     function hideEmailCapture(remember = true) {
         const overlay = document.getElementById('email-capture');
         overlay.classList.add('hidden');
-        
-        if (remember) {
-            localStorage.setItem(STORAGE_KEY, 'dismissed');
-        }
+        if (remember) localStorage.setItem(STORAGE_KEY, 'dismissed');
     }
     
-    // Close button
-    document.getElementById('email-capture-close').addEventListener('click', () => {
-        hideEmailCapture(true);
-    });
-    
-    // "No thanks" button
-    document.getElementById('email-dismiss').addEventListener('click', () => {
-        hideEmailCapture(true);
-    });
-    
-    // Click outside to close
+    document.getElementById('email-capture-close').addEventListener('click', () => hideEmailCapture(true));
+    document.getElementById('email-dismiss').addEventListener('click', () => hideEmailCapture(true));
     document.getElementById('email-capture').addEventListener('click', (e) => {
-        if (e.target.id === 'email-capture') {
-            hideEmailCapture(true);
-        }
+        if (e.target.id === 'email-capture') hideEmailCapture(true);
     });
     
-    // Escape key to close
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && !document.getElementById('email-capture').classList.contains('hidden')) {
             hideEmailCapture(true);
         }
     });
     
-    // Form submission
     document.getElementById('email-capture-form').addEventListener('submit', async (e) => {
         e.preventDefault();
-        
-        const emailInput = document.getElementById('email-input');
-        const email = emailInput.value.trim();
-        
+        const email = document.getElementById('email-input').value.trim();
         if (!email) return;
         
         const submitBtn = document.querySelector('.email-submit-btn');
-        const btnText = submitBtn.querySelector('.btn-text');
-        const btnLoading = submitBtn.querySelector('.btn-loading');
-        
-        // Show loading state
-        btnText.classList.add('hidden');
-        btnLoading.classList.remove('hidden');
+        submitBtn.querySelector('.btn-text').classList.add('hidden');
+        submitBtn.querySelector('.btn-loading').classList.remove('hidden');
         submitBtn.disabled = true;
         
         try {
-            // Submit to Google Form
             const formData = new FormData();
             formData.append(EMAIL_FIELD_NAME, email);
+            await fetch(GOOGLE_FORM_URL, { method: 'POST', mode: 'no-cors', body: formData });
             
-            // Google Forms doesn't support CORS, so we use no-cors mode
-            await fetch(GOOGLE_FORM_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: formData
-            });
-            
-            // Show success (we can't confirm with no-cors, but it usually works)
             localStorage.setItem(STORAGE_KEY, 'submitted');
-            
             document.querySelector('.email-capture-content').classList.add('hidden');
             document.getElementById('email-success').classList.remove('hidden');
-            
-            // Auto-close after 3 seconds
-            setTimeout(() => {
-                hideEmailCapture(false);
-            }, 3000);
-            
+            setTimeout(() => hideEmailCapture(false), 3000);
         } catch (error) {
-            console.error('Email capture error:', error);
-            // Still show success (no-cors doesn't give us error info)
             localStorage.setItem(STORAGE_KEY, 'submitted');
             document.querySelector('.email-capture-content').classList.add('hidden');
             document.getElementById('email-success').classList.remove('hidden');
-            
-            setTimeout(() => {
-                hideEmailCapture(false);
-            }, 3000);
+            setTimeout(() => hideEmailCapture(false), 3000);
         }
     });
 }
