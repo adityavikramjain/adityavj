@@ -10,6 +10,34 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="viewer.css">
+    <style>
+        /* Extra styles for the fullscreen button */
+        .fs-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            color: var(--charcoal);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .fs-btn:hover {
+            background-color: var(--mist-rose);
+            color: var(--electric-orange);
+        }
+        .fs-icon {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+        
+        /* When in fullscreen, hide standard header/nav if they somehow persist */
+        :fullscreen .top-nav, :fullscreen .metadata-bar { display: none; }
+        ::backdrop { background-color: black; }
+    </style>
 </head>
 <body>
 
@@ -37,18 +65,24 @@
             </div>
             <h1 class="presentation-title" id="presentation-title">Loading...</h1>
             <p class="presentation-desc" id="presentation-desc"></p>
+            
+            <button id="fullscreen-trigger" class="fs-btn" title="Toggle Fullscreen" style="margin-left: auto;">
+                <svg class="fs-icon" viewBox="0 0 24 24">
+                    <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+                </svg>
+            </button>
         </div>
     </div>
 
-    <main class="presentation-frame">
-    <div class="keyboard-hint">Use ← → arrow keys (or swipe) to navigate</div>
-    <iframe 
-        id="presentation-iframe"
-        src="about:blank"
-        frameborder="0"
-        allowfullscreen
-        allow="autoplay; fullscreen"
-    ></iframe>
+    <main class="presentation-frame" id="presentation-frame">
+        <div class="keyboard-hint">Use ← → arrow keys (or swipe) to navigate</div>
+        <iframe 
+            id="presentation-iframe"
+            src="about:blank"
+            frameborder="0"
+            allowfullscreen
+            allow="autoplay; fullscreen"
+        ></iframe>
         
         <div class="loading-overlay" id="loading-overlay">
             <div class="loading-spinner"></div>
@@ -97,7 +131,7 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // Get presentation ID from URL
+    // === 1. SETUP PRESENTATION DATA ===
     const urlParams = new URLSearchParams(window.location.search);
     const presentationId = urlParams.get('id');
     
@@ -106,11 +140,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
     
-    // Load data and find presentation
     fetch('data.json')
         .then(response => response.json())
         .then(data => {
-            // Search in sessions
             const presentation = data.sessions.find(s => s.id === presentationId);
             
             if (!presentation) {
@@ -118,14 +150,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             
-            // Update page metadata
             document.title = `${presentation.title} | Aditya V Jain`;
             document.getElementById('presentation-title').textContent = presentation.title;
             document.getElementById('presentation-desc').textContent = presentation.desc || '';
             document.getElementById('program-badge').textContent = presentation.institution || 'Session';
             document.getElementById('cohort-badge').textContent = presentation.cohort || '';
             
-            // Determine which URL to use
             const presentationUrl = presentation.viewerUrl || presentation.url;
             
             if (!presentationUrl) {
@@ -133,20 +163,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             
-            // Load presentation in iframe
             const iframe = document.getElementById('presentation-iframe');
             
-            // === MODIFIED: RESPONSIVE & TOUCH LOGIC ===
+            // === 2. INJECT RESPONSIVE LOGIC (SCALING + TOUCH + FULLSCREEN SUPPORT) ===
             iframe.onload = () => {
                 document.getElementById('loading-overlay').classList.add('hidden');
 
                 try {
                     const doc = iframe.contentDocument || iframe.contentWindow.document;
                     
-                    // Only apply to local HTML presentations
                     if (doc && doc.querySelector('.presentation-container')) {
                         
-                        // 1. INJECT ROBUST CSS (Absolute Centering)
+                        // A. Inject CSS for Absolute Centering
                         const style = doc.createElement('style');
                         style.textContent = `
                             body {
@@ -169,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         `;
                         doc.head.appendChild(style);
 
-                        // 2. INJECT JS (Scaling + Touch Controls)
+                        // B. Inject JS for Logic
                         const script = doc.createElement('script');
                         script.textContent = `
                             function updateLayout() {
@@ -178,16 +206,19 @@ document.addEventListener('DOMContentLoaded', () => {
                                 
                                 const baseW = 1440;
                                 const baseH = 932;
+                                
+                                // Use window dimensions (robust against rotation)
                                 const screenW = window.innerWidth;
                                 const screenH = window.innerHeight;
                                 
+                                // Calculate scale to contain
                                 const scale = Math.min(screenW / baseW, screenH / baseH);
                                 
-                                // ABSOLUTE CENTERING + SCALING
+                                // Apply: Center first (translate), then Scale
                                 container.style.transform = 'translate(-50%, -50%) scale(' + scale + ')';
                             }
 
-                            // TOUCH BRIDGE (Tap/Swipe -> Arrow Keys)
+                            // TOUCH NAVIGATION
                             let touchStartX = 0;
                             let touchStartY = 0;
 
@@ -202,12 +233,12 @@ document.addEventListener('DOMContentLoaded', () => {
                                 const diffX = touchEndX - touchStartX;
                                 const diffY = touchEndY - touchStartY;
 
-                                if (Math.abs(diffY) > Math.abs(diffX)) return; // Ignore vertical
+                                if (Math.abs(diffY) > Math.abs(diffX)) return;
 
-                                if (Math.abs(diffX) > 50) { // SWIPE
+                                if (Math.abs(diffX) > 50) { 
                                     if (diffX < 0) dispatchKey('ArrowRight');
                                     else dispatchKey('ArrowLeft');
-                                } else { // TAP
+                                } else { 
                                     if (touchEndX > window.innerWidth * 0.6) dispatchKey('ArrowRight');
                                     else if (touchEndX < window.innerWidth * 0.4) dispatchKey('ArrowLeft');
                                 }
@@ -217,15 +248,18 @@ document.addEventListener('DOMContentLoaded', () => {
                                 document.dispatchEvent(new KeyboardEvent('keydown', {'key': key}));
                             }
 
+                            // Event Listeners for Resize/Rotate
                             window.addEventListener('resize', updateLayout);
                             window.addEventListener('orientationchange', () => setTimeout(updateLayout, 100));
+                            
+                            // Initial Run
                             updateLayout();
                             document.body.focus();
                         `;
                         doc.body.appendChild(script);
                     }
                 } catch (e) {
-                    console.log('External presentation, skipping auto-scale.');
+                    console.log('External presentation, skipping injection.');
                 }
 
                 iframe.focus();
@@ -236,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 showError('Failed to load the presentation. Please try again.');
             };
             
-            // Handle Google Drive URLs
+            // Handle Google Drive/Slides Links
             let embedUrl = presentationUrl;
             if (presentationUrl.includes('drive.google.com/file/d/')) {
                 const fileId = presentationUrl.match(/\/d\/([a-zA-Z0-9_-]+)/)?.[1];
@@ -254,6 +288,24 @@ document.addEventListener('DOMContentLoaded', () => {
             showError('Failed to load presentation data.');
         });
     
+    // === 3. FULLSCREEN LOGIC ===
+    const fsBtn = document.getElementById('fullscreen-trigger');
+    const presentationFrame = document.getElementById('presentation-frame');
+
+    if (fsBtn && presentationFrame) {
+        fsBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                // Enter Fullscreen
+                presentationFrame.requestFullscreen().catch(err => {
+                    console.error(`Error attempting to enable full-screen mode: ${err.message}`);
+                });
+            } else {
+                // Exit Fullscreen
+                document.exitFullscreen();
+            }
+        });
+    }
+
     function showError(message) {
         document.getElementById('loading-overlay').classList.add('hidden');
         document.getElementById('error-overlay').classList.remove('hidden');
@@ -261,11 +313,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('metadata-bar').classList.add('hidden');
     }
     
-    // === EMAIL CAPTURE SYSTEM ===
+    // === 4. EMAIL CAPTURE SYSTEM ===
     initEmailCapture(presentationId);
 });
 
-// Email Capture Logic (unchanged from your original)
+// Email Capture Logic
 function initEmailCapture(presentationId) {
     const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1kov-UO7M_dKERQ3oKJm6M76pxEDp_NEfLT69XJWqPAc/formResponse';
     const EMAIL_FIELD_NAME = 'entry.2094806374';
