@@ -172,6 +172,85 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    // === RENDER RESOURCES ===
+    function renderResources(resources) {
+        const container = document.getElementById('resources-grid');
+        const promptContainer = document.getElementById('prompt-storage-container');
+
+        if (!resources || resources.length === 0) {
+            container.innerHTML = '<p class="empty-state">No resources found.</p>';
+            return;
+        }
+
+        let html = '';
+
+        resources.forEach((res, index) => {
+            const tags = res.tags || [];
+            const tagsAttr = tags.join(',');
+            const featuredClass = res.featured ? 'featured' : '';
+
+            // Generate platform badges if applicable
+            const badgesHtml = res.platforms ? generatePlatformBadges(res.platforms) : '';
+
+            // Check if it's a Workflow
+            if (res.type === 'Workflow' && res.steps) {
+                html += renderWorkflow(res, tagsAttr, featuredClass, badgesHtml);
+            } else {
+                // Regular Resource (Prompt, Gem, etc.)
+                let icon = '💎';
+                if (res.type === 'Gemini Gem') icon = '💎';
+                else if (res.type === 'Custom GPT') icon = '🤖';
+                else if (res.type && res.type.includes('Prompt')) icon = '⚡';
+
+                // Handle prompt storage
+                if (res.prompt_text && res.prompt_text.trim() !== '') {
+                    const promptId = 'prompt-' + index;
+                    promptStorage[promptId] = res.prompt_text;
+
+                    html += `
+                    <div class="resource-card prompt-card filterable-card ${featuredClass}"
+                         data-tags="${tagsAttr}"
+                         data-prompt-id="${promptId}"
+                         data-title="${escapeHtml(res.title)}"
+                         data-type="${res.type}">
+                        <div class="card-header">
+                            <span class="resource-type"><span class="icon">${icon}</span> ${res.type}</span>
+                            <button class="card-copy-btn" data-prompt-id="${promptId}" title="Copy prompt">
+                                <span class="copy-icon">📋</span>
+                            </button>
+                        </div>
+                        <div class="resource-title">${res.title}</div>
+                        <p class="resource-desc">${res.desc || ''}</p>
+                        ${badgesHtml}
+                        <div class="resource-footer">View Prompt →</div>
+                    </div>`;
+                } else {
+                    // Gem or external link
+                    const linkUrl = res.link || '#';
+                    html += `
+                    <div class="resource-card gem-card filterable-card ${featuredClass}"
+                         data-tags="${tagsAttr}"
+                         data-gem-link="${linkUrl}"
+                         data-link="${linkUrl}">
+                        <div class="card-header">
+                            <span class="resource-type"><span class="icon">${icon}</span> ${res.type}</span>
+                        </div>
+                        <div class="resource-title">${res.title}</div>
+                        <p class="resource-desc">${res.desc || ''}</p>
+                        ${badgesHtml}
+                        <div class="resource-footer">Open Tool →</div>
+                    </div>`;
+                }
+            }
+        });
+
+        container.innerHTML = html;
+
+        // Attach listeners after rendering
+        attachResourceListeners();
+    }
+
     // === HELPER: GENERATE BADGES ===
     function generatePlatformBadges(platforms) {
         if (!platforms || platforms.length === 0) return '';
