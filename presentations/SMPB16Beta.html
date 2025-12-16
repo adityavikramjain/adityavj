@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Foundations of Generative AI | IIM Kozhikode</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --iimk-blue: #003366; --iimk-gold: #FFCC00;
+            --glass-surface: rgba(255, 255, 255, 0.75);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.9);
+            --glass-blur: blur(24px);
+            --glass-shadow: 0 10px 30px -5px rgba(0, 51, 102, 0.08);
+        }
+
+        body { 
+            margin: 0; padding: 0; background: #0F0F11; 
+            overflow: hidden; /* CRITICAL: Prevents scrollbars */
+            width: 100vw; height: 100vh;
+            font-family: 'Montserrat', sans-serif; 
+        }
+
+        /* 16:9 Canvas - Centered via Absolute + Transform to prevent flexbox overflow bugs */
+        #deck-container {
+            width: 1440px; height: 900px;
+            position: absolute;
+            top: 50%; left: 50%;
+            transform-origin: center center;
+            /* Transform is set via JS. Initial state centers it. */
+            transform: translate(-50%, -50%) scale(1); 
+            
+            background-color: #F8FAFC;
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(0, 51, 102, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(255, 204, 0, 0.1) 0%, transparent 40%);
+            box-shadow: 0 0 100px rgba(0,0,0,0.5);
+            overflow: hidden; /* Clips slide content */
+        }
+
+        /* Watermark */
+        .watermark {
+            position: absolute; bottom: 30px; left: 40px; z-index: 1000;
+            font-family: 'Montserrat'; font-weight: 700; font-size: 14px; opacity: 0.5;
+        }
+        .watermark a { text-decoration: none; color: var(--iimk-blue); border-bottom: 2px solid transparent; }
+        .watermark a:hover { opacity: 1; border-bottom-color: var(--iimk-gold); }
+
+        /* Slide Layout */
+        .slide {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            padding: 60px 80px; box-sizing: border-box;
+            opacity: 0; pointer-events: none; 
+            transition: opacity 0.4s ease;
+            display: flex; flex-direction: column;
+        }
+        .slide.active { opacity: 1; pointer-events: auto; z-index: 2; }
+
+        /* Typography */
+        h1.slide-title {
+            font-family: 'Playfair Display', serif; font-size: 56px; color: var(--iimk-blue); 
+            margin: 0 0 40px 0; position: relative; z-index: 10; flex-shrink: 0;
+        }
+        .hero-highlight {
+            background: linear-gradient(120deg, transparent 60%, var(--iimk-gold) 60%, var(--iimk-gold) 100%);
+            padding: 0 4px; border-radius: 2px;
+        }
+
+        /* Vertical Centering Container */
+        .slide-content { 
+            flex: 1; display: flex; flex-direction: column; 
+            justify-content: center; /* Vertical Center */
+            position: relative; z-index: 5;
+            height: 100%; 
+        }
+
+        /* Bento Grid System */
+        .bento-grid {
+            display: grid; gap: 30px; width: 100%; 
+            height: auto; 
+            align-content: center;
+        }
+        .cols-2 { grid-template-columns: 1fr 1fr; }
+        .cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+        /* Cards & Lists */
+        .bento-card {
+            background: var(--glass-surface);
+            backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+            border: var(--glass-border); box-shadow: var(--glass-shadow);
+            border-radius: 24px; padding: 40px;
+            display: flex; flex-direction: column; justify-content: center;
+        }
+        .bento-card h3 {
+            font-family: 'Montserrat'; font-size: 24px; color: var(--iimk-blue); margin: 0 0 20px 0;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .bento-card h3::before { content: ''; width: 8px; height: 8px; background: var(--iimk-gold); border-radius: 50%; }
+
+        ul.bullet-list { list-style: none; padding: 0; margin: 0; }
+        ul.bullet-list li {
+            font-size: 22px; line-height: 1.6; margin-bottom: 16px; padding-left: 30px; position: relative; color: #334155;
+        }
+        ul.bullet-list li::before { content: '→'; position: absolute; left: 0; color: var(--iimk-gold); font-weight: bold; }
+
+        /* Code/Prompt Box */
+        .prompt-box {
+            background: rgba(255,255,255,0.95); border-radius: 16px; 
+            border: 1px solid #E2E8F0; border-left: 6px solid var(--iimk-blue);
+            overflow: hidden; box-shadow: var(--glass-shadow);
+            margin-top: 20px;
+        }
+        .prompt-header { background: #F8FAFC; padding: 10px 20px; display: flex; justify-content: space-between; border-bottom: 1px solid #E2E8F0; align-items: center; }
+        .prompt-label { font-size: 11px; font-weight: 700; color: var(--iimk-blue); text-transform: uppercase; letter-spacing: 1px; }
+        .copy-btn { cursor: pointer; border: 1px solid #CBD5E1; background: white; border-radius: 4px; padding: 4px 10px; font-size: 11px; font-weight: 600; transition: background 0.2s; }
+        .copy-btn:hover { background: #F1F5F9; }
+        .prompt-content { padding: 20px; font-family: 'Fira Code', monospace; font-size: 16px; color: #1E293B; margin: 0; white-space: pre-wrap; line-height: 1.5; }
+
+        /* Title Slide Special */
+        .title-slide-layout {
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 100%;
+            background: radial-gradient(circle at 50% 50%, #00264d 0%, #001a33 100%);
+            margin: -60px -80px; padding: 60px 80px;
+        }
+        .title-slide-layout h1 { color: white; font-size: 72px; margin-bottom: 20px; }
+        .title-slide-layout .subtitle { color: var(--iimk-gold); font-size: 28px; letter-spacing: 2px; text-transform: uppercase; }
+
+        /* Speaker Notes */
+        #speaker-notes {
+            position: fixed; bottom: 0; left: 50%; transform: translateY(100%) translateX(-50%); width: 60%;
+            background: rgba(15, 23, 42, 0.95); color: white; padding: 25px 40px; border-radius: 20px 20px 0 0;
+            z-index: 9999; font-size: 16px; transition: transform 0.3s ease;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
+            line-height: 1.6;
+        }
+        #speaker-notes.visible { transform: translateY(0) translateX(-50%); }
+
+        /* Custom Table Styling */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; padding: 12px; border-bottom: 2px solid var(--iimk-gold); color: var(--iimk-blue); font-family: 'Montserrat'; font-weight: 700; }
+        td { padding: 12px; border-bottom: 1px solid #E2E8F0; color: #334155; font-size: 18px; }
+        
+        /* Helper for frameworks */
+        .framework-circle {
+            width: 80px; height: 80px; border-radius: 50%; background: var(--iimk-blue); color: white;
+            display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: bold; font-family: 'Playfair Display';
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div id="deck-container">
+        <div class="watermark"><a href="https://adityavj.com" target="_blank">adityavj.com</a></div>
+        
+        <div id="slides-wrapper"></div>
+    </div>
+
+    <div id="speaker-notes">Speaker Notes Panel</div>
+
+    <script>
+        // INSERT JSON DATA AS CONSTANT
+        const presentationData = {
+  "metadata": {
+    "title": "Foundations of Generative AI: Mental Models and Effective Interaction",
+    "program": "IIM Kozhikode — Senior Management Program B16",
+    "session": "Session 1 of 3",
+    "date": "January 4, 2026",
+    "facilitator": {
+      "name": "Aditya V Jain",
+      "title": "Sr. Product Manager, Google"
+    },
+    "total_slides": 48
+  },
+  "slides": [
+    {
+      "slide_number": 1,
+      "type": "title",
+      "title": "Foundations of Generative AI",
+      "subtitle": "Mental Models and Effective Interaction",
+      "footer": ["IIM Kozhikode — Senior Management Program B16", "January 4, 2026 | Session 1 of 3"]
+    },
+    {
+      "slide_number": 2,
+      "type": "content",
+      "title": "Your Facilitator",
+      "content": {
+        "heading": "Aditya V Jain",
+        "sub": "Sr. Product Manager, Google",
+        "list": [
+          "18+ years in product leadership across Google, Amazon, Snapdeal and Shaadi.com",
+          "Guest Faculty, IIM Kozhikode — Teaching AI applications in business across MDP, EPGP, and PGP programs for 4 years",
+          "What I bring: I'm not an AI researcher — I'm a practitioner. I use these tools daily for real work."
+        ]
+      }
+    },
+    {
+      "slide_number": 3,
+      "type": "content",
+      "title": "The Three Questions on Your Mind",
+      "content": {
+        "heading": "Our Roadmap for 3 Sundays",
+        "list": [
+          "1. How do I actually get useful output? (Today: Mental models + Prompting)",
+          "2. Can AI help with real work? (Session 2: Deep Research & Analysis)",
+          "3. What does this mean for my strategy? (Session 3: Future Assessment)"
+        ]
+      }
+    },
+    {
+      "slide_number": 4,
+      "type": "content",
+      "title": "Before We Begin — Quick Setup",
+      "content": {
+        "heading": "Three Things You Need",
+        "list": [
+          "Gemini open in another tab (gemini.google.com)",
+          "A real problem in the back of your mind",
+          "Willingness to experiment"
+        ]
+      },
+      "speaker_notes": "Pause here and let participants get Gemini ready. Check chat for any setup issues."
+    },
+    {
+      "slide_number": 5,
+      "type": "agenda",
+      "title": "Today's Roadmap",
+      "items": [
+        "2:30 - 3:15 : The Foundations & Demystifying Terminology",
+        "3:15 - 3:55 : Prompting that Works (R.C.T. Framework)",
+        "3:55 - 4:25 : Break",
+        "4:25 - 5:15 : Real Problems, Live Solutions",
+        "5:15 - 5:45 : Productivity Multipliers (Voice & Gems)",
+        "5:45 - 6:00 : Wrap-up & Homework"
+      ]
+    },
+    {
+      "slide_number": 6,
+      "type": "section_divider",
+      "title": "What Are You Actually Using?",
+      "subtitle": "Cutting Through the Jargon: AI, ML, LLM, GenAI"
+    },
+    {
+      "slide_number": 7,
+      "type": "content",
+      "title": "How These Terms Relate",
+      "content": {
+        "heading": "The Hierarchy",
+        "list": [
+          "Artificial Intelligence (AI): The broad umbrella. Any machine acting 'smart'.",
+          "Machine Learning (ML): Systems that learn patterns from data, not explicit code.",
+          "Large Language Models (LLMs): Trained on massive text to predict language.",
+          "Generative AI: The capability to create new content (text, images, code)."
+        ]
+      }
+    },
+    {
+        "slide_number": 8,
+        "type": "content",
+        "title": "How LLMs Actually Work",
+        "content": {
+            "heading": "It's Prediction, Not Retrieval",
+            "list": [
+                "1. Massive Data Collection: Books, Wikipedia, Code.",
+                "2. The Training Game: Predicting the next word. 'The capital of France is...'",
+                "3. Fine-Tuning: Humans rate responses for helpfulness.",
+                "Takeaway: It generates text that *looks* like a correct answer."
+            ]
+        },
+        "image_query": ""
+    },
+    {
+      "slide_number": 9,
+      "type": "two_column",
+      "title": "Implications for Use",
+      "col1": {
+        "heading": "Generating, Not Retrieving",
+        "content": "There is no database being searched. It is building the answer word-by-word based on patterns. This is why 'hallucinations' happen."
+      },
+      "col2": {
+        "heading": "Patterns vs. Truth",
+        "content": "It learned what sounds right, not what is right. Treat output like a first draft from a well-read but unreliable intern."
+      }
+    },
+    {
+      "slide_number": 10,
+      "type": "two_column",
+      "title": "The Capability Map",
+      "col1": {
+        "heading": "Where LLMs Excel ✓",
+        "content": "Drafting, Brainstorming, Synthesis, Reformatting, Explaining complex concepts."
+      },
+      "col2": {
+        "heading": "Where LLMs Fail ✗",
+        "content": "Precise math, Current events (without tools), Counting/Logic puzzles, Perfect factual accuracy."
+      },
+      "image_query": ""
+    },
+    {
+      "slide_number": 11,
+      "type": "section_divider",
+      "title": "The Right Mental Model",
+      "subtitle": "How to Think About AI to Get Value"
+    },
+    {
+      "slide_number": 12,
+      "type": "content",
+      "title": "How NOT to Think About AI",
+      "content": {
+        "heading": "Common Traps",
+        "list": [
+          "It's NOT Google Search (It creates, doesn't just find).",
+          "It's NOT All-Knowing (Confidence ≠ Accuracy).",
+          "It's NOT Magic (It needs clear instructions, just like a human)."
+        ]
+      }
+    },
+    {
+      "slide_number": 13,
+      "type": "content",
+      "title": "Think of it as a Brilliant New Employee",
+      "content": {
+        "heading": "Characteristics",
+        "list": [
+          "Extremely well-read across all domains.",
+          "Writes beautifully and fast.",
+          "Infinitely patient.",
+          "Zero context about *your* specific business or politics.",
+          "Will confidentially make things up to please you."
+        ]
+      },
+      "speaker_notes": "This is the core metaphor. You manage this employee by giving context and reviewing work."
+    },
+    {
+      "slide_number": 14,
+      "type": "two_column",
+      "title": "The Senior Management Advantage",
+      "col1": {
+        "heading": "Your Skills",
+        "content": "Setting objectives, Providing context, Giving feedback, Iterating on results."
+      },
+      "col2": {
+        "heading": "AI Needs",
+        "content": "Clear goals, Background info, 'Try again with this focus', Correction."
+      },
+      "footer": "Your management experience IS your prompting skill."
+    },
+    {
+      "slide_number": 15,
+      "type": "section_divider",
+      "title": "Prompting That Actually Works",
+      "subtitle": "From Vague to Valuable"
+    },
+    {
+      "slide_number": 16,
+      "type": "two_column",
+      "title": "Why Most Prompts Fail",
+      "col1": {
+        "heading": "What You Type",
+        "content": "'Summarize this report'"
+      },
+      "col2": {
+        "heading": "What You Meant",
+        "content": "'I need this for a CFO meeting, focus on financials, keep it short, flag risks, no jargon.'"
+      },
+      "footer": "The gap between intent and instruction is the failure point."
+    },
+    {
+      "slide_number": 17,
+      "type": "framework",
+      "title": "The R.C.T. Framework",
+      "framework": [
+        { "letter": "R", "title": "Role", "desc": "Who should the AI act as? (e.g., Senior Analyst, Skeptic)" },
+        { "letter": "C", "title": "Context", "desc": "What is the situation? Who is the audience? Why now?" },
+        { "letter": "T", "title": "Task", "desc": "Specific format, length, and content requirements." }
+      ],
+      "image_query": ""
+    },
+    {
+      "slide_number": 18,
+      "type": "content",
+      "title": "The Secret Sauce: Constraints",
+      "content": {
+        "heading": "Tell it what NOT to do",
+        "list": [
+          "Don't use buzzwords.",
+          "Keep it under 150 words.",
+          "No bullet points, use prose.",
+          "Don't include generic intros.",
+          "If you don't know, say you don't know."
+        ]
+      }
+    },
+    {
+      "slide_number": 19,
+      "type": "content",
+      "title": "Live Demo: Document Summarization",
+      "content": {
+        "heading": "The Scenario",
+        "list": [
+          "You have a 50+ page RBI Monetary Policy Report.",
+          "It's dense, technical, and important.",
+          "We will move from a bad prompt to a perfect one."
+        ]
+      }
+    },
+    {
+      "slide_number": 20,
+      "type": "demo_step",
+      "title": "Step 1: The Vague Prompt",
+      "prompt": "Summarize this report",
+      "notes": "Result: Generic, lists headings, misses what matters to YOU."
+    },
+    {
+      "slide_number": 21,
+      "type": "demo_step",
+      "title": "Step 2: Adding Context",
+      "prompt": "I'm the VP of Operations. We're planning capital expenditure for FY26. \n\nSummarize this RBI report focusing on:\n- Interest rate trajectory\n- Inflation outlook affecting input costs\n- Industrial credit availability\n\nI have a meeting with the CFO next week.",
+      "notes": "Result: Focused. AI knows WHY you are reading it."
+    },
+    {
+        "slide_number": 22,
+        "type": "demo_step",
+        "title": "Step 3: Adding Constraints",
+        "prompt": "...[Previous Context]...\n\nFormat:\n- Start with a 3-sentence executive summary.\n- Provide 5 key data points with citations.\n- Flag contradictions to our 7% inflation assumption.\n- Under 500 words.\n- No jargon.",
+        "notes": "Result: Presentation ready. Structured. Useful."
+    },
+    {
+      "slide_number": 23,
+      "type": "content",
+      "title": "The Difference",
+      "content": {
+        "heading": "ROI on 2 minutes of typing",
+        "list": [
+          "Vague Prompt: 0 minutes saved (requires reading report anyway).",
+          "Context + Constraints: 2 hours saved (extracts exactly what you need)."
+        ]
+      }
+    },
+    {
+        "slide_number": 24,
+        "type": "content",
+        "title": "Iteration is Normal",
+        "content": {
+            "heading": "It's a conversation",
+            "list": [
+                "Don't expect perfection on shot #1.",
+                "Common follow-ups: 'Make it shorter', 'Change tone', 'Expand on point 3'.",
+                "Budget 2-4 rounds of conversation for complex tasks."
+            ]
+        }
+    },
+    {
+      "slide_number": 25,
+      "type": "section_divider",
+      "title": "Break",
+      "subtitle": "Reconvene in 30 Minutes. Think of a problem you want to solve."
+    },
+    {
+        "slide_number": 26,
+        "type": "section_divider",
+        "title": "Part 4: Real Problems",
+        "subtitle": "Crowdsourced Live Solutions"
+    },
+    {
+        "slide_number": 27,
+        "type": "content",
+        "title": "What's Not Working?",
+        "content": {
+            "heading": "Let's Solve It Now",
+            "list": [
+                "Share a task where AI failed you.",
+                "Share a skeptical question.",
+                "We will apply R.C.T. live."
+            ]
+        }
+    },
+    {
+        "slide_number": 28,
+        "type": "fallback_scenario",
+        "title": "Scenario A: Vendor Evaluation",
+        "prompt": "I'm evaluating 3 ERP vendor proposals. Compare them across:\n- Total cost of ownership (5-year)\n- Implementation timeline\n- Risks\n\nFormat as a comparison table plus a recommendation.",
+        "target": "IT / Operations"
+    },
+    {
+        "slide_number": 29,
+        "type": "fallback_scenario",
+        "title": "Scenario B: Customer Feedback",
+        "prompt": "Analyze these 200 support tickets.\n- Top 5 issue categories\n- Severity assessment\n- Recommended fixes\n- Quotes for each category",
+        "target": "Consumer / Retail"
+    },
+    {
+        "slide_number": 30,
+        "type": "content",
+        "title": "The Process",
+        "content": {
+            "heading": "How to tackle any problem",
+            "list": [
+                "1. Understand the Task.",
+                "2. Identify the Context Gap (What does AI not know?).",
+                "3. Build Prompt (Role, Context, Task, Constraints).",
+                "4. Execute & Iterate."
+            ]
+        }
+    },
+    {
+        "slide_number": 31,
+        "type": "section_divider",
+        "title": "Productivity Multipliers",
+        "subtitle": "Voice Dictation & Gemini Gems"
+    },
+    {
+        "slide_number": 32,
+        "type": "content",
+        "title": "The Typing Trap",
+        "content": {
+            "heading": "The Compression Gap",
+            "list": [
+                "Thinking Speed: ~150 WPM",
+                "Typing Speed: ~40 WPM",
+                "Result: You compress thoughts, losing context and nuance."
+            ]
+        }
+    },
+    {
+        "slide_number": 33,
+        "type": "two_column",
+        "title": "Voice Dictation",
+        "col1": {
+            "heading": "Wispr Flow / Dictation",
+            "content": "Speaking prompts is 4x faster. More importantly, you naturally include more context when speaking than typing."
+        },
+        "col2": {
+            "heading": "Stats",
+            "content": "72% of characters via voice after 6 months. 90% accuracy."
+        },
+        "image_query": ""
+    },
+    {
+        "slide_number": 34,
+        "type": "content",
+        "title": "Live Demo: Voice",
+        "content": {
+            "heading": "Watch the transformation",
+            "list": [
+                "Messy, natural speech -> Clean, structured prompt.",
+                "The input is richer, so the output is better."
+            ]
+        },
+        "image_query": ""
+    },
+    {
+        "slide_number": 35,
+        "type": "comparison_table",
+        "title": "Voice Tools",
+        "headers": ["Tool", "Platform", "Notes"],
+        "rows": [
+            ["Wispr Flow", "Mac/Win", "Context-aware, high accuracy"],
+            ["Built-in", "OS Default", "Free, acceptable for basics"],
+            ["Otter.ai", "Web/Mobile", "Great for long meetings"]
+        ]
+    },
+    {
+        "slide_number": 36,
+        "type": "section_divider",
+        "title": "Gemini Gems",
+        "subtitle": "From Prompt to Reusable Tool"
+    },
+    {
+        "slide_number": 37,
+        "type": "content",
+        "title": "Don't Start From Scratch",
+        "content": {
+            "heading": "What is a Gem?",
+            "list": [
+                "A saved prompt with a name.",
+                "Pre-load your Role, Context, and Constraints.",
+                "Example: 'The Critical CFO', 'The Email Polisher', 'The Document Summarizer'."
+            ]
+        }
+    },
+    {
+        "slide_number": 38,
+        "type": "demo",
+        "title": "Live Demo: Creating a Gem",
+        "content": {
+            "heading": "We will build 'The Executive Summarizer'",
+            "list": [
+                "1. Open Gem Manager",
+                "2. Paste our best R.C.T. prompt",
+                "3. Add placeholders [DOCUMENT]",
+                "4. Save and Reuse"
+            ]
+        }
+    },
+    {
+        "slide_number": 39,
+        "type": "content",
+        "title": "Anatomy of a Gem",
+        "content": {
+            "heading": "Fields",
+            "list": [
+                "Name: Short & Memorable.",
+                "Instructions: The 'System Prompt' (Your R.C.T. goes here).",
+                "Tip: Be explicit about constraints in the instructions."
+            ]
+        }
+    },
+    {
+        "slide_number": 40,
+        "type": "two_column",
+        "title": "Gems to Build This Week",
+        "col1": {
+            "heading": "Ideas",
+            "content": "1. Meeting Prep Brief\n2. Email Tone Adjuster\n3. Weekly Update Writer"
+        },
+        "col2": {
+            "heading": "More Ideas",
+            "content": "4. Proposal Reviewer (Risk finder)\n5. Feedback Framer\n6. Jargon Buster"
+        }
+    },
+    {
+        "slide_number": 41,
+        "type": "recap",
+        "title": "Recap: Session 1",
+        "points": [
+            "LLMs predict patterns, they don't retrieve truth.",
+            "Treat AI like a brilliant intern (needs context/review).",
+            "R.C.T. Framework: Role, Context, Task + Constraints.",
+            "Voice & Gems multiply your speed."
+        ]
+    },
+    {
+        "slide_number": 42,
+        "type": "content",
+        "title": "Homework",
+        "content": {
+            "heading": "Before Next Sunday",
+            "list": [
+                "1. Dictate at least 5 prompts.",
+                "2. Create at least one Gem.",
+                "3. Bring a complex research challenge for Session 2."
+            ]
+        }
+    },
+    {
+        "slide_number": 43,
+        "type": "preview",
+        "title": "Coming Up: Session 2",
+        "subtitle": "AI for Research & Analysis",
+        "content": {
+            "heading": "Deep Research",
+            "list": [
+                "Gemini Deep Research Mode",
+                "NotebookLM (Chat with your documents)",
+                "Live complex problem solving"
+            ]
+        }
+    },
+    {
+        "slide_number": 44,
+        "type": "title",
+        "title": "Thank You",
+        "subtitle": "Questions?",
+        "footer": ["Aditya V Jain", "adityavj.com"]
+    }
+  ]
+};
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('slides-wrapper');
+            const notesPanel = document.getElementById('speaker-notes');
+            let currentSlideIndex = 0;
+
+            // 1. SCALING ENGINE
+            function scaleDeck() {
+                const deck = document.getElementById('deck-container');
+                const winW = window.innerWidth;
+                const winH = window.innerHeight;
+                const scale = Math.min(winW / 1440, winH / 900) * 0.95;
+                deck.style.transform = `translate(-50%, -50%) scale(${scale})`;
+            }
+            window.addEventListener('resize', scaleDeck);
+            scaleDeck();
+
+            // 2. HELPER: Highlight Text
+            function formatText(text) {
+                if (!text) return '';
+                // Simplistic Markdown-ish parser
+                let formatted = text.replace(/\*(.*?)\*/g, '<span class="hero-highlight">$1</span>');
+                formatted = formatted.replace(/\n/g, '<br>');
+                return formatted;
+            }
+
+            // 3. RENDER SLIDE
+            function renderSlide(slide, index) {
+                const slideDiv = document.createElement('div');
+                slideDiv.className = `slide ${index === 0 ? 'active' : ''}`;
+                slideDiv.dataset.index = index;
+
+                let innerHTML = '';
+
+                // --- TYPE: TITLE ---
+                if (slide.type === 'title') {
+                    innerHTML = `
+                        <div class="title-slide-layout">
+                            <h1>${formatText(slide.title)}</h1>
+                            <div class="subtitle">${slide.subtitle || ''}</div>
+                            <div style="margin-top: 40px; font-size: 18px; color: rgba(255,255,255,0.8);">
+                                ${slide.footer ? slide.footer.join(' • ') : ''}
+                            </div>
+                        </div>
+                    `;
+                } 
+                // --- TYPE: SECTION DIVIDER ---
+                else if (slide.type === 'section_divider') {
+                    innerHTML = `
+                        <div class="title-slide-layout">
+                            <div class="subtitle" style="color:white; margin-bottom:20px;">${slide.part || ''}</div>
+                            <h1>${formatText(slide.title)}</h1>
+                            <div class="subtitle" style="color:var(--iimk-gold);">${slide.subtitle || ''}</div>
+                        </div>
+                    `;
+                }
+                // --- TYPE: CONTENT / AGENDA / RECAP / PREVIEW ---
+                else if (['content', 'agenda', 'recap', 'preview', 'homework'].includes(slide.type)) {
+                    let contentBody = '';
+                    
+                    // Handle various content structures provided in JSON
+                    if (slide.items || slide.points) { // List types
+                        const list = slide.items || slide.points;
+                        contentBody = `<ul class="bullet-list">${list.map(i => `<li>${formatText(i)}</li>`).join('')}</ul>`;
+                    } else if (slide.content) {
+                        if (slide.content.list) {
+                            contentBody = `
+                                <div class="bento-card">
+                                    ${slide.content.heading ? `<h3>${slide.content.heading}</h3>` : ''}
+                                    ${slide.content.sub ? `<p style="color:#666; margin-top:-10px; margin-bottom:20px;">${slide.content.sub}</p>` : ''}
+                                    <ul class="bullet-list">
+                                        ${slide.content.list.map(i => `<li>${formatText(i)}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            `;
+                        } else if (typeof slide.content === 'string') {
+                            contentBody = `<div class="bento-card"><p style="font-size:24px; line-height:1.6;">${formatText(slide.content)}</p></div>`;
+                        }
+                    }
+
+                    // Add Image Tag if present
+                    let imgTag = slide.image_query ? `<div style="margin-top:20px; text-align:center; font-style:italic; color:#666;">${slide.image_query}</div>` : '';
+
+                    innerHTML = `
+                        <h1 class="slide-title">${formatText(slide.title)}</h1>
+                        <div class="slide-content">
+                            <div class="bento-grid">
+                                ${contentBody}
+                                ${imgTag}
+                            </div>
+                        </div>
+                    `;
+                }
+                // --- TYPE: TWO COLUMN ---
+                else if (slide.type === 'two_column') {
+                    let imgTag = slide.image_query ? `<div style="grid-column: span 2; margin-top:10px; text-align:center; font-style:italic; color:#666;">${slide.image_query}</div>` : '';
+                    
+                    innerHTML = `
+                        <h1 class="slide-title">${formatText(slide.title)}</h1>
+                        <div class="slide-content">
+                            <div class="bento-grid cols-2">
+                                <div class="bento-card">
+                                    <h3>${slide.col1.heading}</h3>
+                                    ${Array.isArray(slide.col1.content) ? 
+                                        `<ul class="bullet-list">${slide.col1.content.map(c=>`<li>${c}</li>`).join('')}</ul>` : 
+                                        `<p style="font-size:20px; line-height:1.6;">${slide.col1.content}</p>`}
+                                </div>
+                                <div class="bento-card">
+                                    <h3>${slide.col2.heading}</h3>
+                                    ${Array.isArray(slide.col2.content) ? 
+                                        `<ul class="bullet-list">${slide.col2.content.map(c=>`<li>${c}</li>`).join('')}</ul>` : 
+                                        `<p style="font-size:20px; line-height:1.6;">${slide.col2.content}</p>`}
+                                </div>
+                                ${imgTag}
+                            </div>
+                            ${slide.footer ? `<p style="text-align:center; margin-top:20px; font-weight:bold; color:var(--iimk-blue);">${slide.footer}</p>` : ''}
+                        </div>
+                    `;
+                }
+                // --- TYPE: FRAMEWORK ---
+                else if (slide.type === 'framework') {
+                    const frameworkHTML = slide.framework.map(f => `
+                        <div class="bento-card" style="align-items:center; text-align:center;">
+                            <div class="framework-circle">${f.letter}</div>
+                            <h3>${f.title}</h3>
+                            <p style="font-size:18px;">${f.desc}</p>
+                        </div>
+                    `).join('');
+                    
+                    let imgTag = slide.image_query ? `<div style="margin-top:20px; text-align:center; font-style:italic; color:#666;">${slide.image_query}</div>` : '';
+
+                    innerHTML = `
+                        <h1 class="slide-title">${formatText(slide.title)}</h1>
+                        <div class="slide-content">
+                            <div class="bento-grid cols-3">
+                                ${frameworkHTML}
+                            </div>
+                            ${imgTag}
+                        </div>
+                    `;
+                }
+                // --- TYPE: DEMO / PROMPT ---
+                else if (['demo_step', 'fallback_scenario'].includes(slide.type)) {
+                    innerHTML = `
+                        <h1 class="slide-title">${formatText(slide.title)}</h1>
+                        <div class="slide-content">
+                            <div class="bento-grid">
+                                <div class="prompt-box">
+                                    <div class="prompt-header">
+                                        <span class="prompt-label">Prompt Input</span>
+                                        <button class="copy-btn">COPY</button>
+                                    </div>
+                                    <pre class="prompt-content">${slide.prompt}</pre>
+                                </div>
+                                ${slide.notes ? `<div class="bento-card" style="margin-top:20px; background:rgba(255,204,0,0.1); border-color:var(--iimk-gold);"><h3>Analysis</h3><p>${slide.notes}</p></div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                }
+                // --- TYPE: COMPARISON TABLE ---
+                else if (slide.type === 'comparison_table') {
+                     const rows = slide.rows.map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('');
+                     const headers = slide.headers.map(h => `<th>${h}</th>`).join('');
+                     
+                     innerHTML = `
+                        <h1 class="slide-title">${formatText(slide.title)}</h1>
+                        <div class="slide-content">
+                            <div class="bento-card">
+                                <table>
+                                    <thead><tr>${headers}</tr></thead>
+                                    <tbody>${rows}</tbody>
+                                </table>
+                            </div>
+                        </div>
+                     `;
+                }
+                // --- FALLBACK GENERIC ---
+                else {
+                    innerHTML = `
+                        <h1 class="slide-title">${formatText(slide.title)}</h1>
+                        <div class="slide-content">
+                             <div class="bento-card">
+                                ${slide.content ? (typeof slide.content === 'object' ? `<ul class="bullet-list">${slide.content.list.map(i=>`<li>${i}</li>`).join('')}</ul>` : `<p>${slide.content}</p>`) : ''}
+                             </div>
+                        </div>
+                    `;
+                }
+
+                slideDiv.innerHTML = innerHTML;
+                
+                // Add Copy Logic for this slide
+                const copyBtn = slideDiv.querySelector('.copy-btn');
+                if(copyBtn) {
+                    copyBtn.addEventListener('click', (e) => {
+                        e.stopPropagation(); // Prevent slide advance
+                        const text = slideDiv.querySelector('.prompt-content').innerText;
+                        navigator.clipboard.writeText(text).then(() => {
+                            copyBtn.textContent = 'COPIED!';
+                            setTimeout(() => copyBtn.textContent = 'COPY', 2000);
+                        });
+                    });
+                }
+
+                return slideDiv;
+            }
+
+            // 4. GENERATE SLIDES
+            presentationData.slides.forEach((slideData, i) => {
+                container.appendChild(renderSlide(slideData, i));
+            });
+            const slides = document.querySelectorAll('.slide');
+
+            // 5. NAVIGATION LOGIC
+            function updateSlide(newIndex) {
+                if (newIndex < 0 || newIndex >= slides.length) return;
+                
+                slides[currentSlideIndex].classList.remove('active');
+                currentSlideIndex = newIndex;
+                slides[currentSlideIndex].classList.add('active');
+
+                // Update Notes
+                const noteContent = presentationData.slides[currentSlideIndex].speaker_notes;
+                notesPanel.textContent = noteContent || "No specific notes for this slide.";
+            }
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'ArrowDown') {
+                    updateSlide(currentSlideIndex + 1);
+                } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                    updateSlide(currentSlideIndex - 1);
+                } else if (e.key.toLowerCase() === 's') {
+                    notesPanel.classList.toggle('visible');
+                }
+            });
+
+            document.body.addEventListener('click', (e) => {
+                // Ignore clicks on links or copy buttons (handled separately)
+                if (e.target.tagName === 'A' || e.target.classList.contains('copy-btn')) return;
+                updateSlide(currentSlideIndex + 1);
+            });
+
+            // Init notes for first slide
+            if(presentationData.slides[0].speaker_notes) {
+                notesPanel.textContent = presentationData.slides[0].speaker_notes;
+            } else {
+                notesPanel.textContent = "Welcome! Press 'S' to toggle these notes.";
+            }
+        });
+    </script>
+</body>
+</html>
