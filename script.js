@@ -197,10 +197,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (res.type === 'Workflow' && res.steps) {
                 html += renderWorkflow(res, tagsAttr, featuredClass, badgesHtml);
             } else {
-                // Regular Resource (Prompt, Gem, etc.)
+                // Regular Resource (Prompt, Gem, Interactive Tool, etc.)
                 let icon = '💎';
                 if (res.type === 'Gemini Gem') icon = '💎';
                 else if (res.type === 'Custom GPT') icon = '🤖';
+                else if (res.type === 'Interactive Tool') icon = '🎮';
                 else if (res.type && res.type.includes('Prompt')) icon = '⚡';
 
                 // Handle prompt storage
