@@ -322,16 +322,23 @@
         }
     ],
     "writings": [
-         {
+        {
+            "title": "Understanding How LLMs Think: Token by Token",
+            "link": "blog-autoregressive-playground.html",
+            "date": "Jan 2026",
+            "excerpt": "Business leaders throw around terms like 'hallucination' and 'temperature' without understanding the mechanics. Here's what's actually happening inside these models."
+        },
+        {
+            "title": "Building a 30-Minute Sales Intelligence Briefing with AI",
+            "link": "blog-sales-intelligence.html",
+            "date": "Nov 2025",
+            "excerpt": "Most B2B sales teams waste hours researching prospects manually. Here's how I built a system that delivers boardroom-ready intelligence in 30 minutes."
+        },
+        {
             "title": "Creating Effective Slide Presentations with AI",
             "link": "blog-presentation-engine.html",
             "date": "Oct 2025",
             "excerpt": "Many of us dread making presentations, not for lack of ideas, but because we are forcing our brains to do two contradictory things at once."
-        },
-        {
-    "title": "Building a 30-Minute Sales Intelligence Briefing with AI",
-    "link": "blog-sales-intelligence.html",
-    "date": "Nov 2025",
-    "excerpt": "Most B2B sales teams waste hours researching prospects manually. Here's how I built a system that delivers boardroom-ready intelligence in 30 minutes."
-}]
+        }
+    ]
 }
