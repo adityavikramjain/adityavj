@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Why I Built the Auto-Regressive Playground | Aditya V Jain</title>
+    <title>Understanding LLMs: Token by Token | Aditya V Jain</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -384,193 +384,150 @@
     <!-- Article -->
     <article class="article-wrapper">
         <div class="article-meta">
-            <span class="article-badge">Teaching Tool</span>
+            <span class="article-badge">Deep Dive</span>
             <span class="article-date">January 2026</span>
         </div>
 
-        <h1 class="article-title">Why I Built the Auto-Regressive Playground</h1>
+        <h1 class="article-title">Understanding How LLMs Think: Token by Token</h1>
 
         <div class="article-subtitle">
-            Most people use AI every day but have no idea how it actually works. This creates a dangerous gap between using a tool and understanding its limitations. Here's why I built an interactive way to see what's really happening inside.
+            Business leaders throw around terms like "hallucination" and "temperature" without understanding the mechanics. Here's what's actually happening inside these models—and why it matters for your AI strategy.
         </div>
 
         <div class="article-content">
-            <p>I teach AI strategy to business leaders at IIM Kozhikode. In every session, I ask the same question: <em>"Can someone explain why ChatGPT sometimes makes things up?"</em></p>
+            <p>Every executive I speak with uses AI. They write prompts, they get responses, they're impressed by the magic. But when I ask them to explain <em>why</em> ChatGPT sometimes makes things up, or what "temperature" actually controls, I get hand-waving.</p>
 
-            <p>The room goes quiet. These are smart people—CEOs, VPs, functional heads—who use AI daily to draft emails, analyze data, and make decisions. But when I ask them to explain the mechanics, I get vague answers about "algorithms" and "training data."</p>
+            <p>This isn't academic curiosity. Understanding the mechanics changes how you prompt, how you evaluate outputs, and critically—how you explain AI limitations to your board when someone asks, <em>"Why can't we just trust the AI to write our earnings report?"</em></p>
 
-            <p>That's a problem. You can't make sound judgments about when to trust AI, how to prompt it effectively, or where it's likely to fail if you don't understand the basic mechanism of how it generates text.</p>
+            <p>So I built an interactive visualization that shows you <strong>exactly</strong> what's happening inside a Large Language Model as it generates text, one token at a time.</p>
 
-            <p>So I built the Auto-Regressive Playground—a visual tool that lets you watch an AI model think, one word at a time.</p>
+            <h2>The Core Mechanic: Auto-Regression</h2>
 
-            <h2>The Problem: Black Box Thinking</h2>
+            <p>Large Language Models are <strong>auto-regressive</strong>. This is not a buzzword—it's a precise technical term that explains their fundamental behavior.</p>
 
-            <p>When you type a question into ChatGPT or Gemini, you see a response appear. It looks intelligent. It sounds confident. But you have no idea what's happening underneath.</p>
+            <p>Auto-regression means: <em>the next output depends on all previous outputs.</em></p>
 
-            <p>Most people assume the AI "understands" their question, "thinks" about the answer, and then writes it out. That mental model is completely wrong—and it leads to bad decisions.</p>
+            <p>When you ask Gemini or ChatGPT a question, it doesn't "think" and then write an answer. It predicts <strong>one token</strong> (roughly a word or word fragment), adds it to the context, then predicts the next token based on everything it's written so far.</p>
 
-            <p>I've seen companies:</p>
+            <p>Imagine you're typing an email, but your keyboard only suggests one word at a time. You pick the most likely next word, it appears, and then you get new suggestions based on what you've written. That's how these models work—except they're doing this thousands of times per response, and they're considering probability distributions across millions of possible next tokens.</p>
 
-            <ul>
-                <li>Trust AI to write legal contracts without checking for hallucinated clauses</li>
-                <li>Use AI-generated financial projections in board presentations without understanding when the model was guessing</li>
-                <li>Deploy customer service chatbots that confidently give wrong information because no one knew how to detect low-confidence responses</li>
-            </ul>
+            <div class="highlight-box">
+                <h3>Why This Matters for Business</h3>
+                
+                <p>This token-by-token generation is why LLMs sometimes "drift" into nonsense. If the model picks a low-probability word early in a response, every subsequent prediction is now conditioned on that error. It's not "thinking ahead" to course-correct—it's committed to the path it started down.</p>
 
-            <p>The root cause? People treat AI like magic instead of understanding it as a probability engine.</p>
+                <p>This is also why <strong>prompt engineering works</strong>. By carefully structuring your input, you're steering the probability distribution toward better first tokens, which then cascade into better subsequent predictions.</p>
+            </div>
 
             <h2>What the Playground Shows You</h2>
 
-            <p>The Auto-Regressive Playground does one simple thing: it slows down AI text generation so you can see what's actually happening.</p>
+            <p>I built the Auto-Regressive Playground to make these mechanics visible. Here's what happens when you click "Step":</p>
 
-            <p>Instead of seeing a full response appear instantly, you watch the model generate one word (technically, one "token") at a time. For each word, you see:</p>
+            <ol>
+                <li><strong>The Model Evaluates:</strong> It takes everything in the context window and computes probability scores for thousands of possible next tokens.</li>
+                <li><strong>You See the Top 5:</strong> The visualization shows a bar chart of the five most likely candidates. Maybe "the" has a 45% probability, "a" has 20%, "of" has 15%, and so on.</li>
+                <li><strong>The Model Samples:</strong> Based on your temperature setting, it picks one token. At temperature 0 (deterministic), it always picks the highest probability. At temperature 1 (creative), it samples from the distribution—sometimes picking less obvious choices.</li>
+                <li><strong>The Token Flies Back:</strong> You see the chosen token animate from the probability chart back into the context window. It's now part of the prompt for the next prediction.</li>
+                <li><strong>Repeat:</strong> The cycle starts again with the expanded context.</li>
+            </ol>
+
+            <p>By clicking "Step" repeatedly, you watch the model build a response token by token. You see <em>exactly</em> which alternatives it considered and how confident it was in each choice.</p>
+
+            <h2>Temperature: The Creativity Dial</h2>
+
+            <p>Temperature is not "how creative the AI is." That's the marketing speak.</p>
+
+            <p>Technically, temperature controls the <strong>sharpness of the probability distribution</strong>.</p>
 
             <ul>
-                <li><strong>What the model is choosing between</strong> – The top 5 most likely next words, with their probability scores</li>
-                <li><strong>How confident it is</strong> – A bar chart showing which options are strong candidates versus weak guesses</li>
-                <li><strong>What it actually picks</strong> – The chosen word flies from the chart back into the text</li>
-                <li><strong>When it's guessing</strong> – A warning appears if the model picks a low-probability word (often a sign of hallucination)</li>
+                <li><strong>Temperature = 0 (Deterministic):</strong> The model always picks the highest-probability token. Responses are consistent and predictable. Use this for code generation, data extraction, or any task where you need reproducible outputs.</li>
+                <li><strong>Temperature = 1 (Creative):</strong> The probability distribution is "flattened." Lower-probability tokens get a fair chance. The model takes more risks. Use this for brainstorming, creative writing, or when you want novel solutions.</li>
             </ul>
 
-            <p>You're not learning technical jargon. You're <em>seeing</em> the decision process.</p>
+            <p>In the Playground, try generating the same prompt at temperature 0 and temperature 1. At 0, you'll see the same token chosen every time. At 1, you'll see variety—sometimes the model picks a less obvious word, leading to a completely different response trajectory.</p>
 
             <div class="highlight-box">
-                <h3>A Real Example</h3>
-                
-                <p>Type in: <em>"The capital of France is"</em></p>
+                <h3>Real-World Application: When to Tune Temperature</h3>
 
-                <p>Watch what happens. The model will show high confidence (maybe 95%) for the word "Paris." That's a solid prediction backed by millions of training examples.</p>
+                <p>I've seen companies use temperature 1 for everything because they think "more creative = better." That's wrong.</p>
 
-                <p>Now try: <em>"The first president of Mars was"</em></p>
+                <p>When you're using AI to <strong>extract structured data</strong> from documents (like parsing invoices), you want temperature 0. Creativity is a bug, not a feature. You need the model to output "Invoice Number: 12345" every single time, not "Invoice Code: 12345" on one run and "Bill ID: 12345" on another.</p>
 
-                <p>Watch the probabilities. None of the top candidates have high scores. The model is forced to guess because this information doesn't exist. You'll see it pick something that sounds plausible—but the low confidence scores warn you it's making things up.</p>
-
-                <p>This is the difference between <strong>knowledge</strong> and <strong>hallucination</strong>, made visible.</p>
+                <p>When you're using AI to <strong>generate marketing copy</strong> or brainstorm product names, temperature 0.7-1.0 makes sense. You want unexpected combinations and fresh angles.</p>
             </div>
+
+            <h2>Hallucination Detection: The Low-Probability Warning</h2>
+
+            <p>The Playground includes a "hallucination detector." Here's how it works:</p>
+
+            <p>If the model selects a token with less than 40% probability, a warning overlay appears: <em>"Low Probability Detected. High Hallucination Risk."</em></p>
+
+            <p>Why 40%? Because when a model is <em>uncertain</em> but forced to produce output anyway, it often generates plausible-sounding nonsense. The token it picked wasn't a confident choice—it was the best of several bad options.</p>
+
+            <p>Try the "Test Fake Knowledge" button in the Playground. It asks: <em>"Who was the first Martian President in 1600?"</em></p>
+
+            <p>Watch what happens. The model has never seen this information because it doesn't exist. But it can't say "I don't know"—it's auto-regressive, it <em>must</em> predict the next token. So it picks something that sounds plausible based on the word patterns it's learned.</p>
+
+            <p>You'll see the probability scores. None of the top candidates are confident. The model is guessing. That's a hallucination in progress.</p>
+
+            <div class="highlight-box">
+                <h3>Why This Matters for Procurement Teams</h3>
+
+                <p>If you're buying an AI-powered contract analysis tool, and the vendor says it "automatically flags risky clauses," you need to ask: <em>"What happens when the model encounters a clause structure it's never seen before?"</em></p>
+
+                <p>Does it confidently hallucinate a risk assessment? Or does it admit uncertainty?</p>
+
+                <p>Most enterprise AI tools don't expose these probability scores to end users. But now you know what to ask for. Request access to <strong>logprobs</strong> (log probabilities) or confidence scores. If the vendor can't provide them, their system is a black box—and you're flying blind.</p>
+            </div>
+
+            <h2>Why I Built This as a Teaching Tool</h2>
+
+            <p>I use this Playground in my IIM Kozhikode sessions because business leaders need to develop <strong>AI intuition</strong>, not just memorize definitions.</p>
+
+            <p>When you watch tokens flow from probability chart to context window, you internalize the loop. You stop thinking of AI as "intelligent" and start seeing it as a <strong>statistical prediction engine</strong>. That shift in mental model is everything.</p>
+
+            <p>It changes questions like:</p>
+
+            <ul>
+                <li><em>"Why did the AI give me a different answer this time?"</em> → <em>"What changed in the probability distribution between runs? Did I adjust temperature? Did I reword the prompt, shifting the early token probabilities?"</em></li>
+                <li><em>"Can we trust this AI for legal contract review?"</em> → <em>"Can we architect the system to force low-temperature, high-confidence outputs? Can we detect when it's operating in uncertain territory?"</em></li>
+            </ul>
+
+            <p>You move from passive acceptance to active engineering.</p>
 
             <h2>How to Use the Playground</h2>
 
-            <p>The tool is built for experimentation. Here's how to get the most out of it:</p>
+            <ol>
+                <li><strong>Get a Gemini API Key:</strong> The tool uses Google's Gemini API. You'll need a free API key from <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a>.</li>
+                <li><strong>Enter a Prompt:</strong> Type any starting text. Try something simple like "The future of AI in India" or use the hallucination test.</li>
+                <li><strong>Click "Step":</strong> Watch the model predict one token. Observe the probability distribution.</li>
+                <li><strong>Adjust Temperature:</strong> Slide the temperature control and step again. See how the distribution changes.</li>
+                <li><strong>Repeat:</strong> Keep clicking "Step" to build a full response, token by token.</li>
+            </ol>
 
-            <h3>Start with Atypical Prompts</h3>
-
-            <p>Don't start with boring questions like "Write an email about quarterly results." That won't teach you anything.</p>
-
-            <p>Instead, try prompts that force the model into interesting territory:</p>
-
-            <ul>
-                <li><em>"The most surprising thing about Indian business culture is"</em> – Watch how the model navigates a topic with multiple valid completions</li>
-                <li><em>"In 1850, the iPhone"</em> – See it struggle with an impossible scenario</li>
-                <li><em>"According to the research paper published yesterday"</em> – Watch it try to reference something it can't possibly know</li>
-            </ul>
-
-            <p>These edge cases reveal the model's limitations more clearly than standard queries.</p>
-
-            <h3>Experiment with Temperature</h3>
-
-            <p>Temperature controls how "creative" or "conservative" the model is. But those terms are vague. Here's what's actually happening:</p>
-
-            <ul>
-                <li><strong>Temperature 0:</strong> The model always picks the highest-probability word. Responses are predictable and consistent.</li>
-                <li><strong>Temperature 1:</strong> The model samples from the probability distribution. Lower-probability words get a chance. Responses vary.</li>
-            </ul>
-
-            <p>Try generating the same prompt at both settings. Watch how the probability bars change and notice which words get selected.</p>
-
-            <p>This teaches you when to use each setting in real work—temperature 0 for extracting data from documents, temperature 1 for brainstorming product names.</p>
-
-            <h3>Look for Low-Confidence Warnings</h3>
-
-            <p>When the model selects a word with less than 40% probability, you'll see a warning: <em>"Low Probability Detected. High Hallucination Risk."</em></p>
-
-            <p>This is the model saying: <em>"I'm not sure what comes next, but I have to pick something."</em></p>
-
-            <p>Pay attention to when these warnings appear. They often cluster around:</p>
-
-            <ul>
-                <li>Specific dates, numbers, or names the model doesn't know</li>
-                <li>Technical jargon from niche domains</li>
-                <li>Requests for recent information beyond the model's training data</li>
-            </ul>
-
-            <p>Understanding this pattern changes how you prompt. Instead of asking, <em>"What did the CEO say in yesterday's earnings call?"</em> you learn to provide context: <em>"Here's a transcript of yesterday's earnings call. Summarize the CEO's comments on Q3 guidance."</em></p>
-
-            <h2>Why This Matters for Your Work</h2>
-
-            <p>I'm not building this tool for AI researchers. I'm building it for people who <em>use</em> AI in their work and need to make smart decisions about when to trust it.</p>
-
-            <p>After spending 20 minutes with the Playground, you'll develop an intuition that most users don't have:</p>
-
-            <ul>
-                <li>You'll spot hallucinations before they become problems</li>
-                <li>You'll write better prompts because you understand what increases model confidence</li>
-                <li>You'll know when to use deterministic settings versus creative settings</li>
-                <li>You'll stop treating AI outputs as facts and start treating them as probability distributions</li>
-            </ul>
-
-            <p>That shift in mindset is the difference between blindly trusting AI and strategically deploying it.</p>
-
-            <h2>Three Experiments to Try Right Now</h2>
-
-            <h3>Experiment 1: The Impossible Fact</h3>
-
-            <p>Prompt: <em>"The 2025 Nobel Prize in Economics was awarded to"</em></p>
-
-            <p>Watch the model generate a name. Then check the confidence scores. They'll be low across the board. The model has no idea who won (the announcement hasn't happened yet or wasn't in its training data), but it will confidently complete the sentence anyway.</p>
-
-            <p><strong>Lesson:</strong> AI doesn't say "I don't know." It guesses.</p>
-
-            <h3>Experiment 2: The Confident Error</h3>
-
-            <p>Prompt: <em>"Mumbai is the capital of"</em></p>
-
-            <p>Watch what happens. The model might pick "India" with relatively high confidence—because that's a common phrase pattern—even though the correct answer is "Maharashtra."</p>
-
-            <p><strong>Lesson:</strong> High confidence doesn't equal correctness. The model learns patterns, not facts.</p>
-
-            <h3>Experiment 3: The Temperature Swing</h3>
-
-            <p>Prompt: <em>"The biggest risk facing Indian startups is"</em></p>
-
-            <p>Generate this at temperature 0, then reset and try it at temperature 1. Compare the responses.</p>
-
-            <p>At temperature 0, you'll get the most statistically common answer—probably something about funding or regulations.</p>
-
-            <p>At temperature 1, you might get something unexpected—maybe talent retention, global competition, or infrastructure challenges.</p>
-
-            <p><strong>Lesson:</strong> The "best" answer depends on what you're optimizing for—consensus or novelty.</p>
+            <p>You'll quickly develop an intuition for which types of prompts lead to confident predictions and which ones push the model into guessing territory.</p>
 
             <div class="cta-section">
-                <p><strong>Ready to see how AI really works?</strong></p>
+                <p><strong>Ready to see how LLMs really work?</strong></p>
                 <a href="llm-playground/" class="cta-button">Open the Playground →</a>
             </div>
 
             <hr>
 
-            <h2>What You'll Walk Away With</h2>
+            <h2>The Bottom Line</h2>
 
-            <p>Using the Playground won't make you an AI engineer. That's not the goal.</p>
+            <p>AI strategy in 2026 isn't about "prompting better." It's about understanding the constraints of the technology so you can architect systems that work around them.</p>
 
-            <p>The goal is to give you <strong>operational intuition</strong>—the ability to look at an AI-generated response and immediately sense whether it's drawing from strong patterns or making things up.</p>
+            <p>When you see a low-probability token selected, you don't just accept it—you redesign your prompt structure to avoid that uncertainty in the first place. When you need deterministic outputs, you lock temperature to 0 and validate that your system isn't sampling. When you need creativity, you crank temperature up and implement human review for outlier outputs.</p>
 
-            <p>You'll learn to ask better questions:</p>
+            <p>That's the difference between using AI and <em>deploying</em> AI at scale.</p>
 
-            <ul>
-                <li>Not <em>"Is this AI answer correct?"</em> but <em>"How confident was the model when it generated this?"</em></li>
-                <li>Not <em>"Why did I get a different answer this time?"</em> but <em>"What temperature setting am I using, and is that appropriate for this task?"</em></li>
-                <li>Not <em>"Can AI do this job?"</em> but <em>"Under what conditions will this AI system fail, and can I design around those failure modes?"</em></li>
-            </ul>
-
-            <p>That's the skillset that separates AI users from AI strategists.</p>
-
-            <p>And the best part? It takes 20 minutes to build that intuition. Just open the Playground, try a few weird prompts, and watch what happens.</p>
-
-            <p>The gap between using AI and understanding AI is smaller than you think. You just need to see what's actually happening under the hood.</p>
+            <p>The Playground is a teaching tool, but the principles apply to every AI project in your organization. Play with it. Break it. Watch the tokens fly. You'll walk away with a mental model that most executives don't have—and that asymmetry is your competitive advantage.</p>
         </div>
     </article>
 
     <div class="article-footer">
-        <p>Written by <a href="index.html">Aditya V Jain</a> · Product Lead @ Google · Visiting Faculty @ IIM Kozhikode</p>
+        <p>Written by <a href="index.html">Aditya V Jain</a> · Product Lead @ Google</p>
     </div>
 </div>
 
