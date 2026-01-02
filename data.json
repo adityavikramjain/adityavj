@@ -159,17 +159,17 @@
         }
     ],
     "resources": [
-        {
-            "id": "autoregressive-playground",
-            "title": "Auto-Regressive Playground",
-            "type": "Interactive Tool",
-            "desc": "Watch how LLMs think, one token at a time. An interactive visualization showing probability distributions, temperature effects, and hallucination detection in real-time.",
-            "link": "autoregressive-playground.html",
-            "tags": ["AI", "Education"],
-            "featured": true,
-            "platforms": ["gemini"],
-            "requires_api_key": true
-        },
+      {
+    "id": "autoregressive-playground",
+    "title": "Auto-Regressive Playground",
+    "type": "Interactive Tool",
+    "desc": "Watch how LLMs think, one token at a time. An interactive visualization showing probability distributions, temperature effects, and hallucination detection in real-time. Built with React and powered by Gemini API.",
+    "link": "llm-playground/",
+    "tags": ["AI", "Education"],
+    "featured": true,
+    "platforms": ["gemini"],
+    "requires_api_key": true
+    },
         {
             "id": "b2b-sales-intelligence",
             "title": "B2B Sales Intelligence Analyzer",
