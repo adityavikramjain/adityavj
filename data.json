@@ -164,7 +164,7 @@
     "title": "Auto-Regressive Playground",
     "type": "Interactive Tool",
     "desc": "Watch how LLMs think, one token at a time. An interactive visualization showing probability distributions, temperature effects, and hallucination detection in real-time. Built with React and powered by Gemini API.",
-    "link": "llm-playground/",
+    "link": "https://ai.studio/apps/drive/1BDYTIlrTt8IIrAAxg46-BWhwAEfwUFge",
     "tags": ["AI", "Education"],
     "featured": true,
     "platforms": ["gemini"],
