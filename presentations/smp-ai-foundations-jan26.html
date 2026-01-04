@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Foundations of Generative AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Canvas */
+      --canvas: #FAFAFA;
+      --canvas-dark: #222224; /* Slightly deeper charcoal */
+      
+      /* Ink */
+      --ink-primary: #1A1A2E;
+      --ink-secondary: #4A4A5A;
+      --ink-tertiary: #8A8A9A;
+      --ink-inverse: #FAFAFA;
+      
+      /* Accent: Electric Orange */
+      --accent: #FF4500;
+      --accent-glow: rgba(255, 69, 0, 0.45);
+      --accent-glow-soft: rgba(255, 69, 0, 0.18);
+      --accent-subtle: rgba(255, 69, 0, 0.08);
+      
+      /* Glass Materials - clearer, more crystalline */
+      --glass-surface: rgba(255, 255, 255, 0.75);
+      --glass-surface-strong: rgba(255, 255, 255, 0.90);
+      --glass-border: rgba(255, 255, 255, 0.85);
+      
+      /* Cinematic Shadows (Prettier, multi-layered) */
+      /* 1. Sharp ambient occlusion near the object */
+      /* 2. Medium shaping shadow */
+      /* 3. Large diffuse atmospheric shadow */
+      /* 4. Subtle color bleed for realism */
+      --shadow-cinematic: 
+        0 2px 4px rgba(26, 26, 46, 0.04),
+        0 8px 16px rgba(26, 26, 46, 0.06),
+        0 24px 48px rgba(26, 26, 46, 0.08),
+        0 60px 100px rgba(26, 26, 46, 0.10);
+
+      --shadow-cinematic-hover:
+         0 4px 8px rgba(26, 26, 46, 0.05),
+         0 12px 24px rgba(26, 26, 46, 0.08),
+         0 32px 64px rgba(26, 26, 46, 0.10),
+         0 80px 120px rgba(26, 26, 46, 0.12);
+      
+      /* Layout Zones - WIDER */
+      --header-top: 56px;
+      --header-height: 96px;
+      --content-top: 160px;
+      --content-floor: 18vh;
+      --bar-height: 56px;
+      --margin-x: 5%; /* WIDENED from 10% */
+      
+      /* Blur */
+      --blur-glass: 32px; /* Increased blur for depth */
+      --blur-ambient: 100px;
+      --blur-light: 12px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 19px;
+      font-weight: 500;
+      line-height: 1.6;
+      color: var(--ink-primary);
+      background: var(--canvas);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow: hidden;
+    }
+
+    /* === SLIDES === */
+    .slide {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      display: none;
+      background: radial-gradient(ellipse 130% 110% at 30% 20%, rgba(248, 250, 252, 1) 0%, rgba(250, 250, 250, 1) 60%, rgba(246, 246, 248, 1) 100%);
+    }
+
+    /* Ambient Shape */
+    .slide::before {
+      content: '';
+      position: absolute;
+      top: -25%;
+      right: -15%;
+      width: 70%;
+      height: 90%;
+      background: radial-gradient(circle, rgba(235, 238, 245, 0.7) 0%, rgba(250, 250, 250, 0) 70%);
+      filter: blur(var(--blur-ambient));
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .slide.active { display: block; }
+
+    .slide-header {
+      position: absolute;
+      top: var(--header-top);
+      left: var(--margin-x);
+      right: var(--margin-x);
+      height: var(--header-height);
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .slide-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.8px;
+      color: var(--ink-primary);
+      margin: 0;
+    }
+
+    .slide-subtitle {
+      font-family: 'Inter', sans-serif;
+      font-size: 22px;
+      font-weight: 500;
+      line-height: 1.4;
+      color: var(--ink-secondary);
+      margin: 8px 0 0 0;
+    }
+
+    .slide-body {
+      position: absolute;
+      top: var(--content-top);
+      left: var(--margin-x);
+      right: var(--margin-x);
+      bottom: var(--content-floor);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px; /* Increased gap slightly */
+      z-index: 1;
+    }
+
+    /* === DARK SLIDES === */
+    .slide.dark-slide {
+      background: var(--canvas-dark);
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 var(--margin-x);
+    }
+
+    .slide.dark-slide::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 140%;
+      height: 140%;
+      background: radial-gradient(ellipse 60% 60% at center, rgba(60, 60, 62, 1) 0%, rgba(45, 45, 48, 1) 40%, rgba(34, 34, 36, 1) 70%, rgba(22, 22, 24, 1) 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .slide.dark-slide::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: -20%;
+      width: 70%;
+      height: 90%;
+      background: radial-gradient(circle, rgba(35, 35, 35, 0.9) 0%, rgba(42, 42, 42, 0) 60%);
+      filter: blur(var(--blur-ambient));
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .slide.dark-slide.active { display: flex; }
+    .slide.dark-slide .slide-header, .slide.dark-slide .slide-body { display: none; }
+
+    .section-number {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .dark-slide .slide-title {
+      font-size: 64px; /* Larger title for dark slides */
+      color: var(--ink-inverse);
+      max-width: 1100px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .dark-slide .slide-subtitle {
+      font-size: 22px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 20px;
+      max-width: 800px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .accent-bar {
+      width: 100px;
+      height: 4px;
+      background: var(--accent);
+      margin-top: 40px;
+      border-radius: 2px;
+      box-shadow: 0 0 24px var(--accent-glow), 0 0 50px var(--accent-glow-soft);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* === COMPONENTS (Refined Glass) === */
+    .glass-tile {
+      background: var(--glass-surface);
+      backdrop-filter: blur(var(--blur-glass));
+      -webkit-backdrop-filter: blur(var(--blur-glass));
+      border: 1px solid var(--glass-border);
+      border-radius: 24px; /* Softened corners */
+      padding: 32px 40px; /* More internal breathing room */
+      box-shadow: var(--shadow-cinematic);
+      width: 100%;
+      max-width: 800px; /* WIDENED from 680px */
+      transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s ease;
+    }
+
+    .glass-tile-primary {
+      background: var(--glass-surface-strong);
+      border-left: 5px solid var(--accent);
+      box-shadow: var(--shadow-cinematic), -8px 0 24px var(--accent-glow-soft);
+    }
+
+    .tile-heading {
+      font-family: 'Inter', sans-serif;
+      font-size: 21px;
+      font-weight: 600;
+      line-height: 1.35;
+      color: var(--ink-primary);
+      margin: 0 0 14px 0;
+    }
+
+    .tile-body {
+      font-size: 19px;
+      font-weight: 500;
+      line-height: 1.6;
+      color: var(--ink-secondary);
+    }
+    
+    .tile-list { list-style: none; padding: 0; margin: 12px 0 0 0; }
+    .tile-list li { position: relative; padding-left: 28px; margin-bottom: 14px; font-size: 19px; font-weight: 500; line-height: 1.55; color: var(--ink-secondary); }
+    .tile-list li:last-child { margin-bottom: 0; }
+    .tile-list li::before {
+      content: ''; position: absolute; left: 0; top: 0.55em; width: 0.45em; height: 0.45em;
+      background: var(--accent); border-radius: 50%;
+      box-shadow: 0 0 6px var(--accent-glow), 0 0 12px var(--accent-glow-soft);
+    }
+
+    /* === PROMPT BOX (Wider) === */
+    .prompt-box {
+      background: rgba(248, 250, 252, 0.96);
+      border: 1px solid rgba(26, 26, 46, 0.08);
+      border-left: 5px solid var(--accent);
+      border-radius: 20px;
+      overflow: hidden;
+      width: 600px; /* WIDENED from 540px */
+      max-width: 100%;
+      box-shadow: var(--shadow-cinematic), -4px 0 20px var(--accent-glow-soft);
+    }
+
+    .prompt-header {
+      background: var(--canvas-dark);
+      padding: 16px 24px;
+      display: flex; justify-content: space-between; align-items: center; gap: 24px;
+    }
+
+    .prompt-label {
+      font-family: 'Space Grotesk', sans-serif; font-size: 12px; font-weight: 700;
+      color: var(--ink-inverse); text-transform: uppercase; letter-spacing: 2px;
+    }
+
+    .copy-btn {
+      background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px;
+      padding: 8px 16px; font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 600;
+      color: var(--ink-inverse); text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .copy-btn:hover { background: rgba(255, 255, 255, 0.2); border-color: rgba(255, 255, 255, 0.4); }
+
+    .prompt-content {
+      padding: 24px 32px; font-family: 'JetBrains Mono', monospace; font-size: 17px; font-weight: 400;
+      line-height: 1.6; color: var(--ink-primary); white-space: pre-wrap; word-wrap: break-word;
+    }
+
+    /* === RESULT BOX (Wider) === */
+    .result-box {
+      background: var(--glass-surface); backdrop-filter: blur(var(--blur-glass));
+      -webkit-backdrop-filter: blur(var(--blur-glass)); border: 1px solid var(--glass-border);
+      border-left: 5px solid var(--accent); border-radius: 20px; padding: 24px 32px;
+      width: 600px; /* WIDENED from 540px */
+      max-width: 100%;
+      box-shadow: var(--shadow-cinematic), -4px 0 20px var(--accent-glow-soft);
+    }
+
+    .result-label {
+      font-family: 'Inter', sans-serif; font-size: 18px; font-weight: 600;
+      color: var(--ink-primary); margin: 0 0 16px 0;
+    }
+
+    .result-list { list-style: none; padding: 0; margin: 0; }
+    .result-list li {
+      position: relative; padding-left: 28px; margin-bottom: 12px;
+      font-size: 19px; font-weight: 500; line-height: 1.55; color: var(--ink-secondary);
+    }
+    .result-list li:last-child { margin-bottom: 0; }
+    .result-list li::before {
+      content: ''; position: absolute; left: 0; top: 0.55em; width: 0.45em; height: 0.45em;
+      background: var(--accent); border-radius: 50%;
+      box-shadow: 0 0 6px var(--accent-glow), 0 0 12px var(--accent-glow-soft);
+    }
+
+    /* === QUOTE BLOCK === */
+    .quote-block {
+      background: var(--accent-subtle); border-left: 5px solid var(--accent); border-radius: 0 20px 20px 0;
+      padding: 32px 40px; width: 100%; max-width: 800px;
+      box-shadow: -8px 0 24px var(--accent-glow-soft), var(--shadow-cinematic);
+    }
+    .quote-text {
+      font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; font-style: italic;
+      line-height: 1.4; color: var(--ink-primary); margin: 0 0 16px 0;
+    }
+    .quote-attribution {
+      font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 600; color: var(--ink-tertiary);
+    }
+
+    /* === GRIDS & LAYOUT (Refined) === */
+    .prompt-group { display: flex; flex-direction: row; gap: 40px; align-items: flex-start; flex-wrap: wrap; justify-content: center; width: 100%; }
+    
+    .tile-row { display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start; justify-content: center; width: 100%; }
+    .tile-row .glass-tile { flex: 0 1 auto; min-width: 320px; max-width: 480px; }
+    .tile-row.equal-width .glass-tile { flex: 1 1 320px; max-width: 580px; }
+    
+    .bento-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; width: 100%; 
+      max-width: 1200px; /* WIDENED from 880px */
+      margin: 0 auto;
+    }
+    .bento-grid.cols-3 { 
+      grid-template-columns: repeat(3, 1fr); 
+      max-width: 1400px; /* WIDENED from 1000px */
+    }
+    .bento-grid .glass-tile { width: 100%; min-width: unset; max-width: unset; height: 100%; }
+
+    /* === BOTTOM BAR === */
+    .bottom-bar {
+      position: fixed; bottom: calc(var(--content-floor) - var(--bar-height)); left: 0; right: 0;
+      height: var(--bar-height); background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(var(--blur-light)); -webkit-backdrop-filter: blur(var(--blur-light));
+      border-top: 1px solid rgba(255, 255, 255, 0.5); display: flex; align-items: center;
+      justify-content: space-between; padding: 0 40px; z-index: 100;
+    }
+    .bottom-bar.dark { background: rgba(34, 34, 36, 0.95); border-top: 1px solid rgba(255, 255, 255, 0.08); }
+    
+    .watermark {
+      font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 600;
+      color: var(--ink-secondary); text-decoration: none; letter-spacing: 0.5px; transition: color 0.2s ease;
+    }
+    .watermark:hover { color: var(--accent); }
+    .bottom-bar.dark .watermark { color: rgba(255, 255, 255, 0.7); }
+    .bottom-bar.dark .watermark:hover { color: var(--accent); }
+
+    .progress-container {
+      flex: 1; max-width: 240px; height: 4px; background: rgba(26, 26, 46, 0.08);
+      border-radius: 2px; margin: 0 32px; overflow: hidden;
+    }
+    .bottom-bar.dark .progress-container { background: rgba(255, 255, 255, 0.12); }
+    
+    .progress-fill {
+      height: 100%; background: var(--accent); border-radius: 2px;
+      transition: width 0.3s ease; box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .slide-counter {
+      font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 600;
+      color: var(--ink-secondary); min-width: 60px; text-align: right;
+    }
+    .bottom-bar.dark .slide-counter { color: rgba(255, 255, 255, 0.7); }
+
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    button:focus:not(:focus-visible) { outline: none; }
+  </style>
+</head>
+<body>
+  <main class="presentation" role="main">
+    
+    <article class="slide dark-slide active">
+      <h1 class="slide-title">Foundations of Generative AI</h1>
+      <p class="slide-subtitle">Mental Models and Effective Interaction</p>
+      <div class="accent-bar"></div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">Our Next 3 Sessions</h1>
+      </header>
+      <div class="slide-body">
+        <div class="bento-grid cols-3">
+          <div class="glass-tile glass-tile-primary">
+            <h2 class="tile-heading">Session 1: Foundations (Today)</h2>
+            <div class="tile-body">Mental models for understanding generative AI. Prompting fundamentals. How better instructions yield better outputs.</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Session 2: Research & Analysis (Jan 11)</h2>
+            <div class="tile-body">Practical applications for senior managers: research, competitive intelligence, document synthesis. Tools like Gemini Deep Research.</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Session 3: Strategic Implications (Jan 18)</h2>
+            <div class="tile-body">How AI affects your industry and role. What does the future look like. A framework for assessing your own position.</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide dark-slide">
+      <span class="section-number">Section 01</span>
+      <h1 class="slide-title">The Intern Problem</h1>
+      <p class="slide-subtitle">A management challenge, not a technology problem</p>
+      <div class="accent-bar"></div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">The Brilliant Intern</h1>
+      </header>
+      <div class="slide-body">
+        <div class="bento-grid">
+          <div class="glass-tile">
+            <h2 class="tile-heading">100x Speed</h2>
+            <div class="tile-body">Completes in seconds what takes hours.</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">100x Bandwidth</h2>
+            <div class="tile-body">Can work on many tasks in parallel.</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Has Read Everything</h2>
+            <div class="tile-body">Every book, paper, article, manual you can think of.</div>
+          </div>
+          <div class="glass-tile glass-tile-primary">
+            <h2 class="tile-heading">Eager to Please</h2>
+            <div class="tile-body">Will attempt any task you give them, immediately.</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">The Catch</h1>
+      </header>
+      <div class="slide-body">
+        <div class="tile-row equal-width">
+          <div class="glass-tile glass-tile-primary">
+            <h2 class="tile-heading">Cannot Tell Truth from Fabrication</h2>
+            <div class="tile-body">Will confidently state things that are made up, with no internal sense that it's doing so.</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Every Conversation Is Hour 1, Day 1</h2>
+            <div class="tile-body">Complete amnesia between conversations. Knows nothing about you, your company, your context, every time.</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide dark-slide">
+      <h1 class="slide-title">"AI isn't dangerous because it's wrong. It's dangerous because it sounds right."</h1>
+      <div class="accent-bar"></div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">Why This Matters</h1>
+      </header>
+      <div class="slide-body">
+        <div class="bento-grid cols-3">
+          <div class="glass-tile glass-tile-primary">
+            <h2 class="tile-heading">Authority Without Accountability</h2>
+            <div class="tile-body">Speaks with the confidence of an expert, but has no stake in being correct.</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Plausibility Without Grounding</h2>
+            <div class="tile-body">Optimized for 'sounds right' not 'is right'.</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Confidence Without Uncertainty</h2>
+            <div class="tile-body">Has no model of what it doesn't know. Won't say 'I'm not sure' unless you teach it to.</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">The Manager's Job</h1>
+      </header>
+      <div class="slide-body">
+        <div class="bento-grid cols-3">
+          <div class="glass-tile glass-tile-primary">
+            <h2 class="tile-heading">Decide Where to Trust</h2>
+            <div class="tile-body">Which tasks can this intern handle on their own? Where does speed and breadth create real value?</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Decide When to Verify</h2>
+            <div class="tile-body">What outputs need human review? Where could a confident error cause real damage?</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Decide How to Brief</h2>
+            <div class="tile-body">What context does this intern need? How do you communicate to someone with zero institutional knowledge?</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide dark-slide">
+      <h1 class="slide-title">"To manage this intern well, we need to understand how it actually works."</h1>
+      <div class="accent-bar"></div>
+    </article>
+
+    <article class="slide dark-slide">
+      <span class="section-number">Section 02</span>
+      <h1 class="slide-title">How LLMs Work</h1>
+      <p class="slide-subtitle">The mechanism behind the intern's behavior</p>
+      <div class="accent-bar"></div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">The Puzzle</h1>
+      </header>
+      <div class="slide-body">
+        <div class="tile-row equal-width">
+          <div class="glass-tile glass-tile-primary">
+            <h2 class="tile-heading">The Paradox</h2>
+            <div class="tile-body">Why does ChatGPT write confident, fluent prose about things that are completely made up?</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">If It's So Capable...</h2>
+            <ul class="tile-list">
+              <li>Why does it invent fake legal citations?</li>
+              <li>Why does it fabricate research papers?</li>
+              <li>Why does it generate fake statistics?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">Two Kinds of Intelligence</h1>
+      </header>
+      <div class="slide-body">
+        <div class="tile-row equal-width">
+          <div class="glass-tile">
+            <h2 class="tile-heading">Human/Animal Intelligence</h2>
+            <ul class="tile-list">
+              <li>Formed via evolution</li>
+              <li>Optimized for survival</li>
+              <li>Embodied and multi-sensory</li>
+              <li>A teenager learns to drive in 15 hours</li>
+            </ul>
+          </div>
+          <div class="glass-tile glass-tile-primary">
+            <h2 class="tile-heading">LLM Intelligence</h2>
+            <ul class="tile-list">
+              <li>Formed via training on text</li>
+              <li>Optimized for next-token prediction</li>
+              <li>Limited to language</li>
+              <li>Millions of hours of training, still can't drive</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">The Core Mechanism</h1>
+      </header>
+      <div class="slide-body">
+        <div class="glass-tile glass-tile-primary">
+          <h2 class="tile-heading">Next Token Prediction (Auto-Regression)</h2>
+          <ul class="tile-list">
+            <li><strong>Input:</strong> Everything typed so far</li>
+            <li><strong>Model:</strong> Predicts probability distribution for the next word</li>
+            <li><strong>Selection:</strong> Chooses one token (word/part of word)</li>
+            <li><strong>Repeat:</strong> Adds choice to context and predicts again</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide dark-slide">
+      <span class="section-number">DEMO</span>
+      <h1 class="slide-title">Auto-Regression Playground</h1>
+      <p class="slide-subtitle">Token-by-token generation with probability distributions</p>
+      <div class="accent-bar"></div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">What the Demo Shows</h1>
+      </header>
+      <div class="slide-body">
+        <div class="bento-grid cols-3">
+          <div class="glass-tile glass-tile-primary">
+            <h2 class="tile-heading">Next Token Prediction</h2>
+            <div class="tile-body">It's predicting what word comes next given everything before. That's the entire operation.</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Temperature Controls Variation</h2>
+            <div class="tile-body">Low temperature = predictable choices. High temperature = surprising choices (and more risk of errors).</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Context Accumulates</h2>
+            <div class="tile-body">Every token generated becomes part of the context for the next prediction. Errors compound.</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide dark-slide">
+      <span class="section-number">DEMO</span>
+      <h1 class="slide-title">Hallucination Lab</h1>
+      <p class="slide-subtitle">Visualizing cascading errors</p>
+      <div class="accent-bar"></div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">Why Hallucinations Happen</h1>
+      </header>
+      <div class="slide-body">
+        <div class="bento-grid cols-3">
+          <div class="glass-tile glass-tile-primary">
+            <h2 class="tile-heading">The Mechanism</h2>
+            <div class="tile-body">At each step, the model chooses from probable next tokens. Sometimes a low-probability choice becomes the foundation for everything after.</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">No Internal Check</h2>
+            <div class="tile-body">It's doing what it always does, predicting plausible next tokens. There's no flag for "this is made up."</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Cascading Errors</h2>
+            <div class="tile-body">Once a fabricated detail enters the context, subsequent tokens build on that shaky foundation.</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">Hallucination Traps</h1>
+      </header>
+      <div class="slide-body">
+        <div class="bento-grid">
+          <div class="glass-tile glass-tile-primary">
+            <h2 class="tile-heading">Fake Regulatory Details</h2>
+            <div class="tile-body">"Under the 2024 SEBI Digital Asset Compliance Framework, Section 7.3.2..."</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Fake Research Citations</h2>
+            <div class="tile-body">"According to Gartner's 2025 Magic Quadrant for Enterprise AI Platforms..."</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Fake Technical Specs</h2>
+            <div class="tile-body">"The recommended token limit for Gemini 1.5 Pro when processing financial documents..."</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Fake Precedents</h2>
+            <div class="tile-body">"The Delhi High Court ruling in Sharma vs. TechMahindra (2023)..."</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide dark-slide">
+      <h1 class="slide-title">"AI isn't dangerous because it's wrong. It's dangerous because it sounds right."</h1>
+      <p class="slide-subtitle">Now you understand why</p>
+      <div class="accent-bar"></div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">An Alternative Mental Model</h1>
+      </header>
+      <div class="slide-body">
+        <div class="bento-grid cols-3">
+          <div class="glass-tile glass-tile-primary">
+            <h2 class="tile-heading">The Simulated Mind</h2>
+            <div class="tile-body">Think of each conversation as spinning up a simulated mind. It has knowledge and personality, but exists only for this conversation.</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">What This Captures</h2>
+            <ul class="tile-list">
+              <li>It can reason within a conversation</li>
+              <li>It builds on what you've said</li>
+              <li>It has preferences and tendencies</li>
+            </ul>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">When to Use This Model</h2>
+            <div class="tile-body">Helpful for complex, multi-turn conversations where you're building something together over many exchanges.</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide dark-slide">
+      <span class="section-number">Section 03</span>
+      <h1 class="slide-title">Managing the Intern</h1>
+      <p class="slide-subtitle">Applying what you already know</p>
+      <div class="accent-bar"></div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">A Different Kind of Software</h1>
+      </header>
+      <div class="slide-body">
+        <div class="tile-row equal-width">
+          <div class="glass-tile">
+            <h2 class="tile-heading">Traditional Software</h2>
+            <ul class="tile-list">
+              <li>Deterministic: same input → same output</li>
+              <li>Operated like a tool</li>
+              <li>You learn its commands</li>
+              <li>Capabilities are fixed</li>
+            </ul>
+          </div>
+          <div class="glass-tile glass-tile-primary">
+            <h2 class="tile-heading">LLMs</h2>
+            <ul class="tile-list">
+              <li>Probabilistic: same input → varied output</li>
+              <li>Managed like an employee</li>
+              <li>It responds to how you communicate</li>
+              <li>Capabilities can be discovered</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">Similar to a Human Employee</h1>
+      </header>
+      <div class="slide-body">
+        <div class="tile-row equal-width">
+          <div class="glass-tile">
+            <h2 class="tile-heading">What Works</h2>
+            <ul class="tile-list">
+              <li>Responds to clear briefs</li>
+              <li>Performs better with context</li>
+              <li>Managed through feedback</li>
+              <li>Adapts to your communication style</li>
+            </ul>
+          </div>
+          <div class="glass-tile glass-tile-primary">
+            <h2 class="tile-heading">Implication</h2>
+            <ul class="tile-list">
+              <li>Brief it like a consultant</li>
+              <li>Provide background, not just instructions</li>
+              <li>First draft starts a conversation</li>
+              <li>"Act as a CFO" changes everything</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">Different from a Human Employee</h1>
+      </header>
+      <div class="slide-body">
+        <div class="tile-row equal-width">
+          <div class="glass-tile">
+            <h2 class="tile-heading">Differences</h2>
+            <ul class="tile-list">
+              <li>No persistent memory</li>
+              <li>No judgment about truth</li>
+              <li>100x speed and bandwidth</li>
+              <li>No ego or bad days</li>
+            </ul>
+          </div>
+          <div class="glass-tile glass-tile-primary">
+            <h2 class="tile-heading">Implication</h2>
+            <ul class="tile-list">
+              <li>Provide context every time</li>
+              <li>Verify high-stakes outputs</li>
+              <li>Use it for volume tasks</li>
+              <li>Tell it when something matters</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">The Amnesia Problem</h1>
+      </header>
+      <div class="slide-body">
+        <div class="bento-grid cols-3">
+          <div class="glass-tile glass-tile-primary">
+            <h2 class="tile-heading">The Issue</h2>
+            <div class="tile-body">Every new conversation starts from zero. The intern forgets everything you've discussed.</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Partial Solutions</h2>
+            <ul class="tile-list">
+              <li>Gemini Gems / Custom GPTs saved instructions</li>
+              <li>Memory features in some tools</li>
+              <li>Document upload for context</li>
+            </ul>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Your Job</h2>
+            <div class="tile-body">Provide the context that only you know: your situation, audience, constraints, and definition of success.</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide dark-slide">
+      <h1 class="slide-title">"Context engineering matters more than prompt engineering. Context is what the tool builders don't know."</h1>
+      <div class="accent-bar"></div>
+    </article>
+
+    <article class="slide dark-slide">
+      <span class="section-number">Section 04</span>
+      <h1 class="slide-title">Briefing the Intern</h1>
+      <p class="slide-subtitle">From principles to practice</p>
+      <div class="accent-bar"></div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">The Core Principle</h1>
+      </header>
+      <div class="slide-body">
+        <div class="tile-row equal-width">
+          <div class="glass-tile glass-tile-primary">
+            <h2 class="tile-heading">Good Prompt = Good Job Description</h2>
+            <div class="tile-body">Write prompts as if briefing someone with no context about your company, situation, or goals.</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">What a New Hire Needs</h2>
+            <ul class="tile-list">
+              <li>What's the situation?</li>
+              <li>What do you need from me?</li>
+              <li>What does good look like?</li>
+              <li>Who is this for?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">Three Principles</h1>
+      </header>
+      <div class="slide-body">
+        <div class="bento-grid cols-3">
+          <div class="glass-tile glass-tile-primary">
+            <h2 class="tile-heading">Be Specific</h2>
+            <ul class="tile-list">
+              <li>Define the output you need</li>
+              <li>Ask for options when you want creativity</li>
+              <li>Specify format, length, tone</li>
+            </ul>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Give Context</h2>
+            <ul class="tile-list">
+              <li>Background and situation</li>
+              <li>Audience and purpose</li>
+              <li>Constraints and limitations</li>
+            </ul>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Iterate</h2>
+            <ul class="tile-list">
+              <li>First output is a draft</li>
+              <li>Give feedback, request changes</li>
+              <li>Build on what works</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">Weak vs. Strong Briefs</h1>
+      </header>
+      <div class="slide-body">
+        <div class="prompt-group">
+          <div class="prompt-box">
+            <div class="prompt-header">
+              <span class="prompt-label">WEAK</span>
+              <button class="copy-btn" onclick="copyPrompt(this)" aria-label="Copy prompt">Copy</button>
+            </div>
+            <div class="prompt-content">What are the trends in my industry?</div>
+          </div>
+          <div class="result-box">
+            <h3 class="result-label">RESULT</h3>
+            <ul class="result-list">
+              <li>Generic response</li>
+              <li>Nothing actionable</li>
+              <li>Requires follow-up</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">Weak vs. Strong Briefs</h1>
+      </header>
+      <div class="slide-body">
+        <div class="prompt-group">
+          <div class="prompt-box">
+            <div class="prompt-header">
+              <span class="prompt-label">STRONG</span>
+              <button class="copy-btn" onclick="copyPrompt(this)" aria-label="Copy prompt">Copy</button>
+            </div>
+            <div class="prompt-content">List three emerging trends in Indian IT services and explain how each could impact mid-sized companies (500-2000 employees) competing against TCS and Infosys. Focus on differentiation opportunities.</div>
+          </div>
+          <div class="result-box">
+            <h3 class="result-label">RESULT</h3>
+            <ul class="result-list">
+              <li>Specific insights</li>
+              <li>Tailored to situation</li>
+              <li>Immediately useful</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">Role Assignment</h1>
+      </header>
+      <div class="slide-body">
+        <div class="bento-grid cols-3">
+          <div class="glass-tile">
+            <h2 class="tile-heading">Without Role</h2>
+            <div class="tile-body">"What are the risks of this project?" → Generic list</div>
+          </div>
+          <div class="glass-tile glass-tile-primary">
+            <h2 class="tile-heading">With Role</h2>
+            <div class="tile-body">"Act as a CFO advising the CEO, what are the financial risks and rewards?" → Focused analysis</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Why It Works</h2>
+            <div class="tile-body">Role assignment is shorthand for context. It specifies perspective, priorities, and expertise.</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide dark-slide">
+      <span class="section-number">Section 05</span>
+      <h1 class="slide-title">Advanced Techniques</h1>
+      <p class="slide-subtitle">Getting more from your intern</p>
+      <div class="accent-bar"></div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">Interactive Prompting</h1>
+      </header>
+      <div class="slide-body">
+        <div class="bento-grid cols-3">
+          <div class="glass-tile glass-tile-primary">
+            <h2 class="tile-heading">The Problem</h2>
+            <div class="tile-body">Writing all context upfront is hard. You don't always know what details matter.</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">The Solution</h2>
+            <div class="tile-body">Tell the intern: "Before you start, ask me questions to understand the situation. One at a time, building on my answers."</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Why It Works</h2>
+            <div class="tile-body">The intern extracts context through questioning, like a good consultant would.</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide dark-slide">
+      <span class="section-number">DEMO</span>
+      <h1 class="slide-title">Interactive Prompting</h1>
+      <p class="slide-subtitle">Performance feedback scenario</p>
+      <div class="accent-bar"></div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">Interactive Prompt Template</h1>
+      </header>
+      <div class="slide-body">
+        <div class="prompt-group">
+          <div class="prompt-box">
+            <div class="prompt-header">
+              <span class="prompt-label">THE BRIEF</span>
+              <button class="copy-btn" onclick="copyPrompt(this)" aria-label="Copy prompt">Copy</button>
+            </div>
+            <div class="prompt-content">I need to write difficult performance feedback. Before drafting, interview me to understand the situation.
+
+Ask one question at a time, building on my responses.
+
+Cover: what happened, the impact, our relationship, what outcome I want, and constraints.
+
+Then draft the feedback.</div>
+          </div>
+          <div class="result-box">
+            <h3 class="result-label">WHAT HAPPENS</h3>
+            <ul class="result-list">
+              <li>Asks about specific behaviors</li>
+              <li>Explores impact</li>
+              <li>Understands context</li>
+              <li>Clarifies goals</li>
+              <li>Drafts nuanced feedback</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">Voice Prompting</h1>
+      </header>
+      <div class="slide-body">
+        <div class="bento-grid cols-3">
+          <div class="glass-tile glass-tile-primary">
+            <h2 class="tile-heading">The Problem with Typing</h2>
+            <div class="tile-body">When you type, you edit as you go. You compress. You leave out context that seems obvious.</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Voice Captures More</h2>
+            <div class="tile-body">You speak more naturally, include background you'd skip, and explain nuance.</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Tools</h2>
+            <div class="tile-body">Wispr Flow and similar tools let you dictate prompts, then clean up the transcription.</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide dark-slide">
+      <span class="section-number">DEMO</span>
+      <h1 class="slide-title">Voice Prompting</h1>
+      <p class="slide-subtitle">Speech captures more context than typing</p>
+      <div class="accent-bar"></div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">Meta-Prompting</h1>
+      </header>
+      <div class="slide-body">
+        <div class="bento-grid cols-3">
+          <div class="glass-tile glass-tile-primary">
+            <h2 class="tile-heading">The Concept</h2>
+            <div class="tile-body">Ask the intern to help you write the brief for your actual task.</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">How It Works</h2>
+            <div class="tile-body">Describe what you're trying to accomplish, ask for a detailed brief, then review and use it.</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Why It Works</h2>
+            <div class="tile-body">The intern knows what information it needs. Let it tell you.</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">Meta-Prompting Example</h1>
+      </header>
+      <div class="slide-body">
+        <div class="prompt-group">
+          <div class="prompt-box">
+            <div class="prompt-header">
+              <span class="prompt-label">META-BRIEF</span>
+              <button class="copy-btn" onclick="copyPrompt(this)" aria-label="Copy prompt">Copy</button>
+            </div>
+            <div class="prompt-content">I need to synthesize API documentation for a business head evaluating build vs. buy.
+
+Write me a detailed brief for this task. Include what context to provide and what output format works best.</div>
+          </div>
+          <div class="result-box">
+            <h3 class="result-label">OUTPUT</h3>
+            <ul class="result-list">
+              <li>Brief template</li>
+              <li>Context questions</li>
+              <li>Suggested structure</li>
+              <li>Evaluation criteria</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">Gemini Gems: Reusable Briefs</h1>
+      </header>
+      <div class="slide-body">
+        <div class="bento-grid cols-3">
+          <div class="glass-tile glass-tile-primary">
+            <h2 class="tile-heading">The Principle</h2>
+            <div class="tile-body">Once you have a brief that works, save it.</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Gems / Custom GPTs</h2>
+            <ul class="tile-list">
+              <li>Save refined briefs as tools</li>
+              <li>Include role and context</li>
+              <li>Build a library</li>
+            </ul>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Examples</h2>
+            <ul class="tile-list">
+              <li>Meeting notes synthesizer</li>
+              <li>Tech-to-exec translator</li>
+              <li>Vendor evaluation summarizer</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide dark-slide">
+      <span class="section-number">Section 06</span>
+      <h1 class="slide-title">Live Problem Solving</h1>
+      <p class="slide-subtitle">Putting the intern to work</p>
+      <div class="accent-bar"></div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">Scenario 1: Document Synthesis</h1>
+      </header>
+      <div class="slide-body">
+        <div class="bento-grid cols-3">
+          <div class="glass-tile glass-tile-primary">
+            <h2 class="tile-heading">The Task</h2>
+            <div class="tile-body">Synthesize a technical document for a non-technical audience.</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Examples</h2>
+            <ul class="tile-list">
+              <li>Analyst report → CTO brief</li>
+              <li>API documentation → Build vs. buy</li>
+              <li>Earnings call → Client talking points</li>
+            </ul>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Key Context</h2>
+            <ul class="tile-list">
+              <li>Who is the audience?</li>
+              <li>What decision will they make?</li>
+              <li>What do they already know?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">Scenario 2: Performance Feedback</h1>
+      </header>
+      <div class="slide-body">
+        <div class="bento-grid cols-3">
+          <div class="glass-tile glass-tile-primary">
+            <h2 class="tile-heading">The Scenario</h2>
+            <div class="tile-body">High performer with collaboration issues. Technically excellent but creating friction.</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Why It's Hard</h2>
+            <ul class="tile-list">
+              <li>Too soft → message doesn't land</li>
+              <li>Too harsh → lose a performer</li>
+              <li>Nuance matters</li>
+            </ul>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Approach</h2>
+            <div class="tile-body">Interactive prompting. Let the intern interview you, then draft.</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide dark-slide">
+      <span class="section-number">WORKSHOP</span>
+      <h1 class="slide-title">Hands-On: Your Problems</h1>
+      <p class="slide-subtitle">Open session to work through real challenges</p>
+      <div class="accent-bar"></div>
+    </article>
+
+    <article class="slide dark-slide">
+      <span class="section-number">Section 07</span>
+      <h1 class="slide-title">Takeaways</h1>
+      <div class="accent-bar"></div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">The Mental Model</h1>
+      </header>
+      <div class="slide-body">
+        <div class="bento-grid cols-3">
+          <div class="glass-tile glass-tile-primary">
+            <h2 class="tile-heading">The Brilliant Intern</h2>
+            <div class="tile-body">100x speed, broad knowledge, but cannot tell truth from fabrication, and every conversation starts fresh.</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">The Core Risk</h2>
+            <div class="tile-body">AI isn't dangerous because it's wrong. It's dangerous because it sounds right.</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Your Job</h2>
+            <div class="tile-body">Decide where to trust, when to verify, how to brief. That's management.</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">The Techniques</h1>
+      </header>
+      <div class="slide-body">
+        <div class="bento-grid cols-3">
+          <div class="glass-tile glass-tile-primary">
+            <h2 class="tile-heading">Context Matters Most</h2>
+            <div class="tile-body">Good brief = good job description for someone with zero context.</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Interactive Prompting</h2>
+            <div class="tile-body">Let the intern interview you to extract context.</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Voice</h2>
+            <div class="tile-body">Speaking captures more detail and nuance than typing.</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Meta-Prompting</h2>
+            <div class="tile-body">Use the intern to write your briefs.</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Save What Works</h2>
+            <div class="tile-body">Build a library of Gems for recurring tasks.</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">Next Steps</h1>
+      </header>
+      <div class="slide-body">
+        <div class="bento-grid cols-3">
+          <div class="glass-tile glass-tile-primary">
+            <h2 class="tile-heading">Between Sessions</h2>
+            <ul class="tile-list">
+              <li>Try the tools</li>
+              <li>Experiment with interactive prompting</li>
+              <li>Bring your results to Session 2</li>
+            </ul>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Session 2 (Jan 11)</h2>
+            <div class="tile-body">Research, analysis, and decision support. Gemini Deep Research, NotebookLM, real problems.</div>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Session 3 (Jan 18)</h2>
+            <div class="tile-body">Strategic implications. How AI affects your industry and role.</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header">
+        <h1 class="slide-title">Resources</h1>
+      </header>
+      <div class="slide-body">
+        <div class="bento-grid cols-3">
+          <div class="glass-tile glass-tile-primary">
+            <h2 class="tile-heading">Try This Week</h2>
+            <ul class="tile-list">
+              <li>Interactive prompting for one task</li>
+              <li>Voice dictation</li>
+              <li>Save one prompt as a Gem</li>
+            </ul>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Tools Demoed</h2>
+            <ul class="tile-list">
+              <li>LLM Auto-Regression Playground</li>
+              <li>Hallucination Lab</li>
+              <li>Wispr Flow</li>
+            </ul>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Recommended</h2>
+            <ul class="tile-list">
+              <li>Gemini (with Gems)</li>
+              <li>ChatGPT (with Custom GPTs)</li>
+              <li>Claude</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide dark-slide">
+      <h1 class="slide-title">Questions?</h1>
+      <div class="accent-bar"></div>
+    </article>
+
+  </main>
+
+  <nav class="bottom-bar" role="navigation" aria-label="Presentation controls">
+    <a href="https://adityavj.com" target="_blank" rel="noopener" class="watermark">adityavj.com</a>
+    <div class="progress-container" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="51">
+      <div class="progress-fill" style="width: 0%"></div>
+    </div>
+    <div class="slide-counter" aria-live="polite">1 / 51</div>
+  </nav>
+
+  <script>
+    (function() {
+      const slides = document.querySelectorAll('.slide');
+      const totalSlides = slides.length;
+      const counter = document.querySelector('.slide-counter');
+      const progressFill = document.querySelector('.progress-fill');
+      const progressContainer = document.querySelector('.progress-container');
+      const bottomBar = document.querySelector('.bottom-bar');
+      let currentSlide = 0;
+
+      function showSlide(index) {
+        slides.forEach((slide, i) => {
+          slide.classList.toggle('active', i === index);
+        });
+        
+        counter.textContent = `${index + 1} / ${totalSlides}`;
+        progressFill.style.width = `${((index + 1) / totalSlides) * 100}%`;
+        progressContainer.setAttribute('aria-valuenow', index + 1);
+        
+        const isDark = slides[index].classList.contains('dark-slide');
+        bottomBar.classList.toggle('dark', isDark);
+      }
+
+      function navigate(direction) {
+        currentSlide = Math.max(0, Math.min(totalSlides - 1, currentSlide + direction));
+        showSlide(currentSlide);
+      }
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          navigate(1);
+        } else if (e.key === 'ArrowLeft' || e.key === 'Backspace') {
+          e.preventDefault();
+          navigate(-1);
+        } else if (e.key === 'Home') {
+          e.preventDefault();
+          currentSlide = 0;
+          showSlide(currentSlide);
+        } else if (e.key === 'End') {
+          e.preventDefault();
+          currentSlide = totalSlides - 1;
+          showSlide(currentSlide);
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (e.target.closest('a, button')) return;
+        const x = e.clientX / window.innerWidth;
+        navigate(x > 0.5 ? 1 : -1);
+      });
+
+      window.copyPrompt = function(button) {
+        const promptBox = button.closest('.prompt-box');
+        const content = promptBox.querySelector('.prompt-content').textContent;
+        navigator.clipboard.writeText(content).then(() => {
+          const originalText = button.textContent;
+          button.textContent = 'Copied!';
+          setTimeout(() => { button.textContent = originalText; }, 1500);
+        });
+      };
+
+      if (slides.length > 0) {
+        showSlide(0);
+      }
+    })();
+  </script>
+</body>
+</html>

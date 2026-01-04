@@ -1,6 +1,18 @@
 {
     "sessions": [
         {
+            "id": "smp-ai-foundations-jan26",
+            "title": "Foundations of Generative AI",
+            "institution": "IIM Kozhikode",
+            "program": "SMP",
+            "cohort": "Jan 2026",
+            "url": "presentations/smp-ai-foundations-jan26.html",
+            "viewerUrl": "presentations/smp-ai-foundations-jan26.html",
+            "desc": "Mental models for understanding generative AI—the brilliant intern metaphor, how LLMs work, prompting fundamentals, and interactive techniques.",
+            "tags": ["AI"],
+            "featured": true
+        },
+        {
     "id": "ai-phd-research",
     "title": "AI for PhD Research",
     "institution": "IIM Kozhikode",
