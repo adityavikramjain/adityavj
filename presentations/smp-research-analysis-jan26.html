@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 2: AI for Research, Analysis, and Decision Support</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --iimk-blue: #003366;
+            --iimk-blue-dark: #002244;
+            --iimk-gold: #FFCC00;
+            --dove-gray: #666666;
+            --pure-white: #FFFFFF;
+            --pure-black: #000000;
+            --light-blue: #E6EEF5;
+            --light-gold: #FFF9E6;
+            --light-gold-vivid: #FFF3CC;
+            --table-border: #E0E0E0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--pure-white);
+            color: var(--pure-black);
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .presentation-container {
+            width: 1440px;
+            height: 932px;
+            margin: 0 auto;
+            position: relative;
+            background: var(--pure-white);
+            transform-origin: top center;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            padding: 50px 70px; /* Reduced padding */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            overflow: hidden;
+            will-change: opacity, transform;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            animation: slideEnter 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .slide.exiting {
+            animation: slideExit 0.4s cubic-bezier(0.4, 0, 1, 1) forwards;
+        }
+
+        /* Slide Indicator */
+        .slide-indicator {
+            position: fixed;
+            bottom: 25px;
+            right: 35px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--dove-gray);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px 18px;
+            border-radius: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+
+        /* Watermark */
+        .watermark {
+            position: fixed;
+            bottom: 25px;
+            left: 35px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--dove-gray);
+            opacity: 0.5;
+            z-index: 1000;
+            letter-spacing: 0.5px;
+        }
+
+        /* Animations */
+        @keyframes slideEnter {
+            from { opacity: 0; transform: translateY(20px) scale(0.98); filter: blur(4px); }
+            to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+
+        @keyframes slideExit {
+            from { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+            to { opacity: 0; transform: translateY(-10px) scale(0.99); filter: blur(2px); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); filter: blur(4px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+
+        @keyframes highlightReveal {
+            from { background-size: 0% 40%; }
+            to { background-size: 100% 40%; }
+        }
+        
+        @keyframes subtleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .animate-in {
+            opacity: 0;
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .hero-highlight {
+            display: inline-block;
+            background: linear-gradient(120deg, var(--light-gold-vivid) 0%, var(--light-gold-vivid) 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 40%;
+            background-position: 0 85%;
+            padding: 0 10px;
+            margin: 0 -4px;
+            animation: highlightReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+        }
+
+        /* Typography - Reduced Sizes for Safety */
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 64px; /* Reduced from 72 */
+            font-weight: 700;
+            color: var(--iimk-blue);
+            margin-bottom: 30px;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 50px; /* Reduced from 56 */
+            font-weight: 600;
+            color: var(--iimk-blue);
+            margin-bottom: 25px;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
+        }
+
+        h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 28px; /* Reduced from 32 */
+            font-weight: 600;
+            color: var(--iimk-gold);
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 28px;
+            font-weight: 400;
+            color: var(--dove-gray);
+            margin-bottom: 35px;
+        }
+
+        p {
+            font-size: 24px; /* Reduced from 26 */
+            line-height: 1.6;
+            color: var(--pure-black);
+            margin-bottom: 18px;
+        }
+
+        .content-section {
+            margin-bottom: 30px;
+            margin-top: 20px;
+        }
+
+        /* Lists */
+        .bullet-list {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .bullet-list li {
+            font-size: 24px; /* Reduced from 26 */
+            line-height: 1.6;
+            margin-bottom: 20px;
+            padding-left: 40px;
+            position: relative;
+            color: var(--pure-black);
+        }
+
+        .bullet-list li:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 12px;
+            width: 10px;
+            height: 10px;
+            background: var(--iimk-gold);
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(255, 204, 0, 0.4);
+        }
+
+        /* Layouts */
+        .two-column {
+            display: flex;
+            gap: 40px;
+            margin-top: 25px;
+            align-items: stretch;
+        }
+
+        .two-column .column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, var(--light-blue) 0%, var(--pure-white) 100%);
+            padding: 30px;
+            border-radius: 16px;
+            border: 2px solid rgba(0, 51, 102, 0.1);
+            box-shadow: 0 8px 30px rgba(0, 51, 102, 0.06);
+        }
+
+        .two-column .column h3 {
+            color: var(--iimk-blue);
+        }
+
+        /* Custom 3-Column Layout */
+        .three-column {
+            display: flex;
+            gap: 25px;
+            margin-top: 30px;
+            align-items: stretch;
+        }
+
+        .three-column .column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, var(--light-blue) 0%, var(--pure-white) 100%);
+            padding: 25px;
+            border-radius: 16px;
+            border: 2px solid rgba(0, 51, 102, 0.1);
+            box-shadow: 0 6px 20px rgba(0, 51, 102, 0.05);
+        }
+        
+        .three-column .column h3 {
+            font-size: 22px;
+            color: var(--iimk-blue);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .three-column .column h3 span {
+            font-size: 28px;
+        }
+        
+        .three-column .column .bullet-list li {
+            font-size: 18px; /* Kept smaller for density */
+            margin-bottom: 10px;
+            padding-left: 25px;
+        }
+        
+        .three-column .column .bullet-list li:before {
+            width: 8px;
+            height: 8px;
+            top: 10px;
+        }
+
+        /* Tables */
+        .academic-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Montserrat', sans-serif;
+            margin-top: 15px;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .academic-table th {
+            background-color: var(--iimk-blue);
+            color: white;
+            padding: 16px 20px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 20px;
+        }
+
+        .academic-table td {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--table-border);
+            font-size: 20px;
+            vertical-align: top;
+            line-height: 1.5;
+        }
+
+        .academic-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .academic-table tr:hover td {
+            background-color: var(--light-blue);
+        }
+
+        /* Title Slide */
+        .title-slide {
+            background: linear-gradient(135deg, var(--iimk-blue) 0%, #004080 50%, var(--iimk-blue-dark) 100%);
+            color: white;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .title-slide::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 204, 0, 0.08) 0%, transparent 50%);
+            animation: subtleFloat 8s ease-in-out infinite;
+        }
+
+        .title-slide h1 { color: white; margin-bottom: 15px; z-index: 1; font-size: 72px; }
+        .title-slide h2 { color: var(--iimk-gold); font-size: 32px; font-weight: 400; margin-bottom: 60px; z-index: 1; font-family: 'Montserrat', sans-serif; }
+        .title-slide p { color: rgba(255,255,255,0.9); font-size: 24px; z-index: 1; margin-bottom: 10px; }
+
+        /* Section Slide */
+        .section-slide {
+            background: linear-gradient(135deg, var(--light-blue) 0%, var(--pure-white) 50%, var(--light-gold) 100%);
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .section-slide h1 { font-size: 64px; }
+        .section-slide .subtitle { font-size: 32px; color: var(--iimk-blue); margin-bottom: 10px; }
+        .section-slide p { color: var(--dove-gray); font-size: 24px; }
+
+        /* Backdrop Slide (Live Demo) */
+        .backdrop-slide {
+            background: var(--iimk-blue-dark);
+            color: white;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .backdrop-slide h1 { color: white; margin-bottom: 20px; font-size: 60px; }
+        .backdrop-slide p { color: rgba(255,255,255,0.7); font-size: 24px; max-width: 800px; margin: 0 auto; }
+        .demo-badge {
+            display: inline-block;
+            background: var(--iimk-gold);
+            color: var(--iimk-blue);
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        /* Prompt/Output Boxes */
+        .prompt-box, .output-box {
+            position: relative;
+            padding: 24px 30px;
+            padding-top: 45px;
+            margin: 20px 0;
+            border-radius: 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 20px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            box-shadow: 0 6px 25px rgba(0, 51, 102, 0.1);
+        }
+
+        .prompt-box {
+            background: linear-gradient(135deg, var(--light-blue) 0%, #F0F5FA 100%);
+            border-left: 5px solid var(--iimk-blue);
+        }
+
+        .output-box {
+            background: linear-gradient(135deg, var(--light-gold) 0%, #FFFAED 100%);
+            border-left: 5px solid var(--iimk-gold);
+        }
+        
+        .prompt-label, .output-label {
+            position: absolute;
+            top: 12px;
+            left: 30px;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .prompt-label { background: var(--iimk-blue); color: white; }
+        .output-label { background: var(--iimk-gold); color: var(--iimk-blue); }
+
+        .copy-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: white;
+            border: 1px solid var(--iimk-blue);
+            border-radius: 4px;
+            padding: 4px 10px;
+            color: var(--iimk-blue);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .copy-btn:hover { background: var(--iimk-blue); color: white; }
+
+        /* Rich List (Slide 35) */
+        .rich-list-item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .rich-list-item strong {
+            display: block;
+            font-size: 22px;
+            color: var(--iimk-blue);
+            margin-bottom: 4px;
+        }
+        .rich-list-item span {
+            font-size: 18px;
+            color: var(--dove-gray);
+        }
+
+        /* Responsive Scaling - Optimized for Windowed Mode */
+        @media (max-width: 1440px) { .presentation-container { transform: scale(0.85); } }
+        @media (max-width: 1200px) { .presentation-container { transform: scale(0.7); } }
+        
+        /* New Height-based media queries for windowed/laptop screens */
+        @media (max-height: 950px) { 
+            .presentation-container { transform: scale(0.75); } 
+        }
+        @media (max-height: 800px) { 
+            .presentation-container { transform: scale(0.65); } 
+        }
+
+        @media (max-width: 768px) {
+            .presentation-container { transform: scale(0.5); }
+            .two-column, .three-column { flex-direction: column; }
+        }
+
+        /* Print Styles for PDF Export */
+        @media print {
+            @page {
+                size: 1440px 932px;
+                margin: 0;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+                overflow: visible;
+            }
+
+            .presentation-container {
+                width: 1440px;
+                height: 932px;
+                margin: 0;
+                padding: 0;
+                transform: none !important;
+                page-break-after: avoid;
+            }
+
+            .slide {
+                position: relative !important;
+                width: 1440px !important;
+                height: 932px !important;
+                page-break-after: always;
+                page-break-inside: avoid;
+                opacity: 1 !important;
+                visibility: visible !important;
+                display: flex !important;
+                padding: 50px 70px;
+                overflow: hidden;
+                animation: none !important;
+            }
+
+            .slide.active,
+            .slide.exiting {
+                animation: none !important;
+            }
+
+            /* Hide interactive elements */
+            .slide-indicator,
+            .watermark,
+            .copy-btn {
+                display: none !important;
+            }
+
+            /* Ensure backgrounds print */
+            .title-slide,
+            .section-slide,
+            .backdrop-slide,
+            .two-column .column,
+            .three-column .column,
+            .prompt-box,
+            .output-box,
+            .emphasis-box {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Fix animations in print */
+            .animate-in,
+            .hero-highlight {
+                opacity: 1 !important;
+                transform: none !important;
+                filter: none !important;
+                animation: none !important;
+            }
+
+            /* Ensure tables print correctly */
+            .academic-table {
+                page-break-inside: avoid;
+            }
+
+            /* Fix bullet points */
+            .bullet-list li:before {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Ensure gradients print */
+            .title-slide::before {
+                display: none; /* Remove animated background element */
+            }
+
+            /* Fix layout for columns */
+            .two-column,
+            .three-column {
+                page-break-inside: avoid;
+            }
+
+            /* Remove last page break */
+            .slide:last-child {
+                page-break-after: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="slide-indicator">
+            <span id="current-slide">1</span> / <span id="total-slides">40</span>
+        </div>
+        <div class="watermark">adityavj.com</div>
+
+        <div class="slide title-slide active">
+            <h1>Session 2: AI for Research, Analysis, and Decision Support</h1>
+            <h2>IIM Kozhikode Senior Management Programme - Batch 16</h2>
+            <p>Aditya V. Jain</p>
+            <p>January 2026</p>
+        </div>
+
+        <div class="slide">
+            <h2>Quick Recap: Session 1 <span class="hero-highlight">Foundations</span></h2>
+            <div class="content-section animate-in">
+                <ul class="bullet-list">
+                    <li>LLMs are 'Brilliant Interns' — encyclopedic knowledge, 100x speed, but no judgment</li>
+                    <li>Three cognitive deficits: Hallucination, No Real-Time Knowledge, No Persistent Memory</li>
+                    <li>Context engineering > Elaborate prompting</li>
+                    <li>The skill isn't writing prompts — it's getting AI to extract context from you</li>
+                </ul>
+            </div>
+            <div class="emphasis-box animate-in" style="background: var(--light-gold); padding: 20px; border-left: 4px solid var(--iimk-gold); border-radius: 4px; margin-top: 20px;">
+                <p><strong>Key Insight:</strong> Today: We solve the 'No Real-Time Knowledge' and 'No Persistent Memory' problems</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>Today's Journey: Two <span class="hero-highlight">Superpowers</span></h2>
+            <div class="two-column animate-in">
+                <div class="column">
+                    <h3>🔍 Deep Research</h3>
+                    <p style="font-size: 20px; margin-bottom: 15px; color: var(--dove-gray);">The World's Information → Your Intelligence</p>
+                    <ul class="bullet-list">
+                        <li>Research that would take days, done in minutes</li>
+                        <li>Synthesizes hundreds of sources</li>
+                        <li>Creates actionable reports, not just summaries</li>
+                    </ul>
+                </div>
+                <div class="column">
+                    <h3>📚 NotebookLM</h3>
+                    <p style="font-size: 20px; margin-bottom: 15px; color: var(--dove-gray);">Your Documents → Queryable Knowledge</p>
+                    <ul class="bullet-list">
+                        <li>Your organization's memory, made intelligent</li>
+                        <li>No more 'I know we discussed this somewhere...'</li>
+                        <li>Transforms static PDFs into dynamic conversations</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>The 'Google Test' for <span class="hero-highlight">AI Value</span></h2>
+            <p style="margin-bottom: 20px;">Question: If you Google the first 10 words of your query, would you get a useful answer?</p>
+            
+            <table class="academic-table animate-in">
+                <thead>
+                    <tr>
+                        <th style="width: 50%">Query</th>
+                        <th style="width: 30%">Verdict</th>
+                        <th style="width: 20%">AI Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>What is Quick Commerce?</td>
+                        <td style="color: #d32f2f;">❌ Google handles this fine</td>
+                        <td>Low</td>
+                    </tr>
+                    <tr>
+                        <td>How should Perfetti Van Melle India respond to Blinkit's dominance given their ₹1 price point dependency?</td>
+                        <td style="color: #2e7d32;">✅ Google can't answer this</td>
+                        <td>High</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <p style="margin-top: 30px; font-style: italic; color: var(--dove-gray);">Principle: AI earns its keep when it synthesizes, not when it retrieves</p>
+        </div>
+
+        <div class="slide section-slide">
+            <div class="subtitle">Part 1</div>
+            <h1>Know Your Organization</h1>
+            <p>Making Internal Documents Intelligent</p>
+        </div>
+
+        <div class="slide">
+            <h2>The Organizational <span class="hero-highlight">Memory Problem</span></h2>
+            <p style="margin-bottom: 25px;">Scenario: You've been at your organization for 15+ years. You've seen strategies evolve, pivots happen, lessons learned...</p>
+            <div class="content-section animate-in">
+                <ul class="bullet-list">
+                    <li>New leaders ask questions you answered 3 years ago</li>
+                    <li>Strategic decisions get re-debated without institutional context</li>
+                    <li>Annual reports become write-once-read-never artifacts</li>
+                    <li>Contracts sit in folders until there's a dispute</li>
+                </ul>
+            </div>
+            <p style="margin-top: 25px; color: var(--iimk-blue); font-weight: 600;">Cost: Organizations don't learn — individuals do. And individuals leave.</p>
+        </div>
+
+        <div class="slide">
+            <h2>NotebookLM: Your Organization's <span class="hero-highlight">Memory</span></h2>
+            <p>What it is: Upload documents → Ask questions → Get answers with citations</p>
+            <div class="content-section animate-in">
+                <ul class="bullet-list">
+                    <li>Grounds responses in YOUR documents only (no hallucination from training data)</li>
+                    <li>Cites specific sources for every claim</li>
+                    <li>Creates study guides, FAQs, timelines automatically</li>
+                    <li>Generates 'Audio Overviews' — podcast-style discussions of your content</li>
+                </ul>
+            </div>
+            <p style="margin-top: 20px; font-style: italic;">Crucial difference: Unlike ChatGPT: It won't make things up. It only knows what you upload.</p>
+        </div>
+
+        <div class="slide backdrop-slide">
+            <div class="demo-badge">Live Demo</div>
+            <h1>Plan India NotebookLM</h1>
+            <p>Organization History & Evolution Analysis</p>
+        </div>
+
+        <div class="slide">
+            <h2>Demo 1: 17 Years of <span class="hero-highlight">History</span></h2>
+            <div class="two-column animate-in">
+                <div class="column">
+                    <h3>The Setup</h3>
+                    <p style="font-size: 20px; color: var(--dove-gray); margin-bottom: 12px;"><strong>Context:</strong> Plan India — child-rights NGO</p>
+                    <p style="font-size: 20px; color: var(--dove-gray); margin-bottom: 12px;"><strong>Documents:</strong> 17 years of annual reports (2008-2025)</p>
+                    <p style="font-size: 20px; color: var(--dove-gray);"><strong>Challenge:</strong> New executive joining needs to understand organizational evolution, strategic pivots, program changes</p>
+                </div>
+                <div class="column">
+                    <h3>What We'll Ask</h3>
+                    <ul class="bullet-list">
+                        <li>How has the strategic focus evolved from 2008 to 2025?</li>
+                        <li>What were the major programmatic pivots and why?</li>
+                        <li>How has the funding mix changed over time?</li>
+                        <li>What lessons from past initiatives inform current strategy?</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide backdrop-slide">
+            <div class="demo-badge">Live Demo</div>
+            <h1>EPC Contract NotebookLM</h1>
+            <p>Risk Analysis & Clause Interpretation</p>
+        </div>
+
+        <div class="slide">
+            <h2>Demo 2: Contract <span class="hero-highlight">Intelligence</span></h2>
+            <div class="two-column animate-in">
+                <div class="column">
+                    <h3>The Setup</h3>
+                    <p style="font-size: 20px; color: var(--dove-gray); margin-bottom: 12px;"><strong>Context:</strong> Infrastructure/EPC Contracts</p>
+                    <p style="font-size: 20px; color: var(--dove-gray); margin-bottom: 12px;"><strong>Documents:</strong> MoRTH Model EPC Agreement (2012) + Risk Analysis</p>
+                    <p style="font-size: 20px; color: var(--dove-gray);"><strong>Challenge:</strong> Before signing, identify contractor-unfriendly clauses that could cost crores</p>
+                </div>
+                <div class="column">
+                    <h3>What We'll Ask</h3>
+                    <ul class="bullet-list">
+                        <li>What are the top 5 risks for contractors in this agreement?</li>
+                        <li>Where does the 'foreseeability clause' create exposure?</li>
+                        <li>What are the strict time-bars that could forfeit claims?</li>
+                        <li>How does risk allocation compare to industry norms?</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>The NotebookLM <span class="hero-highlight">Pattern</span></h2>
+            <div class="content-section animate-in">
+                <ul class="bullet-list">
+                    <li><strong>1. Gather:</strong> Collect documents that represent institutional knowledge (reports, contracts, research, transcripts)</li>
+                    <li><strong>2. Upload:</strong> Add to NotebookLM (up to 50 sources, 500K words total)</li>
+                    <li><strong>3. Query:</strong> Ask questions as if talking to someone who read everything</li>
+                    <li><strong>4. Verify:</strong> Every answer cites sources — click to verify</li>
+                    <li><strong>5. Share:</strong> Generate Audio Overviews, study guides, or FAQs for team distribution</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide section-slide">
+            <div class="subtitle">Part 2</div>
+            <h1>Know Your Market</h1>
+            <p>External Intelligence at Scale</p>
+        </div>
+
+        <div class="slide">
+            <h2>The Research <span class="hero-highlight">Problem</span></h2>
+            <p>Scenario: You need to understand a market, a competitor, a prospect, or a regulatory landscape...</p>
+            <div class="content-section animate-in">
+                <ul class="bullet-list">
+                    <li>Old Way: Google search → 10 blue links → open tabs → read → synthesize → repeat</li>
+                    <li>Or: Commission expensive consulting reports</li>
+                    <li>Or: Ask a junior analyst to 'do some research'</li>
+                </ul>
+            </div>
+            <div style="margin-top: 25px;">
+                <p><strong>Time Cost:</strong> A thorough research brief = 2-4 hours minimum, often days</p>
+                <p><strong>Quality Issue:</strong> Results depend heavily on researcher's domain knowledge</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>Gemini Deep Research: <span class="hero-highlight">Superhuman Speed</span></h2>
+            <p>Research that would take days, done in minutes.</p>
+            <div class="content-section animate-in">
+                <ul class="bullet-list">
+                    <li>Takes your research question</li>
+                    <li>Creates a multi-step research plan</li>
+                    <li>Searches hundreds of sources (news, reports, filings, articles)</li>
+                    <li>Reads and synthesizes across sources</li>
+                    <li>Produces a structured report with citations</li>
+                </ul>
+            </div>
+            <div style="background: var(--light-blue); padding: 20px; border-radius: 8px;">
+                <p style="font-size: 22px; margin-bottom: 0;"><strong>Output:</strong> A 5-15 page research report in 5-10 minutes</p>
+            </div>
+        </div>
+
+        <div class="slide backdrop-slide">
+            <div class="demo-badge">Live Demo</div>
+            <h1>HDFC Bank Proposal Research</h1>
+            <p>Deep Research for Sales Intelligence</p>
+        </div>
+
+        <div class="slide">
+            <h2>Demo 4: Sales Proposal <span class="hero-highlight">Intelligence</span></h2>
+            <div class="two-column animate-in">
+                <div class="column">
+                    <h3>The Setup</h3>
+                    <p style="font-size: 20px; color: var(--dove-gray); margin-bottom: 12px;"><strong>Context:</strong> IT Services / Consulting</p>
+                    <p style="font-size: 20px; color: var(--dove-gray); margin-bottom: 12px;"><strong>Challenge:</strong> Atos Eviden pursuing HDFC Bank for AI/GenAI services</p>
+                    <p style="font-size: 20px; color: var(--dove-gray);"><strong>Need:</strong> Understand HDFC's IT strategy, pain points, and create tailored proposal</p>
+                </div>
+                <div class="column">
+                    <h3>The Research Question</h3>
+                    <p style="font-size: 22px; font-style: italic; line-height: 1.6;">"Research HDFC Bank's technology strategy, digital transformation initiatives, and IT challenges from their annual reports and investor calls. Then match Atos Eviden's AI/GenAI capabilities to their specific needs and create a proposal framework."</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide backdrop-slide">
+            <div class="demo-badge">Live Demo</div>
+            <h1>Labor Solutions Strategy Research</h1>
+            <p>Market Dynamics & Regulatory Analysis</p>
+        </div>
+
+        <div class="slide">
+            <h2>Demo 5: Strategic <span class="hero-highlight">Positioning</span></h2>
+            <div class="two-column animate-in">
+                <div class="column">
+                    <h3>The Setup</h3>
+                    <p style="font-size: 20px; color: var(--dove-gray); margin-bottom: 12px;"><strong>Context:</strong> Social Impact Tech / B2B</p>
+                    <p style="font-size: 20px; color: var(--dove-gray); margin-bottom: 12px;"><strong>Company:</strong> Labor Solutions — worker voice technology</p>
+                    <p style="font-size: 20px; color: var(--dove-gray);"><strong>Challenge:</strong> New EU regulations (CSDDD) changing market dynamics; need strategic pivot analysis</p>
+                </div>
+                <div class="column">
+                    <h3>The Research Output</h3>
+                    <ul class="bullet-list">
+                        <li>Identified EcoVadis-Ulula merger as primary threat</li>
+                        <li>Recommended pivot from 'worker voice' to 'market access insurance'</li>
+                        <li>Mapped Tier 1 mega-supplier targets</li>
+                        <li>Defined differentiation strategy vs. ESG aggregators</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>The Deep Research <span class="hero-highlight">Pattern</span></h2>
+            <div class="content-section animate-in">
+                <ul class="bullet-list">
+                    <li>Prospect/client research before important meetings</li>
+                    <li>Competitive intelligence and market analysis</li>
+                    <li>Regulatory landscape understanding</li>
+                    <li>Due diligence and background research</li>
+                    <li>Strategic planning inputs</li>
+                </ul>
+            </div>
+            <div class="output-box">
+                <div class="output-label">Good vs Bad</div>
+                <p><strong>Weak:</strong> "What is HDFC Bank's revenue?"</p>
+                <p><strong>Strong:</strong> "What are HDFC Bank's stated technology priorities and where do they face implementation challenges?"</p>
+            </div>
+        </div>
+
+        <div class="slide section-slide" style="background: linear-gradient(135deg, var(--iimk-gold) 0%, #FFD700 50%, #FFDB4D 100%);">
+            <div class="subtitle" style="color: var(--iimk-blue);">30 Minutes</div>
+            <h1 style="color: var(--iimk-blue);">☕ Break</h1>
+            <p style="color: var(--iimk-blue);">When we return: Technical ROI, Structured Thinking, and Your Action Plan</p>
+        </div>
+
+        <div class="slide section-slide">
+            <div class="subtitle">Part 3</div>
+            <h1>Accelerate Your Team</h1>
+            <p>Technical Decisions & Structured Thinking</p>
+        </div>
+
+        <div class="slide backdrop-slide">
+            <div class="demo-badge">Live Demo</div>
+            <h1>PostgreSQL Upgrade NotebookLM</h1>
+            <p>Technical Analysis & Business Case Generation</p>
+        </div>
+
+        <div class="slide">
+            <h2>Demo 6: Technical <span class="hero-highlight">ROI</span></h2>
+            <div class="two-column animate-in">
+                <div class="column">
+                    <h3>The Setup</h3>
+                    <p style="font-size: 20px; color: var(--dove-gray); margin-bottom: 12px;"><strong>Context:</strong> Engineering / IT Leadership</p>
+                    <p style="font-size: 20px; color: var(--dove-gray); margin-bottom: 12px;"><strong>Challenge:</strong> PostgreSQL 16 → 18 upgrade decision</p>
+                    <p style="font-size: 20px; color: var(--dove-gray);"><strong>Documents:</strong> PostgreSQL 16, 17, 18 documentation + release notes</p>
+                </div>
+                <div class="column">
+                    <h3>What We'll Ask</h3>
+                    <ul class="bullet-list">
+                        <li>What are the breaking changes between versions?</li>
+                        <li>What performance improvements justify the migration cost?</li>
+                        <li>What's the business case I can present to the CFO?</li>
+                        <li>What are the risks and rollback considerations?</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>Beyond Features: <span class="hero-highlight">Shaping Behavior</span></h2>
+            <div class="content-section animate-in">
+                <p style="font-size: 26px; margin-bottom: 30px;">The demos so far used AI tools as-is. But you can <strong>SHAPE</strong> how AI thinks.</p>
+                
+                <div style="background: var(--light-blue); padding: 25px; border-radius: 12px; border-left: 6px solid var(--iimk-blue);">
+                    <p><strong>Concept:</strong> Custom instructions (Gemini Gems, GPTs, Claude Projects) let you embed methodologies.</p>
+                    <p style="margin-top: 15px;"><strong>Example:</strong> Instead of asking AI to brainstorm, you can create an AI that follows a specific brainstorming methodology.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide backdrop-slide">
+            <div class="demo-badge">Live Demo</div>
+            <h1>Adaptive Inquiry Gem</h1>
+            <p>Structured Brainstorming & Idea Stress-Testing</p>
+        </div>
+
+        <div class="slide">
+            <h2>Demo 7: The <span class="hero-highlight">Adaptive Inquiry</span></h2>
+            <div class="two-column animate-in">
+                <div class="column">
+                    <h3>The Methodology</h3>
+                    <ul class="bullet-list">
+                        <li><strong>Gödelian Inquiry:</strong> Every idea has unstated assumptions — surface them</li>
+                        <li><strong>Darwinian Ideation:</strong> Ideas must survive in an ecosystem — test their fitness</li>
+                        <li>Stage 1: Axiomatic Deconstruction</li>
+                        <li>Stage 2: Ecosystem & Fitness Scan</li>
+                    </ul>
+                </div>
+                <div class="column">
+                    <h3>The Implementation</h3>
+                    <p style="margin-bottom: 15px;"><strong>Tool:</strong> Gemini Gem with custom instructions</p>
+                    <p style="margin-bottom: 15px;"><strong>Behavior:</strong> AI doesn't answer "How do I build X?" — it guides you through rigorous idea refinement</p>
+                    <p><strong>Output:</strong> A much more robust, stress-tested project plan</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide section-slide">
+            <div class="subtitle">Part 4</div>
+            <h1>Choosing the Right Tool</h1>
+            <p>A Decision Framework</p>
+        </div>
+
+        <div class="slide">
+            <h2>The Tool Selection <span class="hero-highlight">Matrix</span></h2>
+            <div class="three-column animate-in">
+                <div class="column">
+                    <h3><span>📚</span> NotebookLM</h3>
+                    <p style="font-weight: 700; margin-bottom: 10px; color: var(--dove-gray);">Use when:</p>
+                    <ul class="bullet-list">
+                        <li>You have specific documents</li>
+                        <li>You need answers grounded in YOUR content</li>
+                        <li>You want citations you can verify</li>
+                    </ul>
+                    <p style="font-weight: 700; margin-top: 15px; margin-bottom: 10px; color: var(--dove-gray);">Examples:</p>
+                    <p style="font-size: 18px;">Contract analysis, Policy interpretation, Historical research</p>
+                </div>
+                
+                <div class="column">
+                    <h3><span>🔍</span> Deep Research</h3>
+                    <p style="font-weight: 700; margin-bottom: 10px; color: var(--dove-gray);">Use when:</p>
+                    <ul class="bullet-list">
+                        <li>You need external intelligence</li>
+                        <li>Research would take hours manually</li>
+                        <li>You need synthesis across many sources</li>
+                    </ul>
+                    <p style="font-weight: 700; margin-top: 15px; margin-bottom: 10px; color: var(--dove-gray);">Examples:</p>
+                    <p style="font-size: 18px;">Market analysis, Competitor intelligence, Prospect research</p>
+                </div>
+                
+                <div class="column">
+                    <h3><span>🧠</span> Gems/Custom GPTs</h3>
+                    <p style="font-weight: 700; margin-bottom: 10px; color: var(--dove-gray);">Use when:</p>
+                    <ul class="bullet-list">
+                        <li>You have a repeatable methodology</li>
+                        <li>You want consistent AI behavior</li>
+                        <li>You're embedding expertise</li>
+                    </ul>
+                    <p style="font-weight: 700; margin-top: 15px; margin-bottom: 10px; color: var(--dove-gray);">Examples:</p>
+                    <p style="font-size: 18px;">Structured brainstorming, Interview frameworks, Coaching</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>The Combination <span class="hero-highlight">Play</span></h2>
+            <div class="two-column animate-in">
+                <div class="column">
+                    <h3>Deep Research → NotebookLM</h3>
+                    <ul class="bullet-list">
+                        <li>Use Deep Research to gather external intelligence</li>
+                        <li>Download/save the research output</li>
+                        <li>Upload to NotebookLM with your internal documents</li>
+                        <li>Query across both external research AND internal context</li>
+                    </ul>
+                    <p style="margin-top: 15px; color: var(--iimk-blue); font-weight: 600;">Example: Market research + strategy docs</p>
+                </div>
+                <div class="column">
+                    <h3>NotebookLM → Audio Overview</h3>
+                    <ul class="bullet-list">
+                        <li>Upload complex documents to NotebookLM</li>
+                        <li>Generate Audio Overview with specific framing</li>
+                        <li>Share podcast with team members who won't read the documents</li>
+                        <li>Use as onboarding or briefing material</li>
+                    </ul>
+                    <p style="margin-top: 15px; color: var(--iimk-blue); font-weight: 600;">Example: "Hidden Traps" podcast for team</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide section-slide">
+            <div class="subtitle">Part 5</div>
+            <h1>Your Action Plan</h1>
+            <p>Starting Tomorrow</p>
+        </div>
+
+        <div class="slide">
+            <h2>This Week: Three <span class="hero-highlight">Experiments</span></h2>
+            <div class="content-section animate-in">
+                <ul class="bullet-list">
+                    <li><strong>Tomorrow: NotebookLM Experiment</strong><br>Upload one document you reference frequently (a policy, a contract, a strategy doc). Ask it 5 questions. See what it surfaces that you'd forgotten.</li>
+                    <li><strong>Day 2-3: Deep Research Experiment</strong><br>Think of a prospect meeting, strategic decision, or competitive question. Run Deep Research. Compare output to what you would have done manually.</li>
+                    <li><strong>Day 4-5: Audio Overview Experiment</strong><br>Create a NotebookLM notebook. Generate an Audio Overview. Share with one colleague and get their reaction.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>Building Your <span class="hero-highlight">AI Toolkit</span></h2>
+            <div class="two-column animate-in">
+                <div class="column">
+                    <h3>Free Tools (Start Here)</h3>
+                    <div class="rich-list-item">
+                        <strong>NotebookLM</strong>
+                        <span>notebooklm.google.com (Free, generous limits)</span>
+                    </div>
+                    <div class="rich-list-item">
+                        <strong>Gemini</strong>
+                        <span>gemini.google.com (Free tier available)</span>
+                    </div>
+                    <div class="rich-list-item">
+                        <strong>ChatGPT</strong>
+                        <span>chatgpt.com (Free tier available)</span>
+                    </div>
+                    <div class="rich-list-item">
+                        <strong>Claude</strong>
+                        <span>claude.ai (Free tier available)</span>
+                    </div>
+                </div>
+                <div class="column">
+                    <h3>Paid Upgrades (When Ready)</h3>
+                    <div class="rich-list-item">
+                        <strong>Gemini Advanced</strong>
+                        <span>Deep Research, 1M token context (~₹1,650/month)</span>
+                    </div>
+                    <div class="rich-list-item">
+                        <strong>ChatGPT Plus</strong>
+                        <span>GPT-4, DALL-E, Advanced Data Analysis (~₹1,650/month)</span>
+                    </div>
+                    <div class="rich-list-item">
+                        <strong>Claude Pro</strong>
+                        <span>Higher limits, Projects (~₹1,650/month)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>The Mindset <span class="hero-highlight">Shift</span></h2>
+            <div class="content-section animate-in">
+                <ul class="bullet-list">
+                    <li>From <strong>AI as search engine</strong> → To <strong>AI as research analyst</strong></li>
+                    <li>From <strong>Documents as storage</strong> → To <strong>Documents as queryable knowledge</strong></li>
+                    <li>From <strong>One-off queries</strong> → To <strong>Accumulated context</strong></li>
+                    <li>From <strong>Generic AI</strong> → To <strong>AI shaped for your methodology</strong></li>
+                </ul>
+            </div>
+            <div class="emphasis-box animate-in">
+                <p>The value isn't in the AI — it's in the context you bring to it.</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>Session 2 <span class="hero-highlight">Summary</span></h2>
+            <div class="content-section animate-in">
+                <ul class="bullet-list">
+                    <li><strong>NotebookLM:</strong> Makes your documents intelligent (Demos: Plan India, EPC Contract, PostgreSQL)</li>
+                    <li><strong>Gemini Deep Research:</strong> Research that would take days, done in minutes (Demos: HDFC proposal, Labor Solutions)</li>
+                    <li><strong>Gemini Gems:</strong> Shape AI to follow your methodology (Demo: Adaptive Inquiry)</li>
+                </ul>
+            </div>
+            <p style="margin-top: 30px; color: var(--iimk-blue); font-weight: 600;">You now have tools to solve the 'No Real-Time Knowledge' and 'No Persistent Memory' problems.</p>
+        </div>
+
+        <div class="slide section-slide">
+            <h1>Q&A</h1>
+            <p>Questions, Clarifications, and Discussion</p>
+            <div class="subtitle" style="margin-top: 20px;">15-20 minutes</div>
+        </div>
+
+        <div class="slide">
+            <h2>Looking Ahead: <span class="hero-highlight">Session 3</span></h2>
+            <div class="content-section animate-in">
+                <p style="font-size: 26px; margin-bottom: 20px;"><strong>AI and the Future of Work</strong></p>
+                <ul class="bullet-list">
+                    <li>The economic impact of AI on jobs and industries</li>
+                    <li>The 'Reshuffle' — how work gets reorganized, not eliminated</li>
+                    <li>Building AI-first workflows in your organization</li>
+                    <li>Managing teams in the age of AI augmentation</li>
+                </ul>
+            </div>
+            <p style="margin-top: 25px; font-style: italic;">Preparation: Think about: What tasks in your role could be augmented (not replaced) by AI?</p>
+        </div>
+
+        <div class="slide title-slide">
+            <h1>Thank You</h1>
+            <h2>Aditya V. Jain</h2>
+            <p style="margin-bottom: 30px;">Links to tools and further reading will be shared</p>
+            <p style="font-size: 26px; font-weight: 600; color: var(--iimk-gold);">"The best time to start was yesterday. The second best time is tomorrow morning with NotebookLM."</p>
+        </div>
+
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const currentSlideElement = document.getElementById('current-slide');
+        let isAnimating = false;
+
+        function showSlide(n) {
+            if (isAnimating) return;
+            isAnimating = true;
+
+            const currentEl = slides[currentSlide];
+            currentEl.classList.add('exiting');
+            
+            setTimeout(() => {
+                currentEl.classList.remove('active', 'exiting');
+                currentSlide = (n + totalSlides) % totalSlides;
+                slides[currentSlide].classList.add('active');
+                currentSlideElement.textContent = currentSlide + 1;
+                
+                // Re-trigger animations
+                const animatedElements = slides[currentSlide].querySelectorAll('.animate-in, .hero-highlight');
+                animatedElements.forEach(el => {
+                    el.style.animation = 'none';
+                    el.offsetHeight; // Trigger reflow
+                    el.style.animation = '';
+                });
+
+                setTimeout(() => { isAnimating = false; }, 300);
+            }, 350);
+        }
+
+        function nextSlide() { showSlide(currentSlide + 1); }
+        function prevSlide() { showSlide(currentSlide - 1); }
+
+        function copyPrompt(button) {
+            const box = button.closest('.prompt-box, .output-box');
+            const label = box.querySelector('.prompt-label, .output-label');
+            const textContent = box.textContent.replace(label.textContent, '').replace('Copy', '').trim();
+            
+            navigator.clipboard.writeText(textContent).then(() => {
+                const originalText = button.innerHTML;
+                button.innerHTML = 'Copied!';
+                button.style.background = 'var(--iimk-blue)';
+                button.style.color = 'white';
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.style.background = 'white';
+                    button.style.color = 'var(--iimk-blue)';
+                }, 2000);
+            });
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+            else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+            else if (e.key === 'Home') { e.preventDefault(); showSlide(0); }
+            else if (e.key === 'End') { e.preventDefault(); showSlide(totalSlides - 1); }
+            else if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                // Ctrl+P or Cmd+P - Prepare for print/PDF export
+                e.preventDefault();
+                prepareForPrint();
+            }
+        });
+
+        function prepareForPrint() {
+            // Make all slides visible for printing
+            slides.forEach(slide => {
+                slide.classList.add('active');
+                slide.style.position = 'relative';
+            });
+
+            // Trigger print dialog
+            setTimeout(() => {
+                window.print();
+
+                // Restore normal state after print dialog closes
+                setTimeout(() => {
+                    slides.forEach((slide, index) => {
+                        if (index !== currentSlide) {
+                            slide.classList.remove('active');
+                            slide.style.position = 'absolute';
+                        }
+                    });
+                }, 100);
+            }, 100);
+        }
+
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.slide-indicator') || e.target.closest('.copy-btn')) return;
+            const x = e.clientX;
+            const width = window.innerWidth;
+            if (x > width / 2) { nextSlide(); } else { prevSlide(); }
+        });
+
+        document.getElementById('total-slides').textContent = totalSlides;
+        slides[0].classList.add('active');
+    </script>
+</body>
+</html>

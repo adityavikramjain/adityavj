@@ -1,6 +1,30 @@
 {
     "sessions": [
         {
+            "id": "smp-future-of-work-jan26",
+            "title": "The Future of Work with AI: Strategic Implications",
+            "institution": "IIM Kozhikode",
+            "program": "SMP",
+            "cohort": "Jan 2026",
+            "url": "presentations/smp-future-of-work-jan26.html",
+            "viewerUrl": "presentations/smp-future-of-work-jan26.html",
+            "desc": "Strategic frameworks for navigating AI's impact on work—mechanics of agency, the job unbundling event, the EPOCH framework, and building resilient careers through the economic reality check.",
+            "tags": ["AI", "Strategy"],
+            "featured": true
+        },
+        {
+            "id": "smp-research-analysis-jan26",
+            "title": "AI for Research, Analysis, and Decision Support",
+            "institution": "IIM Kozhikode",
+            "program": "SMP",
+            "cohort": "Jan 2026",
+            "url": "presentations/smp-research-analysis-jan26.html",
+            "viewerUrl": "presentations/smp-research-analysis-jan26.html",
+            "desc": "Solving the 'No Real-Time Knowledge' problem with NotebookLM and Gemini Deep Research—turning organizational memory and market intelligence into strategic advantage through practical demos.",
+            "tags": ["AI", "NotebookLM", "Research"],
+            "featured": true
+        },
+        {
             "id": "smp-ai-foundations-jan26",
             "title": "Foundations of Generative AI",
             "institution": "IIM Kozhikode",

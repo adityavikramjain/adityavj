@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Future of Work with AI: Strategic Implications</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Canvas */
+      --canvas: #FAFAFA;
+      --canvas-dark: #2A2A2A;
+      
+      /* Ink */
+      --ink-primary: #1A1A2E;
+      --ink-secondary: #5A5A6A;
+      --ink-tertiary: #8A8A9A;
+      --ink-inverse: #FAFAFA;
+      
+      /* Accent */
+      --accent: #FF4500;
+      --accent-glow: rgba(255, 69, 0, 0.35);
+      --accent-glow-soft: rgba(255, 69, 0, 0.15);
+      --accent-subtle: rgba(255, 69, 0, 0.08);
+      
+      /* Glass */
+      --glass-surface: rgba(255, 255, 255, 0.65);
+      --glass-surface-strong: rgba(255, 255, 255, 0.8);
+      --glass-border: rgba(255, 255, 255, 0.7);
+      
+      /* Shadows */
+      --shadow-tight: 0 2px 8px rgba(26, 26, 46, 0.08);
+      --shadow-medium: 0 8px 24px rgba(26, 26, 46, 0.1);
+      --shadow-diffuse: 0 20px 60px rgba(26, 26, 46, 0.12);
+      
+      /* Layout */
+      --header-top: 64px;
+      --header-height: 96px;
+      --content-top: 176px;
+      --content-floor: 18vh;
+      --bar-height: 56px;
+      --margin-x: 10%;
+      
+      /* Blur */
+      --blur-glass: 24px;
+      --blur-ambient: 80px;
+      --blur-light: 8px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 19px;
+      font-weight: 500;
+      line-height: 1.6;
+      color: var(--ink-primary);
+      background: var(--canvas);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow: hidden;
+    }
+
+    /* === SLIDES === */
+    .slide {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      display: none;
+      background: radial-gradient(ellipse 120% 100% at 30% 20%, rgba(245, 247, 250, 1) 0%, rgba(250, 250, 250, 1) 60%, rgba(248, 248, 250, 1) 100%);
+    }
+
+    .slide::before {
+      content: '';
+      position: absolute;
+      top: -20%;
+      right: -10%;
+      width: 60%;
+      height: 80%;
+      background: radial-gradient(circle, rgba(240, 242, 248, 0.8) 0%, rgba(250, 250, 250, 0) 70%);
+      filter: blur(var(--blur-ambient));
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .slide.active { display: block; }
+
+    .slide-header {
+      position: absolute;
+      top: var(--header-top);
+      left: var(--margin-x);
+      right: var(--margin-x);
+      height: var(--header-height);
+      z-index: 1;
+    }
+
+    .slide-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.5px;
+      color: var(--ink-primary);
+      margin: 0;
+    }
+
+    .slide-body {
+      position: absolute;
+      top: var(--content-top);
+      left: var(--margin-x);
+      right: var(--margin-x);
+      bottom: var(--content-floor);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      z-index: 1;
+    }
+
+    /* === DARK SLIDES === */
+    .slide.dark-slide {
+      background: var(--canvas-dark);
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 var(--margin-x);
+    }
+
+    .slide.dark-slide::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 140%;
+      height: 140%;
+      background: radial-gradient(ellipse 50% 50% at center, rgba(50, 50, 50, 1) 0%, rgba(42, 42, 42, 1) 40%, rgba(32, 32, 32, 1) 70%, rgba(24, 24, 24, 1) 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .slide.dark-slide::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: -20%;
+      width: 70%;
+      height: 90%;
+      background: radial-gradient(circle, rgba(35, 35, 35, 0.9) 0%, rgba(42, 42, 42, 0) 60%);
+      filter: blur(var(--blur-ambient));
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .slide.dark-slide.active { display: flex; }
+
+    .slide.dark-slide .slide-header, .slide.dark-slide .slide-body { display: none; }
+
+    .section-number {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .dark-slide .slide-title {
+      font-size: 56px;
+      color: var(--ink-inverse);
+      max-width: 900px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .dark-slide .slide-subtitle {
+      font-size: 20px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 16px;
+      max-width: 700px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .accent-bar {
+      width: 80px;
+      height: 4px;
+      background: var(--accent);
+      margin-top: 32px;
+      border-radius: 2px;
+      box-shadow: 0 0 20px var(--accent-glow), 0 0 40px var(--accent-glow-soft);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* === GLASS TILES & COMPONENTS === */
+    .glass-tile {
+      background: var(--glass-surface);
+      backdrop-filter: blur(var(--blur-glass));
+      -webkit-backdrop-filter: blur(var(--blur-glass));
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 28px 32px;
+      box-shadow: var(--shadow-tight), var(--shadow-medium), var(--shadow-diffuse), 0 0 1px rgba(255, 255, 255, 0.6) inset;
+      width: 100%;
+      max-width: 680px;
+    }
+
+    .tile-heading {
+      font-family: 'Inter', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.35;
+      color: var(--ink-primary);
+      margin: 0 0 12px 0;
+    }
+
+    .tile-list { list-style: none; padding: 0; margin: 8px 0 0 0; }
+    .tile-list li {
+      position: relative;
+      padding-left: 24px;
+      margin-bottom: 12px;
+      font-size: 19px;
+      font-weight: 500;
+      line-height: 1.55;
+      color: var(--ink-secondary);
+    }
+    .tile-list li:last-child { margin-bottom: 0; }
+    .tile-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.55em;
+      width: 0.45em;
+      height: 0.45em;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 6px var(--accent-glow), 0 0 12px var(--accent-glow-soft);
+    }
+
+    /* Two Column Layout */
+    .tile-row { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; justify-content: center; width: 100%; }
+    .tile-row.equal-width .glass-tile { flex: 1 1 280px; max-width: 480px; }
+
+    /* Quote Block */
+    .quote-block {
+      background: var(--accent-subtle);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 16px 16px 0;
+      padding: 28px 32px;
+      width: 100%;
+      max-width: 680px;
+      box-shadow: -4px 0 16px var(--accent-glow-soft), var(--shadow-medium);
+    }
+    .quote-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 700;
+      font-style: italic;
+      line-height: 1.4;
+      color: var(--ink-primary);
+      margin: 0 0 16px 0;
+    }
+    .quote-attribution {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* === BOTTOM BAR === */
+    .bottom-bar {
+      position: fixed;
+      bottom: calc(var(--content-floor) - var(--bar-height));
+      left: 0; right: 0;
+      height: var(--bar-height);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(var(--blur-light));
+      -webkit-backdrop-filter: blur(var(--blur-light));
+      border-top: 1px solid rgba(255, 255, 255, 0.5);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px;
+      z-index: 100;
+    }
+    .bottom-bar.dark { background: rgba(42, 42, 42, 0.9); border-top: 1px solid rgba(255, 255, 255, 0.08); }
+    .watermark {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink-secondary);
+      text-decoration: none;
+      letter-spacing: 0.5px;
+      transition: color 0.2s ease;
+    }
+    .watermark:hover { color: var(--accent); }
+    .bottom-bar.dark .watermark { color: rgba(255, 255, 255, 0.7); }
+    .bottom-bar.dark .watermark:hover { color: var(--accent); }
+    .progress-container {
+      flex: 1; max-width: 200px; height: 4px;
+      background: rgba(26, 26, 46, 0.08);
+      border-radius: 2px; margin: 0 32px; overflow: hidden;
+    }
+    .bottom-bar.dark .progress-container { background: rgba(255, 255, 255, 0.12); }
+    .progress-fill {
+      height: 100%; background: var(--accent); border-radius: 2px;
+      transition: width 0.3s ease; box-shadow: 0 0 8px var(--accent-glow-soft);
+    }
+    .slide-counter {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink-secondary);
+      min-width: 60px; text-align: right;
+    }
+    .bottom-bar.dark .slide-counter { color: rgba(255, 255, 255, 0.7); }
+    
+    /* Utility for strong text */
+    strong { color: var(--ink-primary); font-weight: 700; }
+    /* === PRINT MODIFICATIONS === */
+    @media print {
+      body {
+        overflow: visible !important;
+        background: none !important;
+      }
+      
+      .slide {
+        display: block !important; /* Force all slides to show */
+        position: relative !important;
+        width: 100% !important;
+        height: 100vh !important; /* One slide per page height */
+        page-break-after: always !important; /* Force new page after each slide */
+        break-after: page !important;
+        overflow: hidden !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      /* Handle Dark Slides specific Flexbox layout */
+      .slide.dark-slide {
+        display: flex !important;
+      }
+
+      /* Hide interactive elements */
+      .bottom-bar {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="presentation" role="main">
+
+    <article class="slide dark-slide">
+      <h1 class="slide-title">The Future of Work with AI: Strategic Implications</h1>
+      <p class="slide-subtitle">IIMK SMP Batch 16 | Facilitator: Aditya V. Jain</p>
+      <div class="accent-bar"></div>
+    </article>
+
+    <article class="slide dark-slide">
+      <span class="section-number">Part 1</span>
+      <h1 class="slide-title">THE MECHANICS</h1>
+      <p class="slide-subtitle">From Chatbots to Agents</p>
+      <div class="accent-bar"></div>
+    </article>
+
+    <article class="slide dark-slide">
+      <h1 class="slide-title">The Mechanics of Agency</h1>
+      <p class="slide-subtitle">Moving from Conversation to Execution</p>
+      <div class="accent-bar"></div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">AI Chatbots vs. AI Agents</h1></header>
+      <div class="slide-body">
+        <div class="tile-row equal-width">
+          <div class="glass-tile">
+            <h2 class="tile-heading">The Chatbot</h2>
+            <ul class="tile-list">
+              <li>A Brain in a Jar</li>
+              <li>Can think, write, and analyze</li>
+              <li>Passive (Waits for input)</li>
+            </ul>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">The Agent</h2>
+            <ul class="tile-list">
+              <li>A Brain with Hands</li>
+              <li>Has tools (Search, Code, API)</li>
+              <li>Active (Pursues goals)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">The Intern Analogy</h1></header>
+      <div class="slide-body">
+        <div class="tile-row equal-width">
+          <div class="glass-tile">
+            <h2 class="tile-heading">Zero Shot (The Old Way)</h2>
+            <ul class="tile-list">
+              <li>Ask intern for final report instantly</li>
+              <li>Result: Panic and Hallucination</li>
+              <li>Low Quality</li>
+            </ul>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Agentic Workflow (The New Way)</h2>
+            <ul class="tile-list">
+              <li>Ask intern to Plan, Search, Draft, Review</li>
+              <li>Result: Self Correction</li>
+              <li>High Quality</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">Andrew Ng's Insight</h1></header>
+      <div class="slide-body">
+        <div class="glass-tile">
+          <ul class="tile-list">
+            <li>The Research: GPT 3.5 in an Agentic Loop beats GPT 4 in Zero Shot</li>
+            <li>The Lesson: Don't wait for Smarter AI</li>
+            <li>The Lesson: Build Better Workflows</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">Pattern 1: Reflection</h1></header>
+      <div class="slide-body">
+        <div class="glass-tile">
+          <ul class="tile-list">
+            <li><strong>Concept:</strong> The Agent critiques its own work</li>
+            <li><strong>Prompt:</strong> Review your code for bugs. If you find any, fix them.</li>
+            <li><strong>Use Case:</strong> Legal drafting, Coding, Compliance checks</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">Pattern 2: Tool Use</h1></header>
+      <div class="slide-body">
+        <div class="glass-tile">
+          <ul class="tile-list">
+            <li><strong>Concept:</strong> The Agent calls external functions when it lacks knowledge</li>
+            <li><strong>Example:</strong> I do not know the stock price. Calling Finance API...</li>
+            <li><strong>Use Case:</strong> Database queries, Live search, Calculator</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">Pattern 3: Planning</h1></header>
+      <div class="slide-body">
+        <div class="glass-tile">
+          <ul class="tile-list">
+            <li><strong>Concept:</strong> Breaking complex goals into sequential steps</li>
+            <li><strong>Goal:</strong> Analyze Competitor X</li>
+            <li><strong>Steps:</strong> 1. Search News -> 2. Scrape Pricing -> 3. Compare -> 4. Summarize</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">Pattern 4: Multi Agent Collaboration</h1></header>
+      <div class="slide-body">
+        <div class="tile-row equal-width">
+          <div class="glass-tile">
+            <h2 class="tile-heading">The Squad</h2>
+            <ul class="tile-list">
+              <li>Manager Agent (Delegates)</li>
+              <li>Coder Agent (Executes)</li>
+              <li>Reviewer Agent (Tests)</li>
+            </ul>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">The Benefit</h2>
+            <ul class="tile-list">
+              <li>Specialization reduces errors</li>
+              <li>Mimics human teams</li>
+              <li>Scalable complexity</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide dark-slide">
+      <span class="section-number">Part 2</span>
+      <h1 class="slide-title">THE STRATEGY</h1>
+      <p class="slide-subtitle">Navigating the Great Reshuffle</p>
+      <div class="accent-bar"></div>
+    </article>
+
+    <article class="slide dark-slide">
+      <h1 class="slide-title">The Future of Work: Strategic Implications</h1>
+      <p class="slide-subtitle">Navigating the Great Reshuffle</p>
+      <div class="accent-bar"></div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">The Paradox of 2026</h1></header>
+      <div class="slide-body">
+        <div class="tile-row equal-width">
+          <div class="glass-tile">
+            <h2 class="tile-heading">Narrative A: The Skeptic</h2>
+            <ul class="tile-list">
+              <li>AI is mostly hype and ineffective</li>
+              <li>Chatbots are unreliable and hallucinate</li>
+              <li>It is a bubble that will burst</li>
+            </ul>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Narrative B: The Alarmist</h2>
+            <ul class="tile-list">
+              <li>AI is too powerful and dangerous</li>
+              <li>Government must stop development now</li>
+              <li>It will take all jobs and cause apocalypse</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">The Job Bundle</h1></header>
+      <div class="slide-body">
+        <div class="glass-tile">
+          <ul class="tile-list">
+            <li>The Old View: You are a Marketing Manager (A Monolith)</li>
+            <li>The Reality: Your job is a Bundle of Tasks glued together by friction</li>
+            <li><strong>Task A:</strong> Define Strategy (High Value)</li>
+            <li><strong>Task B:</strong> Coordinate Schedules (Low Value)</li>
+            <li><strong>Task C:</strong> Write Emails (Commodity)</li>
+            <li><strong>Key Insight:</strong> AI does not replace jobs. It attacks specific tasks within the bundle</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">The Unbundling Event</h1></header>
+      <div class="slide-body">
+        <div class="tile-row equal-width">
+          <div class="glass-tile">
+            <h2 class="tile-heading">Case Study: Typing</h2>
+            <ul class="tile-list">
+              <li>1950: Typing was a Career</li>
+              <li>You were hired specifically to type</li>
+              <li>It was a specialized skill</li>
+            </ul>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">The Warning</h2>
+            <ul class="tile-list">
+              <li>2025: Typing is a Task everyone does</li>
+              <li>Generative AI is doing this to Coding</li>
+              <li>High value skills becoming utilities</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">The Cognitive Value Chain</h1></header>
+      <div class="slide-body">
+        <div class="glass-tile">
+          <ul class="tile-list">
+            <li><strong>The Ends (High Value):</strong> Proprietary Data and Final Decisions</li>
+            <li><strong>The Middle (Collapsing Value):</strong> Processing, Summarizing, Organizing</li>
+            <li><strong>The Implication:</strong> If your day is spent mostly in the Middle, your salary premium is at risk</li>
+            <li>We are witnessing the commoditization of cognition</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">The Economics of Intelligence</h1></header>
+      <div class="slide-body">
+        <div class="tile-row equal-width">
+          <div class="glass-tile">
+            <h2 class="tile-heading">Old Economics</h2>
+            <ul class="tile-list">
+              <li>Intelligence was scarce</li>
+              <li>Hiring analysts cost $100k</li>
+              <li>Took months to onboard</li>
+            </ul>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">New Economics</h2>
+            <ul class="tile-list">
+              <li>AI agent costs $0.05</li>
+              <li>Runs instantly</li>
+              <li>We now waste intelligence</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">The Verifiability Spectrum</h1></header>
+      <div class="slide-body">
+        <div class="glass-tile">
+          <ul class="tile-list">
+            <li><strong>Zone 1 High Verifiability (Math & Code):</strong> One right answer. AI creates training data. AI wins here.</li>
+            <li><strong>Zone 2 Low Verifiability (Creative Writing):</strong> No right answer. We teach AI preferences. AI wins here.</li>
+            <li><strong>Zone 3 The Messy Middle (Strategy):</strong> Right answer exists but is hard to check immediately.</li>
+            <li>Humans win in Zone 3. This is your safe zone.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide dark-slide">
+      <h1 class="slide-title">The Solution: Re-Bundling</h1>
+      <p class="slide-subtitle">Creating a New Value Proposition</p>
+      <div class="accent-bar"></div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">The EPOCH Framework</h1></header>
+      <div class="slide-body">
+        <div class="glass-tile">
+          <ul class="tile-list">
+            <li><strong>Empathy:</strong> Deep understanding, not just polite scripts</li>
+            <li><strong>Presence:</strong> The biological trust of being in the room</li>
+            <li><strong>Opinion:</strong> Taste, Judgment, and subjective filtering</li>
+            <li><strong>Creativity:</strong> Asking the question, not just answering it</li>
+            <li><strong>Hope:</strong> Vision for a future that data cannot predict</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">Deep Dive: Empathy & Presence</h1></header>
+      <div class="slide-body">
+        <div class="glass-tile">
+          <ul class="tile-list">
+            <li><strong>The Shift:</strong> As digital communication becomes free, Human Connection becomes a luxury</li>
+            <li><strong>Empathy:</strong> Moving from Transactional to Relational</li>
+            <li><strong>Presence:</strong> Trust is biological</li>
+            <li>AI can simulate an apology, but it cannot care</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">Deep Dive: Opinion & Judgment</h1></header>
+      <div class="slide-body">
+        <div class="glass-tile">
+          <ul class="tile-list">
+            <li><strong>The Problem of Abundance:</strong> AI generates 1,000 slogans in seconds</li>
+            <li><strong>The New Value:</strong> Knowing which one is good</li>
+            <li><strong>The Arbiter:</strong> You are the Editor in Chief</li>
+            <li><strong>Accountability:</strong> You can go to jail. AI cannot.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">Deep Dive: Creativity</h1></header>
+      <div class="slide-body">
+        <div class="tile-row equal-width">
+          <div class="glass-tile">
+            <h2 class="tile-heading">AI is a Solver</h2>
+            <ul class="tile-list">
+              <li>Optimizes defined paths</li>
+              <li>Answers questions</li>
+              <li>Maximizes efficiency</li>
+            </ul>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Human is a Formulator</h2>
+            <ul class="tile-list">
+              <li>Defines the path</li>
+              <li>Asks questions</li>
+              <li>Determines effectiveness</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">Deep Dive: Hope</h1></header>
+      <div class="slide-body">
+        <div class="glass-tile">
+          <ul class="tile-list">
+            <li><strong>Data is Backward Looking:</strong> LLMs are trained on the past</li>
+            <li><strong>Vision is Forward Looking:</strong> Betting on the improbable</li>
+            <li><strong>The Human Edge:</strong> Imagining a future not in the dataset</li>
+            <li><strong>Role:</strong> Rallying people around a vision, not a calculation</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">The Economic Reality Check</h1></header>
+      <div class="slide-body">
+        <div class="glass-tile">
+          <ul class="tile-list">
+            <li><strong>The Fear:</strong> If AI does the work, there is nothing left for us</li>
+            <li><strong>The Fallacy:</strong> Work is not a fixed pie (Lump of Labor)</li>
+            <li><strong>The Concept:</strong> Jevons Paradox</li>
+            <li><strong>History:</strong> Automated looms crashed cloth prices, but the Fashion Industry was born</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">Deep Dive: Limitless Desire</h1></header>
+      <div class="slide-body">
+        <div class="tile-row equal-width">
+          <div class="glass-tile">
+            <h2 class="tile-heading">1800s Reality</h2>
+            <ul class="tile-list">
+              <li>Only Aristocrats had Wardrobes</li>
+              <li>Normal people had two shirts</li>
+              <li>Goal was basic utility</li>
+            </ul>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">The Shift</h2>
+            <ul class="tile-list">
+              <li>Cheap cloth created new demand</li>
+              <li>Fashion and Self Expression born</li>
+              <li>Complexity increased</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">Complexity Explodes</h1></header>
+      <div class="slide-body">
+        <div class="glass-tile">
+          <ul class="tile-list">
+            <li><strong>Mechanism:</strong> Technology lowers cost -> Volume explodes -> New industries emerge</li>
+            <li><strong>AI Parallel:</strong> AI makes Software cheap</li>
+            <li><strong>Result:</strong> We put software in everything</li>
+            <li><strong>Examples:</strong> Hyper personalized education, AI doctors, customized media</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">The Shipping Container Lesson</h1></header>
+      <div class="slide-body">
+        <div class="glass-tile">
+          <ul class="tile-list">
+            <li><strong>The Event:</strong> Cheap shipping decimated US manufacturing jobs</li>
+            <li><strong>The Result:</strong> Economy shifted to Design, Logistics, Marketing</li>
+            <li><strong>The Lesson:</strong> Economic complexity moves Up the Stack</li>
+            <li><strong>Transition:</strong> From Manufacturing Intelligence to Designing with Intelligence</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">Conclusion on Abundance</h1></header>
+      <div class="slide-body">
+        <div class="glass-tile">
+          <ul class="tile-list">
+            <li><strong>The Bottom Line:</strong> AI creates value in the digital realm</li>
+            <li><strong>The Ripple Effect:</strong> Massive demand created in physical and adjacent realms</li>
+            <li><strong>Example:</strong> AI solves Travel Planning -> People travel more -> Jobs for Guides</li>
+            <li><strong>Your Future:</strong> Look for the adjacent value</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide dark-slide">
+      <h1 class="slide-title">The Pivot to Action</h1>
+      <p class="slide-subtitle">How do we actually work with this?</p>
+      <div class="accent-bar"></div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">Mental Model 1: The 10:80:10 Rule</h1></header>
+      <div class="slide-body">
+        <div class="glass-tile">
+          <ul class="tile-list">
+            <li><strong>First 10% (Human):</strong> Defining the Intent. Setting Strategy.</li>
+            <li><strong>Middle 80% (AI):</strong> Heavy lifting. Generating code. Analyzing data.</li>
+            <li><strong>Last 10% (Human):</strong> The Audit. The Polish. The Liability.</li>
+            <li><strong>The Rule:</strong> Never let AI do the first or last 10%</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">Mental Model 2: The Director Framework</h1></header>
+      <div class="slide-body">
+        <div class="glass-tile">
+          <ul class="tile-list">
+            <li><strong>You are the Director:</strong> You set the mood and objective</li>
+            <li><strong>AI is the Film Crew:</strong> Operates camera, generates footage</li>
+            <li><strong>You are the Editor:</strong> Cut footage, remove hallucinations</li>
+            <li><strong>The Shift:</strong> Stop being the Camera Operator. Start being the Visionary.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">Mental Model 3: The Diamond Process</h1></header>
+      <div class="slide-body">
+        <div class="glass-tile">
+          <ul class="tile-list">
+            <li><strong>Step 1 Diverge (Human + AI):</strong> Give me 50 solutions (Volume)</li>
+            <li><strong>Step 2 Converge (AI):</strong> Rank these 50 based on cost (Processing)</li>
+            <li><strong>Step 3 Refine (Human):</strong> I choose Option 3 with tweaks (Context)</li>
+            <li><strong>Benefit:</strong> Prevents Blank Page Syndrome</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">The New Managerial Skill</h1></header>
+      <div class="slide-body">
+        <div class="tile-row equal-width">
+          <div class="glass-tile">
+            <h2 class="tile-heading">Silicon Employees</h2>
+            <ul class="tile-list">
+              <li>Agents</li>
+              <li>Require logic & constraints</li>
+              <li>Step by step instructions</li>
+            </ul>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Carbon Employees</h2>
+            <ul class="tile-list">
+              <li>Humans</li>
+              <li>Require empathy & vision</li>
+              <li>Psychological safety</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">Industry Implications</h1></header>
+      <div class="slide-body">
+        <div class="tile-row equal-width">
+          <div class="glass-tile">
+            <h2 class="tile-heading">Horizontal Change</h2>
+            <ul class="tile-list">
+              <li>Everyone gets a Copilot</li>
+              <li>Emails are faster</li>
+              <li>Incremental Efficiency</li>
+            </ul>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Vertical Change</h2>
+            <ul class="tile-list">
+              <li>Business model breaks</li>
+              <li>Billable Hours to Fixed Price</li>
+              <li>Lines of Code to Features Shipped</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">The Parable of William Sims</h1></header>
+      <div class="slide-body">
+        <div class="glass-tile">
+          <ul class="tile-list">
+            <li><strong>The Case:</strong> 1890s Naval Gunnery. Accuracy was 10%.</li>
+            <li><strong>The Innovation:</strong> Continuous Aim Firing raised accuracy to 3,000% improvement.</li>
+            <li><strong>The Rejection:</strong> It took 25 years for the Navy to adopt it.</li>
+            <li><strong>The Thesis:</strong> Innovation is a reordering of Power and Status.</li>
+            <li><strong>The Lesson:</strong> The resistance you face is not technical. It is cultural.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">The Shadow AI Reality</h1></header>
+      <div class="slide-body">
+        <div class="glass-tile">
+          <ul class="tile-list">
+            <li><strong>The Reality:</strong> Your teams are already using AI</li>
+            <li><strong>The Risk:</strong> Unsecure and unmanaged usage</li>
+            <li><strong>The Leadership Move:</strong> Create Safe Harbors</li>
+            <li><strong>Action:</strong> Encourage experimentation and share failures openly</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <div class="slide-body">
+        <div class="quote-block">
+          <p class="quote-text">"If you feel overwhelmed, you are paying attention."</p>
+          <span class="quote-attribution">Maestro</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">The Adaptive Mindset</h1></header>
+      <div class="slide-body">
+        <div class="tile-row equal-width">
+          <div class="glass-tile">
+            <h2 class="tile-heading">Fixed Mindset</h2>
+            <ul class="tile-list">
+              <li>AI is cheating</li>
+              <li>AI is replacing me</li>
+              <li>Competing AGAINST the machine</li>
+            </ul>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Adaptive Mindset</h2>
+            <ul class="tile-list">
+              <li>AI is a bicycle for the mind</li>
+              <li>Amplifies EPOCH skills</li>
+              <li>Competing WITH the machine</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">The Choice</h1></header>
+      <div class="slide-body">
+        <div class="tile-row equal-width">
+          <div class="glass-tile">
+            <h2 class="tile-heading">The Observer</h2>
+            <ul class="tile-list">
+              <li>Watches Unbundling</li>
+              <li>Clings to old bundle</li>
+              <li>Hopes change is slow</li>
+            </ul>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">The Architect</h2>
+            <ul class="tile-list">
+              <li>Actively Re bundles</li>
+              <li>Uses 10:80:10 rule</li>
+              <li>Doubles down on Strategy</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">The Mandate: Monday Morning</h1></header>
+      <div class="slide-body">
+        <div class="glass-tile">
+          <ul class="tile-list">
+            <li><strong>1. Audit:</strong> Identify the Middle tasks (processing)</li>
+            <li><strong>2. Delegate:</strong> Apply the 10:80:10 Rule to one task</li>
+            <li><strong>3. Invest:</strong> Spend the saved time reconnecting (Presence)</li>
+            <li><strong>Mission:</strong> Use the Reshuffle to solve problems you couldn't touch before</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide dark-slide">
+      <span class="section-number">Part 3</span>
+      <h1 class="slide-title">THE ROLLOUT</h1>
+      <p class="slide-subtitle">The Blueprint for Enterprise</p>
+      <div class="accent-bar"></div>
+    </article>
+
+    <article class="slide dark-slide">
+      <h1 class="slide-title">Rolling Out AI in the Enterprise</h1>
+      <p class="slide-subtitle">Architecture, Privacy, and Strategy</p>
+      <div class="accent-bar"></div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">The Deployment Spectrum</h1></header>
+      <div class="slide-body">
+        <div class="glass-tile">
+          <ul class="tile-list">
+            <li><strong>1. Enterprise SaaS (Recommended):</strong> Gemini Advanced, Claude Enterprise. (Low Friction)</li>
+            <li><strong>2. Enterprise Search:</strong> Glean. (Connects internal data)</li>
+            <li><strong>3. Platform (PaaS):</strong> Amazon Bedrock. (Custom apps)</li>
+            <li><strong>4. On Prem / Local:</strong> Running Llama locally. (High Maintenance)</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">The Security Myth</h1></header>
+      <div class="slide-body">
+        <div class="glass-tile">
+          <ul class="tile-list">
+            <li><strong>The Fear:</strong> If I use AI, it steals my data for training.</li>
+            <li><strong>The Reality:</strong> Enterprise plans have Zero Retention policies.</li>
+            <li><strong>The Analogy:</strong> You trust Google with your Email. Trust them with your AI.</li>
+            <li><strong>Key:</strong> Never use free consumer versions for corporate data.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">The Overkill Trap</h1></header>
+      <div class="slide-body">
+        <div class="glass-tile">
+          <ul class="tile-list">
+            <li><strong>The Pitch:</strong> Vendors say you need a Custom Fine Tuned Model.</li>
+            <li><strong>The Truth:</strong> 95% of use cases are solved by RAG + Long Context.</li>
+            <li><strong>The Risk:</strong> Building a model is like building a database. Don't do it unless necessary.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">Methods of Learning</h1></header>
+      <div class="slide-body">
+        <div class="tile-row equal-width">
+          <div class="glass-tile">
+            <h2 class="tile-heading">Fine Tuning (The Hard Way)</h2>
+            <ul class="tile-list">
+              <li>Like sending intern to Medical School</li>
+              <li>Teaches new behavior/language</li>
+              <li>Expensive & Slow</li>
+            </ul>
+          </div>
+          <div class="glass-tile">
+            <h2 class="tile-heading">Long Context / RAG (The Smart Way)</h2>
+            <ul class="tile-list">
+              <li>Like giving intern a Textbook</li>
+              <li>Provides knowledge instantly</li>
+              <li>Cheap & Fast</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">The Recommendation</h1></header>
+      <div class="slide-body">
+        <div class="glass-tile">
+          <ul class="tile-list">
+            <li><strong>Start with Tier 1 (SaaS):</strong> Give teams secure access to Claude Enterprise or Gemini for Workspace</li>
+            <li><strong>Why:</strong> Immediate Value, SOC2 Compliance, Zero Maintenance</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">Concrete Example: Claude Projects</h1></header>
+      <div class="slide-body">
+        <div class="glass-tile">
+          <ul class="tile-list">
+            <li><strong>Setup:</strong> Create a Project called Q3 Marketing Strategy</li>
+            <li><strong>Knowledge:</strong> Drag and drop 50 PDFs (Brand Guidelines, Data)</li>
+            <li><strong>Result:</strong> Every chat now knows your brand context</li>
+            <li><strong>Cost:</strong> $0 extra. No coding. No servers.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">Governance Framework</h1></header>
+      <div class="slide-body">
+        <div class="glass-tile">
+          <ul class="tile-list">
+            <li><strong>Green (Public AI):</strong> Brainstorming, generic drafting.</li>
+            <li><strong>Yellow (Enterprise AI):</strong> Internal strategy, coding. (Protected by Contract)</li>
+            <li><strong>Red (Prohibited):</strong> PII, highly classified IP.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide">
+      <header class="slide-header"><h1 class="slide-title">The Pilot Strategy</h1></header>
+      <div class="slide-body">
+        <div class="glass-tile">
+          <ul class="tile-list">
+            <li><strong>Avoid:</strong> Customer Service Chatbot (High Risk)</li>
+            <li><strong>Pick:</strong> Internal Knowledge Assistant or Coding Copilot</li>
+            <li><strong>Reason:</strong> If it hallucinates, an employee catches it.</li>
+            <li><strong>Goal:</strong> Immediate productivity gain with low reputational risk.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="slide dark-slide">
+      <h1 class="slide-title">Architect Your Future</h1>
+      <p class="slide-subtitle">Thank You<br>Aditya V. Jain | aditya1384@gmail.com</p>
+      <div class="accent-bar"></div>
+    </article>
+
+  </main>
+
+  <nav class="bottom-bar" role="navigation" aria-label="Presentation controls">
+    <a href="https://adityavj.com" target="_blank" rel="noopener" class="watermark">adityavj.com</a>
+    <div class="progress-container" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="52">
+      <div class="progress-fill" style="width: 0%"></div>
+    </div>
+    <div class="slide-counter" aria-live="polite">1 / 52</div>
+  </nav>
+
+  <script>
+    (function() {
+      const slides = document.querySelectorAll('.slide');
+      const totalSlides = slides.length;
+      const counter = document.querySelector('.slide-counter');
+      const progressFill = document.querySelector('.progress-fill');
+      const progressContainer = document.querySelector('.progress-container');
+      const bottomBar = document.querySelector('.bottom-bar');
+      let currentSlide = 0;
+
+      function showSlide(index) {
+        slides.forEach((slide, i) => {
+          slide.classList.toggle('active', i === index);
+        });
+        
+        counter.textContent = `${index + 1} / ${totalSlides}`;
+        progressFill.style.width = `${((index + 1) / totalSlides) * 100}%`;
+        progressContainer.setAttribute('aria-valuenow', index + 1);
+        
+        // Toggle dark mode on bottom bar
+        const isDark = slides[index].classList.contains('dark-slide');
+        bottomBar.classList.toggle('dark', isDark);
+      }
+
+      function navigate(direction) {
+        currentSlide = Math.max(0, Math.min(totalSlides - 1, currentSlide + direction));
+        showSlide(currentSlide);
+      }
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          navigate(1);
+        } else if (e.key === 'ArrowLeft' || e.key === 'Backspace') {
+          e.preventDefault();
+          navigate(-1);
+        } else if (e.key === 'Home') {
+          e.preventDefault();
+          currentSlide = 0;
+          showSlide(currentSlide);
+        } else if (e.key === 'End') {
+          e.preventDefault();
+          currentSlide = totalSlides - 1;
+          showSlide(currentSlide);
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (e.target.closest('a, button')) return;
+        const x = e.clientX / window.innerWidth;
+        navigate(x > 0.5 ? 1 : -1);
+      });
+
+      window.copyPrompt = function(button) {
+        const promptBox = button.closest('.prompt-box');
+        const content = promptBox.querySelector('.prompt-content').textContent;
+        navigator.clipboard.writeText(content).then(() => {
+          const originalText = button.textContent;
+          button.textContent = 'Copied!';
+          setTimeout(() => { button.textContent = originalText; }, 1500);
+        });
+      };
+
+      if (slides.length > 0) showSlide(0);
+    })();
+  </script>
+</body>
+</html>
