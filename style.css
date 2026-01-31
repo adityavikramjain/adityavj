@@ -115,7 +115,8 @@ body::before {
     height: 100%;
     pointer-events: none;
     z-index: 9999;
-    opacity: 0.03;
+    opacity: 0.04;
+    /* Slightly increased for visibility through multiply layers */
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     mix-blend-mode: multiply;
 }
@@ -837,14 +838,18 @@ p {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg,
+    /* Rothko-style layered color field on top - Paint Glaze Effect */
+    background: linear-gradient(105deg,
             var(--field-peach) 0%,
             var(--electric-orange) 50%,
             var(--field-rust) 100%);
-    opacity: 0.6;
+    opacity: 0.8;
+    /* Higher opacity because multiply mode darkens it */
     transform: scaleX(0);
     transform-origin: left;
     transition: all 0.4s var(--ease-smooth);
+    mix-blend-mode: multiply;
+    /* key for paint effect */
 }
 
 .session-card:hover::before {
@@ -998,13 +1003,16 @@ p {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg,
+    /* Organic angle for natural feel */
+    background: linear-gradient(125deg,
             transparent 0%,
-            rgba(244, 223, 214, 0.2) 100%);
+            rgba(244, 223, 214, 0.4) 100%);
     border-radius: 16px;
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.4s var(--ease-smooth);
+    mix-blend-mode: multiply;
+    /* Glaze effect */
 }
 
 .resource-card.featured:hover::before {
