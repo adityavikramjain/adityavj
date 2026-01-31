@@ -11,32 +11,53 @@ Description: Electric Lab - UX Enhanced Edition with Research Intelligence visua
 }
 #content, .site-content, #primary, .ast-container { padding-top: 0 !important; margin-top: 0 !important; }
 
-/* === VARIABLES === */
+/* === VARIABLES - ROTHKO FIELDS PALETTE === */
 :root {
-    --electric-orange: #FF4500;
-    --electric-orange-light: rgba(255, 69, 0, 0.1);
-    --electric-orange-glow: rgba(255, 69, 0, 0.3);
+    /* Primary - Rothko Orange (muted, complex) */
+    --electric-orange: #d87c68;
+    --electric-orange-light: rgba(216, 124, 104, 0.08);
+    --electric-orange-glow: rgba(216, 124, 104, 0.18);
+
+    /* Background - Canvas Cream */
     --white: #FFFFFF;
-    --mist-rose: #FFF5F2;
-    --charcoal: #1F2937;
+    --mist-rose: #faf8f4;
+
+    /* Color field layers for depth */
+    --field-peach: #f4dfd6;
+    --field-rust: #c9735f;
+    --field-amber: #e5b896;
+
+    /* Text - Deep Umber */
+    --charcoal: #2c2420;
     --soft-grey: #6B7280;
     --light-grey: #9CA3AF;
-    --border-light: rgba(0, 0, 0, 0.06);
+
+    /* Borders - softer */
+    --border-light: rgba(44, 36, 32, 0.06);
+
+    /* Accent - Muted Burgundy */
+    --accent: #a14f4a;
+
+    /* Keep existing functional colors */
     --success-green: #22c55e;
     --success-green-light: rgba(34, 197, 94, 0.1);
     --gem-purple: #8B5CF6;
     --gem-purple-light: rgba(139, 92, 246, 0.1);
-    --gem-gradient: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(255, 69, 0, 0.05) 100%);
+    --gem-gradient: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(216, 124, 104, 0.05) 100%);
     --research-blue: #2563eb;
     --research-blue-light: rgba(37, 99, 235, 0.1);
     --research-bg: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%);
+
+    /* Easing */
     --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
     --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
     --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
-    --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.08);
-    --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
-    --shadow-orange: 0 8px 30px rgba(255, 69, 0, 0.2);
+
+    /* Shadows - softer, more gallery-like */
+    --shadow-sm: 0 2px 8px rgba(216, 124, 104, 0.06);
+    --shadow-md: 0 8px 24px rgba(216, 124, 104, 0.08);
+    --shadow-lg: 0 16px 48px rgba(216, 124, 104, 0.1);
+    --shadow-orange: 0 8px 32px rgba(216, 124, 104, 0.15);
     --shadow-gem: 0 8px 30px rgba(139, 92, 246, 0.2);
 }
 
@@ -386,9 +407,10 @@ p { color: var(--soft-grey); }
     background-position: center top 30%;
     border: 3px solid var(--charcoal);
     border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-    box-shadow: 
-        0 20px 60px rgba(255, 69, 0, 0.15),
-        0 0 0 1px rgba(255, 69, 0, 0.1);
+    box-shadow:
+        0 20px 60px rgba(216, 124, 104, 0.12),
+        0 8px 24px rgba(216, 124, 104, 0.08),
+        0 0 0 1px rgba(216, 124, 104, 0.1);
     animation: morphBlob 12s ease-in-out infinite;
     transition: transform 0.4s var(--ease-smooth);
 }
@@ -401,7 +423,7 @@ p { color: var(--soft-grey); }
     inset: -20px;
     border: 2px dashed var(--electric-orange);
     border-radius: inherit;
-    opacity: 0.4;
+    opacity: 0.3;
     animation: morphBlob 15s ease-in-out infinite reverse, spin 30s linear infinite;
 }
 
@@ -409,7 +431,7 @@ p { color: var(--soft-grey); }
     content: '';
     position: absolute;
     inset: -40px;
-    border: 1px dotted rgba(255, 69, 0, 0.2);
+    border: 1px dotted rgba(216, 124, 104, 0.15);
     border-radius: inherit;
     animation: morphBlob 18s ease-in-out infinite, spin 45s linear infinite reverse;
 }
@@ -472,7 +494,9 @@ p { color: var(--soft-grey); }
 @media (hover: hover) {
     .btn-primary:hover {
         transform: translateY(-2px);
-        box-shadow: 0 12px 35px rgba(255, 69, 0, 0.35);
+        box-shadow:
+            0 16px 40px rgba(216, 124, 104, 0.25),
+            0 8px 20px rgba(216, 124, 104, 0.15);
     }
 }
 
@@ -682,24 +706,42 @@ p { color: var(--soft-grey); }
     cursor: pointer;
 }
 
+/* Rothko-style layered color field on top */
 .session-card::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 3px;
-    background: var(--electric-orange);
+    height: 4px;
+    background: linear-gradient(90deg,
+        var(--field-peach) 0%,
+        var(--electric-orange) 50%,
+        var(--field-rust) 100%);
+    opacity: 0.6;
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform 0.3s var(--ease-smooth);
+    transition: all 0.4s var(--ease-smooth);
 }
 
-.session-card:hover::before { transform: scaleX(1); }
+.session-card:hover::before {
+    transform: scaleX(1);
+    opacity: 1;
+}
 
+/* Subtle color field overlay for featured cards */
 .session-card.featured {
-    border-color: rgba(255, 69, 0, 0.2);
-    background: linear-gradient(135deg, var(--white) 0%, rgba(255, 69, 0, 0.02) 100%);
+    border-color: rgba(216, 124, 104, 0.15);
+    background: linear-gradient(135deg,
+        var(--white) 0%,
+        var(--field-peach) 100%);
+    background-size: 200% 200%;
+    animation: subtleShift 8s ease infinite;
+}
+
+@keyframes subtleShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
 }
 
 .session-card.featured::after {
@@ -812,8 +854,27 @@ p { color: var(--soft-grey); }
     position: relative;
 }
 
+/* Featured resources get subtle color field treatment */
 .resource-card.featured {
-    border-color: rgba(255, 69, 0, 0.2);
+    border-color: rgba(216, 124, 104, 0.15);
+    position: relative;
+}
+
+.resource-card.featured::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg,
+        transparent 0%,
+        rgba(244, 223, 214, 0.2) 100%);
+    border-radius: 16px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s var(--ease-smooth);
+}
+
+.resource-card.featured:hover::before {
+    opacity: 1;
 }
 
 .resource-type {
@@ -1040,12 +1101,15 @@ p { color: var(--soft-grey); }
     transform: scale(1);
 }
 
-/* === ENHANCED CARD HOVER DEPTH (Mobile Optimized) === */
+/* === ENHANCED CARD HOVER DEPTH - Gallery Lighting === */
 @media (hover: hover) {
     .session-card:hover, .resource-card:hover {
-        transform: translateY(-8px) scale(1.01); /* Deeper lift */
-        box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.1), 0 10px 20px -5px rgba(0, 0, 0, 0.04); /* Premium soft shadow */
-        border-color: rgba(255, 69, 0, 0.3); /* Subtle border highlight */
+        transform: translateY(-6px) scale(1.01);
+        box-shadow:
+            0 24px 48px -8px rgba(216, 124, 104, 0.12),
+            0 12px 24px -6px rgba(216, 124, 104, 0.08),
+            0 4px 12px rgba(216, 124, 104, 0.06);
+        border-color: rgba(216, 124, 104, 0.25);
     }
     
     .resource-card.gem-card:hover {
