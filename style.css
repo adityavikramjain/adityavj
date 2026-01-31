@@ -34,27 +34,30 @@ header.site-header,
 
 /* === VARIABLES - ROTHKO FIELDS PALETTE === */
 :root {
-    /* Primary - Deep Persimmon (Richer, museum-quality orange) */
-    --electric-orange: #CA5234;
-    --electric-orange-light: rgba(202, 82, 52, 0.08);
-    --electric-orange-glow: rgba(202, 82, 52, 0.18);
+    /* Primary - Terracotta Clay (Handcrafted, builder-like) */
+    --electric-orange: #d4826f;
+    --electric-orange-light: rgba(212, 130, 111, 0.1);
+    --electric-orange-glow: rgba(212, 130, 111, 0.2);
 
-    /* Background - Gallery Wall (Warm but cleaner) */
+    /* Background - Porcelain (Creamier white) */
     --white: #FFFFFF;
-    --mist-rose: #F9F6F1;
+    --mist-rose: #fdfcf9;
 
-    /* Color field layers for depth - Deeper tones */
-    --field-peach: #EAD0C2;
-    /* Warm Biscuit */
-    --field-rust: #9C3625;
-    /* Oxblood for depth */
-    --field-amber: #DCA773;
-    /* Raw Sienna */
+    /* Color field layers for depth - Glazed Earth */
+    --field-peach: #f5ebe4;
+    /* Glazed Clay */
+    --field-rust: #d4826f;
+    /* Medium Terracotta */
+    --field-amber: #e6d5c9;
+    /* Raw Biscuit */
 
-    /* Text - Deep Umber */
-    --charcoal: #2c2420;
+    /* Text - Fired Earth */
+    --charcoal: #2d2520;
     --soft-grey: #6B7280;
     --light-grey: #9CA3AF;
+
+    /* Accent - Ash Glaze (Sage Green) */
+    --accent: #9ba89a;
 
     /* Borders - softer */
     --border-light: rgba(44, 36, 32, 0.08);
@@ -838,18 +841,17 @@ p {
     left: 0;
     right: 0;
     height: 4px;
-    /* Rothko-style layered color field on top - Paint Glaze Effect */
+    /* Terracotta Glaze Gradient - Soft & Earthen */
     background: linear-gradient(105deg,
             var(--field-peach) 0%,
-            var(--electric-orange) 50%,
-            var(--field-rust) 100%);
-    opacity: 0.8;
-    /* Higher opacity because multiply mode darkens it */
+            var(--electric-orange) 60%,
+            var(--field-amber) 100%);
+    opacity: 0.9;
     transform: scaleX(0);
     transform-origin: left;
     transition: all 0.4s var(--ease-smooth);
-    mix-blend-mode: multiply;
-    /* key for paint effect */
+    mix-blend-mode: normal;
+    /* Removed multiply for cleaner clay look */
 }
 
 .session-card:hover::before {
