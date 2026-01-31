@@ -1,3 +1,7 @@
+// CONFIGURATION: Google Sheets Integration
+// Replace this URL with your Google Apps Script Web App URL
+const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzMe7KMC8f0Gw3njTQdVwQd4BH-XaW2z9ZpxGTsNSvp8H0a-luFpn9UmtNiabMt4mbt/exec';
+
 document.addEventListener('DOMContentLoaded', () => {
     // Engagement tracking for contextual nudge
     const engagement = {
@@ -209,12 +213,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     const promptId = 'prompt-' + index;
                     promptStorage[promptId] = res.prompt_text;
 
+                    // Mark featured prompts as premium (require lead magnet)
+                    const isPremium = res.featured ? 'true' : 'false';
+
                     html += `
                     <div class="resource-card prompt-card filterable-card ${featuredClass}"
                          data-tags="${tagsAttr}"
                          data-prompt-id="${promptId}"
                          data-title="${escapeHtml(res.title)}"
-                         data-type="${res.type}">
+                         data-type="${res.type}"
+                         data-premium="${isPremium}"
+                         data-resource-id="${res.id}">
                         <div class="card-header">
                             <span class="resource-type"><span class="icon">${icon}</span> ${res.type}</span>
                             <button class="card-copy-btn" data-prompt-id="${promptId}" title="Copy prompt">
@@ -314,14 +323,23 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.resource-card.prompt-card').forEach(card => {
             card.addEventListener('click', function(e) {
                 if (e.target.closest('.card-copy-btn')) return;
-                
+
+                const isPremium = this.getAttribute('data-premium') === 'true';
+                const resourceId = this.getAttribute('data-resource-id');
                 const promptId = this.getAttribute('data-prompt-id');
                 const title = this.getAttribute('data-title');
                 const type = this.getAttribute('data-type');
                 const promptText = promptStorage[promptId];
-                
-                openPromptModal(title, type, promptText);
-                trackResourceView();
+
+                // Show lead magnet for premium content if user hasn't provided email
+                if (isPremium && !hasProvidedEmail()) {
+                    currentResourceId = resourceId;
+                    currentResourceData = { promptId, title, type, promptText };
+                    showLeadMagnet(resourceId);
+                } else {
+                    openPromptModal(title, type, promptText);
+                    trackResourceView();
+                }
             });
         });
 
@@ -940,4 +958,156 @@ document.addEventListener('DOMContentLoaded', () => {
         modalOverlay.classList.add('active');
         document.body.style.overflow = 'hidden';
     }
+
+    // === LEAD MAGNET SYSTEM ===
+    const leadMagnetOverlay = document.getElementById('lead-magnet-overlay');
+    const leadMagnetForm = document.getElementById('lead-magnet-form');
+    const leadMagnetClose = document.querySelector('.lead-magnet-close');
+    const leadMagnetSkip = document.querySelector('.lead-magnet-skip');
+
+    let currentResourceId = null;
+    let currentResourceData = null;
+    let leadMagnetShown = false;
+
+    // Check if user has already provided email (using localStorage)
+    window.hasProvidedEmail = function() {
+        return localStorage.getItem('lead_email_provided') === 'true';
+    };
+
+    // Show lead magnet modal
+    function showLeadMagnet(resourceId) {
+        if (hasProvidedEmail() || leadMagnetShown) {
+            return false; // Don't show if already captured or shown
+        }
+
+        currentResourceId = resourceId;
+        leadMagnetOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        leadMagnetShown = true;
+        return true;
+    }
+
+    // Hide lead magnet modal
+    function hideLeadMagnet() {
+        leadMagnetOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    // Handle form submission
+    leadMagnetForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const email = document.getElementById('lead-email').value;
+        const submitButton = e.target.querySelector('.lead-magnet-submit');
+        const originalButtonText = submitButton.textContent;
+
+        // Show loading state
+        submitButton.textContent = 'Submitting...';
+        submitButton.disabled = true;
+
+        try {
+            // Send to Google Sheets if URL is configured
+            if (GOOGLE_SHEETS_URL && GOOGLE_SHEETS_URL.trim() !== '') {
+                const payload = {
+                    email: email,
+                    source: 'AI Sales Toolkit Lead Magnet',
+                    pageUrl: window.location.href,
+                    userAgent: navigator.userAgent,
+                    timestamp: new Date().toISOString()
+                };
+
+                // Send to Google Sheets
+                await fetch(GOOGLE_SHEETS_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Google Apps Script requires no-cors
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                console.log('Email sent to Google Sheets:', email);
+            } else {
+                console.warn('Google Sheets URL not configured. Email saved locally only.');
+            }
+
+            // Store email locally (prevents showing modal again)
+            localStorage.setItem('lead_email_provided', 'true');
+            localStorage.setItem('lead_email', email);
+            localStorage.setItem('lead_email_timestamp', new Date().toISOString());
+
+            showToast('🎉 Success! Opening your toolkit now...');
+
+            // Redirect to thank you page or proceed to resource
+            setTimeout(() => {
+                hideLeadMagnet();
+
+                // Reset button
+                submitButton.textContent = originalButtonText;
+                submitButton.disabled = false;
+
+                // Open toolkit page in new tab
+                window.open('ai-sales-toolkit.html', '_blank');
+
+                // Then proceed to the resource they wanted
+                setTimeout(() => {
+                    proceedToResource(currentResourceId);
+                }, 500);
+            }, 1500);
+
+        } catch (error) {
+            console.error('Error submitting email:', error);
+
+            // Still save locally and proceed (graceful degradation)
+            localStorage.setItem('lead_email_provided', 'true');
+            localStorage.setItem('lead_email', email);
+
+            showToast('Saved! Opening your toolkit...');
+
+            setTimeout(() => {
+                hideLeadMagnet();
+                submitButton.textContent = originalButtonText;
+                submitButton.disabled = false;
+
+                window.open('ai-sales-toolkit.html', '_blank');
+                setTimeout(() => {
+                    proceedToResource(currentResourceId);
+                }, 500);
+            }, 1500);
+        }
+    });
+
+    // Handle close button
+    leadMagnetClose.addEventListener('click', hideLeadMagnet);
+
+    // Handle skip button
+    leadMagnetSkip.addEventListener('click', function() {
+        hideLeadMagnet();
+        proceedToResource(currentResourceId);
+    });
+
+    // Close on overlay click
+    leadMagnetOverlay.addEventListener('click', function(e) {
+        if (e.target === leadMagnetOverlay) {
+            hideLeadMagnet();
+        }
+    });
+
+    // Proceed to the resource after email capture or skip
+    function proceedToResource(resourceId) {
+        if (!currentResourceData) return;
+
+        const { promptId, title, type, promptText } = currentResourceData;
+        openPromptModal(title, type, promptText);
+        trackResourceView();
+
+        // Reset
+        currentResourceData = null;
+        currentResourceId = null;
+    }
+
+    // Intercept resource clicks to show lead magnet for premium content
+    window.showLeadMagnetForResource = function(resourceId) {
+        return showLeadMagnet(resourceId);
+    };
 });
