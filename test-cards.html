@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .test-card {
+            background: white;
+            padding: 20px;
+            margin: 10px;
+            opacity: 0;
+            animation: slideIn 0.5s ease forwards;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-card">Test Card 1</div>
+    <div class="test-card">Test Card 2</div>
+    <div class="test-card">Test Card 3</div>
+</body>
+</html>

@@ -1713,9 +1713,8 @@ p { color: var(--soft-grey); }
 .card-grid > *:nth-child(6) { animation-delay: 0.35s; }
 
 .session-card, .resource-card, .workflow-card {
-    /* Removed problematic animation - cards now visible by default */
-    /* opacity: 0; */
-    /* animation: slideInBlur 0.5s var(--ease-smooth) forwards; */
+    opacity: 0;
+    animation: slideInBlur 0.5s var(--ease-smooth) forwards;
 }
 
 /* === RESPONSIVE === */
