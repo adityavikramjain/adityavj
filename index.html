@@ -7,7 +7,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
     
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
@@ -29,7 +29,7 @@
         <div class="nav-links">
             <a href="index.html#sessions" class="nav-link active">Presentations</a>
             <a href="index.html#lab" class="nav-link">AI Resources</a>
-            <a href="index.html#writings" class="nav-link">Blog</a>
+            <a href="index.html#writings" class="nav-link">Build Notes</a>
             <a href="index.html#book" class="nav-link nav-cta">AI Workshop</a>
         </div>
         <div class="nav-social">
@@ -267,6 +267,16 @@
     </div>
 
     <div id="toast" class="toast"></div>
+
+    <!-- AVANT-GARDE SVG FILTERS -->
+    <svg style="display: none;">
+        <defs>
+            <filter id="wetPaint">
+                <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" result="warp" />
+                <feDisplacementMap xChannelSelector="R" yChannelSelector="G" scale="15" in="SourceGraphic" in2="warp" />
+            </filter>
+        </defs>
+    </svg>
 
 </div>
 

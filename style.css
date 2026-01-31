@@ -398,10 +398,12 @@ section {
 h1,
 h2,
 h3 {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
     color: var(--charcoal);
     line-height: 1.1;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.01em;
+    font-weight: 600;
 }
 
 p {
@@ -461,6 +463,12 @@ p {
     border-left: 3px solid var(--electric-orange);
     opacity: 0;
     animation: slideInBlur 0.8s var(--ease-smooth) 0.3s forwards;
+    /* Avant-Garde: Wet Paint Interaction */
+    transition: filter 0.3s ease;
+}
+
+.hero-value:hover {
+    filter: url(#wetPaint);
 }
 
 /* === HERO BLOB === */
@@ -828,6 +836,20 @@ p {
     position: relative;
     overflow: hidden;
     cursor: pointer;
+    /* Avant-Garde: Organic Edges via Masking */
+    mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 H200 V200 H0 Z' fill='white'/%3E%3C/svg%3E");
+    mask-mode: alpha;
+    /* Fallback for mask compatibility */
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 10 Q 50 0 100 0 Q 150 0 200 10 V 190 Q 150 200 100 200 Q 50 200 0 190 Z' fill='black'/%3E%3C/svg%3E");
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    margin-bottom: 8px;
+    /* Breathing room for uneven edges */
+}
+
+/* Wet Paint Hover for Cards */
+.session-card:hover {
+    filter: url(#wetPaint);
 }
 
 /* Rothko-style layered color field on top */
@@ -850,6 +872,19 @@ p {
     transition: all 0.4s var(--ease-smooth);
     mix-blend-mode: multiply;
     /* key for paint effect */
+    /* Scroll-Driven Animation: Shift colors as you scroll */
+    animation: paintShift auto linear;
+    animation-timeline: scroll(root);
+}
+
+@keyframes paintShift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 100% 50%;
+    }
 }
 
 .session-card:hover::before {
