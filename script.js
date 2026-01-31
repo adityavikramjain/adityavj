@@ -331,12 +331,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 const type = this.getAttribute('data-type');
                 const promptText = promptStorage[promptId];
 
+                console.log('Prompt card clicked:', { title, isPremium, resourceId, hasEmail: hasProvidedEmail() });
+
                 // Show lead magnet for premium content if user hasn't provided email
                 if (isPremium && !hasProvidedEmail()) {
+                    console.log('Showing lead magnet for:', title);
                     currentResourceId = resourceId;
                     currentResourceData = { promptId, title, type, promptText };
                     showLeadMagnet(resourceId);
                 } else {
+                    console.log('Opening prompt modal directly for:', title);
                     openPromptModal(title, type, promptText);
                     trackResourceView();
                 }
