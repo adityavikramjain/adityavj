@@ -290,19 +290,29 @@ body::before {
 @media (max-width: 480px) {
     .nav-container {
         flex-direction: column;
-        gap: 12px;
+        gap: 10px;
         padding: 12px 16px;
+    }
+
+    .nav-brand {
+        font-size: 0.95rem;
     }
 
     .nav-links {
         width: 100%;
-        justify-content: space-between;
-        gap: 8px;
+        justify-content: center;
+        gap: 6px;
+        flex-wrap: wrap;
     }
 
     .nav-link {
-        font-size: 0.8rem;
-        padding: 6px 0;
+        font-size: 0.78rem;
+        padding: 6px 4px;
+    }
+
+    .nav-link.nav-cta {
+        padding: 6px 12px;
+        font-size: 0.78rem;
     }
 
     .nav-social {
@@ -587,7 +597,6 @@ p {
     color: var(--white);
     border-color: var(--charcoal);
     box-shadow: var(--shadow-sm);
-    color: var(--white);
 }
 
 .btn-primary:hover {
@@ -2040,6 +2049,9 @@ p {
 
     .hero-visual {
         order: -1;
+        overflow: hidden;
+        padding: 44px;
+        /* room for the decorative rings */
     }
 
     .flux-blob {
@@ -2055,6 +2067,13 @@ p {
     }
 
     .btn-group {
+        justify-content: center;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn {
+        width: 100%;
         justify-content: center;
     }
 
@@ -2122,7 +2141,8 @@ p {
     }
 
     .booking-nudge {
-        bottom: 16px;
+        bottom: 80px;
+        /* sit above the sticky book button */
         right: 16px;
         left: 16px;
     }
@@ -2145,6 +2165,10 @@ p {
 
     .hero-name {
         font-size: 2.25rem;
+    }
+
+    .hero-visual {
+        padding: 44px;
     }
 
     .flux-blob {
@@ -2495,16 +2519,16 @@ p {
     }
 
     .sticky-book-btn {
-        padding: 10px 16px;
-        font-size: 0.8rem;
+        padding: 14px 20px;
+        font-size: 0.85rem;
     }
 
     .sticky-book-text {
-        display: none;
+        display: inline;
     }
 
     .sticky-book-btn .sticky-book-icon {
-        font-size: 1.3rem;
+        font-size: 1.1rem;
     }
 }
 
