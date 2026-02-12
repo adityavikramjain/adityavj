@@ -93,6 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const hasViewer = (session.viewerUrl && session.viewerUrl.trim() !== '') || isGoogleLink;
             const linkUrl = hasViewer ? `viewer.html?id=${session.id}` : session.url;
             const linkTarget = hasViewer ? '_self' : '_blank';
+            const linkRel = hasViewer ? '' : ' rel="noopener noreferrer"';
 
             // Handout Logic
             let handoutHtml = '';
@@ -103,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ? session.handout 
                     : window.location.origin + '/' + session.handout;
                     
-                handoutHtml = `<a href="${session.handout}" target="_blank" class="handout-btn" onclick="event.stopPropagation()">📄 Notes</a>`;
+                handoutHtml = `<a href="${session.handout}" target="_blank" rel="noopener noreferrer" class="handout-btn" onclick="event.stopPropagation()">📄 Notes</a>`;
             }
 
             const shareUrlAbsolute = linkUrl.startsWith('http') 
@@ -130,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="card-institution">${session.institution || ''}</span>
                     <span class="card-cohort">${session.cohort || ''}</span>
                 </div>
-                <a href="${linkUrl}" target="${linkTarget}" class="card-title" onclick="trackDownload(event)">${session.title}</a>
+                <a href="${linkUrl}" target="${linkTarget}"${linkRel} class="card-title" onclick="trackDownload(event)">${session.title}</a>
                 <p class="card-desc">${desc}</p>
                 <div class="card-footer">
                     <span class="card-badge program">${session.program || 'Program'}</span>
@@ -275,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let stepsHtml = '';
         res.steps.forEach((step, stepIndex) => {
             stepsHtml += `
-                <a href="${step.link}" target="_blank" class="workflow-step" onclick="trackResourceView()">
+                <a href="${step.link}" target="_blank" rel="noopener noreferrer" class="workflow-step" onclick="trackResourceView()">
                     <div class="step-number">${step.step_number}</div>
                     <div class="step-title">${step.title}</div>
                     <div class="step-desc">${step.desc}</div>
@@ -386,15 +387,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 fireConfetti(centerX, centerY);
 
                 buttonElement.classList.add('copied');
-                
+
                 const iconEl = buttonElement.querySelector('.copy-icon');
                 const textEl = buttonElement.querySelector('.copy-text');
-                
+
                 if (iconEl) iconEl.textContent = '✓';
                 if (textEl) textEl.textContent = 'Copied!';
-                
+
                 showToast('Prompt copied — go build something great! ✨', 'success');
-                
+
+                // GA4 Event: Prompt Copy
+                const promptId = buttonElement.getAttribute('data-prompt-id') || 'modal-prompt';
+                const promptTitle = document.querySelector(`[data-prompt-id="${promptId}"]`)?.closest('.prompt-card')?.querySelector('.card-title')?.textContent || 'Unknown Prompt';
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'prompt_copy', {
+                        prompt_id: promptId,
+                        prompt_title: promptTitle,
+                        page_path: window.location.pathname
+                    });
+                }
+
                 setTimeout(() => {
                     buttonElement.classList.remove('copied');
                     if (iconEl) iconEl.textContent = '📋';
@@ -483,7 +495,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="card-meta">
                     <span class="card-badge">${post.date || 'Article'}</span>
                 </div>
-                <a href="${post.link}" target="_blank" class="card-title">${post.title}</a>
+                <a href="${post.link}" target="_blank" rel="noopener noreferrer" class="card-title">${post.title}</a>
                 <p class="card-desc">${post.excerpt || ''}</p>
                 <div class="card-footer">
                     <span class="card-institution"></span>
@@ -502,13 +514,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 const filterType = this.getAttribute('data-filter-type');
                 const target = this.getAttribute('data-target');
 
+                // GA4 Event: Filter Usage
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'filter_click', {
+                        filter_type: filterType,
+                        filter_value: filter,
+                        filter_target: target,
+                        page_path: window.location.pathname
+                    });
+                }
+
                 // Visual Reset of "Other" Section (Smart Sync)
                 if (target === 'resources' && filterType === 'function') {
                     resetFilterVisuals('sessions');
-                    activeFilters.sessions.function = 'all'; 
+                    activeFilters.sessions.function = 'all';
                 } else if (target === 'sessions' && filterType === 'function') {
                     resetFilterVisuals('resources');
-                    activeFilters.resources.function = 'all'; 
+                    activeFilters.resources.function = 'all';
                 }
 
                 const parent = this.closest('.filter-bar');
@@ -733,6 +755,20 @@ document.addEventListener('DOMContentLoaded', () => {
     window.trackDownload = function(e) {
         engagement.downloads++;
         checkNudgeTrigger();
+
+        // GA4 Event: Presentation Download/Open
+        const linkElement = e.target.closest('a');
+        if (linkElement) {
+            const sessionTitle = linkElement.textContent || linkElement.getAttribute('title') || 'Unknown Session';
+            const sessionUrl = linkElement.getAttribute('href') || '';
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'presentation_open', {
+                    session_title: sessionTitle,
+                    session_url: sessionUrl,
+                    page_path: window.location.pathname
+                });
+            }
+        }
     };
 
     window.trackResourceView = function() {
@@ -879,6 +915,26 @@ document.addEventListener('DOMContentLoaded', () => {
             trackBookingClick(source);
         });
     });
+
+    // 4. Track Social and Email Links
+    document.querySelectorAll('a[href*="linkedin.com"], a[href*="github.com"], a[href^="mailto:"]').forEach(link => {
+        link.addEventListener('click', function() {
+            const href = this.getAttribute('href') || '';
+            let linkType = 'unknown';
+            if (href.includes('linkedin.com')) linkType = 'linkedin';
+            else if (href.includes('github.com')) linkType = 'github';
+            else if (href.startsWith('mailto:')) linkType = 'email';
+
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'social_click', {
+                    link_type: linkType,
+                    link_url: href,
+                    page_path: window.location.pathname
+                });
+            }
+        });
+    });
+
     // === SHARE MODAL LOGIC ===
     function openShareModal(title, link, handout) {
         const modalOverlay = document.getElementById('modal-overlay');
@@ -912,7 +968,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p style="color: var(--soft-grey); font-size: 0.95rem;">Choose how you want to share <strong>${title}</strong></p>
             </div>
             <div class="share-options-grid">
-                <a href="${waLink}" target="_blank" class="share-option-btn whatsapp">
+                <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="share-option-btn whatsapp">
                     <span class="share-option-icon">💬</span>
                     <span class="share-option-label">WhatsApp</span>
                 </a>
