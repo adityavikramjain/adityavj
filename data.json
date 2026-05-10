@@ -1,6 +1,18 @@
 {
     "sessions": [
         {
+            "id": "mdp-social-media-marketing-s1-may26",
+            "title": "Social Media Marketing for Sales Leaders — Session 1",
+            "institution": "IIM Kozhikode",
+            "program": "MDP",
+            "cohort": "May 2026",
+            "url": "presentations/mdp-social-media-marketing-s1-may26.html",
+            "viewerUrl": "presentations/mdp-social-media-marketing-s1-may26.html",
+            "desc": "How attention and trust reorganized across four eras, why premium categories are most affected, and what Royal Canin can learn from Heads Up For Tails. Session 1 of 2.",
+            "tags": ["Marketing", "Social Media", "Sales"],
+            "featured": true
+        },
+        {
             "id": "smp-future-of-work-jan26",
             "title": "The Future of Work with AI: Strategic Implications",
             "institution": "IIM Kozhikode",
