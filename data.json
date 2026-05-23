@@ -1,6 +1,30 @@
 {
     "sessions": [
         {
+            "id": "mdp-performance-marketing-may26",
+            "title": "Performance Marketing",
+            "institution": "IIM Kozhikode",
+            "program": "MDP",
+            "cohort": "May 2026",
+            "url": "presentations/mdp-performance-marketing-may26.html",
+            "viewerUrl": "presentations/mdp-performance-marketing-may26.html",
+            "desc": "Performance marketing as financial arbitrage: the Audience×Creative×Offer×Experience×Economics equation, Dollar Shave Club case study, platform incentive conflicts, the paradox of scale, Q-commerce as new general trade, and honest measurement via incrementality and MMM.",
+            "tags": ["Marketing", "Performance Marketing", "Sales"],
+            "featured": true
+        },
+        {
+            "id": "mdp-social-media-marketing-s2-may26",
+            "title": "Social Media Marketing for Sales Leaders — Session 2",
+            "institution": "IIM Kozhikode",
+            "program": "MDP",
+            "cohort": "May 2026",
+            "url": "presentations/mdp-social-media-marketing-s2-may26.html",
+            "viewerUrl": "presentations/mdp-social-media-marketing-s2-may26.html",
+            "desc": "Retail and Q-commerce channel strategy, WhatsApp CRM for specialty retailers, expert channels (vets and breeders), and measurement — creating demand versus capturing it. Session 2 of 2.",
+            "tags": ["Marketing", "Social Media", "Sales"],
+            "featured": true
+        },
+        {
             "id": "mdp-social-media-marketing-s1-may26",
             "title": "Social Media Marketing for Sales Leaders — Session 1",
             "institution": "IIM Kozhikode",

@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Marketing for Sales Leaders — Session 2 · Aditya V Jain</title>
+    <meta name="description" content="Session 2 of 2: retail and Q-commerce channels, WhatsApp CRM for retailers, expert channels (vets and breeders), and measurement — creating demand versus capturing it.">
+    <link rel="canonical" href="https://adityavj.com/presentations/mdp-social-media-marketing-s2-may26.html">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://adityavj.com/presentations/mdp-social-media-marketing-s2-may26.html">
+    <meta property="og:title" content="Social Media Marketing for Sales Leaders — Session 2">
+    <meta property="og:description" content="Session 2 of 2: retail and Q-commerce channels, WhatsApp CRM for retailers, expert channels (vets and breeders), and measurement — creating demand versus capturing it.">
+    <meta property="og:image" content="https://adityavj.com/aditya.png">
+    <meta property="og:site_name" content="adityavj.com">
+    <meta property="og:locale" content="en_IN">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Social Media Marketing for Sales Leaders — Session 2">
+    <meta name="twitter:description" content="Session 2 of 2: retail and Q-commerce channels, WhatsApp CRM for retailers, expert channels (vets and breeders), and measurement — creating demand versus capturing it.">
+    <meta name="twitter:image" content="https://adityavj.com/aditya.png">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CreativeWork",
+      "name": "Social Media Marketing for Sales Leaders — Session 2",
+      "author": { "@type": "Person", "name": "Aditya V Jain", "url": "https://adityavj.com/" },
+      "url": "https://adityavj.com/presentations/mdp-social-media-marketing-s2-may26.html",
+      "description": "Session 2 of 2: retail and Q-commerce channels, WhatsApp CRM for retailers, expert channels (vets and breeders), and measurement — creating demand versus capturing it."
+    }
+    </script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-J91KSE4133"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-J91KSE4133');
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --iimk-blue: #003366;
+            --iimk-gold: #FFCC00;
+            --dove-gray: #666666;
+            --pure-white: #FFFFFF;
+            --pure-black: #000000;
+            --light-blue: #E6EEF5;
+            --light-gold: #FFF9E6;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--pure-white);
+            color: var(--pure-black);
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 1440px;
+            height: 932px;
+            margin: 0 auto;
+            position: relative;
+            background: var(--pure-white);
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            padding: 60px 80px 60px 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            overflow: hidden;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .slide-indicator {
+            position: fixed;
+            bottom: 30px;
+            right: 40px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            color: var(--dove-gray);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 16px;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        /* Typography */
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 64px;
+            font-weight: 700;
+            color: var(--iimk-blue);
+            margin-bottom: 30px;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 50px;
+            font-weight: 600;
+            color: var(--iimk-blue);
+            margin-bottom: 25px;
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--iimk-gold);
+            margin-bottom: 18px;
+        }
+
+        .subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 28px;
+            font-weight: 400;
+            color: var(--dove-gray);
+            margin-bottom: 40px;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .animate-in { animation: fadeInUp 0.6s ease forwards; }
+        .hero-content { animation: fadeInScale 0.8s ease forwards; position: relative; }
+
+        .hero-highlight {
+            display: inline-block;
+            background: linear-gradient(120deg, var(--light-gold) 0%, var(--light-gold) 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 40%;
+            background-position: 0 85%;
+            padding: 0 8px;
+        }
+
+        /* Content Sections */
+        .content-section { margin-bottom: 35px; margin-top: 20px; }
+
+        .bullet-list { list-style: none; margin-left: 0; }
+        .bullet-list li {
+            font-size: 22px; line-height: 1.7; margin-bottom: 20px;
+            padding-left: 40px; position: relative; color: var(--pure-black);
+        }
+        .bullet-list li:before {
+            content: ''; position: absolute; left: 0; top: 12px;
+            width: 10px; height: 10px; background: var(--iimk-gold); border-radius: 50%;
+        }
+
+        .numbered-list { list-style: none; counter-reset: item; margin-left: 0; }
+        .numbered-list li {
+            font-size: 22px; line-height: 1.7; margin-bottom: 20px;
+            padding-left: 50px; position: relative; color: var(--pure-black);
+        }
+        .numbered-list li:before {
+            content: counter(item); counter-increment: item; position: absolute; left: 0; top: 0;
+            width: 36px; height: 36px; background: var(--iimk-gold); color: var(--iimk-blue);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 20px;
+        }
+
+        /* Title Slide */
+        .title-slide {
+            background: linear-gradient(135deg, var(--iimk-blue) 0%, #004d99 100%);
+            color: white; justify-content: center; align-items: center; text-align: center;
+        }
+        .title-slide h1 { color: white; font-size: 68px; margin-bottom: 30px; }
+        .title-slide .subtitle { color: var(--iimk-gold); font-size: 32px; }
+
+        /* Module Title Slides */
+        .module-slide {
+            background: linear-gradient(135deg, var(--light-blue) 0%, var(--pure-white) 100%);
+            justify-content: center; align-items: center; text-align: center;
+        }
+        .module-slide h1 { font-size: 62px; }
+
+        /* Section Headers */
+        .section-header {
+            background: var(--iimk-blue); color: white; padding: 18px 30px;
+            margin: -60px -80px 35px -80px; font-family: 'Montserrat', sans-serif;
+            font-size: 20px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px;
+        }
+
+        /* Two Column Layout */
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 20px; }
+
+        /* Break Slide */
+        .break-slide {
+            background: linear-gradient(135deg, var(--iimk-gold) 0%, #FFD700 100%);
+            justify-content: center; align-items: center; text-align: center;
+        }
+        .break-slide h1 { color: var(--iimk-blue); font-size: 80px; }
+
+        /* Emphasis Box */
+        .emphasis-box {
+            background: var(--light-gold); border: 3px solid var(--iimk-gold);
+            border-radius: 12px; padding: 35px; margin: 30px 0; text-align: center;
+        }
+        .emphasis-box p { font-size: 24px; line-height: 1.7; color: var(--pure-black); font-weight: 500; }
+
+        /* Framework Box */
+        .framework-box {
+            background: white; border: 3px solid var(--iimk-blue);
+            border-radius: 12px; padding: 30px; margin: 25px 0;
+        }
+        .framework-item { margin-bottom: 22px; }
+        .framework-item strong { color: var(--iimk-blue); font-size: 22px; font-weight: 700; }
+        .framework-item span, .framework-item p { color: var(--pure-black); font-size: 19px; line-height: 1.6; }
+
+        .card-container {
+            background: var(--light-blue);
+            padding: 25px;
+            border-radius: 12px;
+            height: 100%;
+        }
+
+        /* Responsive scaling */
+        @media (max-width: 1440px) {
+            .presentation-container { transform: scale(0.9); transform-origin: top center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="slide-indicator">
+            <span id="current-slide">1</span> / <span id="total-slides">30</span>
+        </div>
+
+        <div class="slide active title-slide">
+            <h1 class="animate-in">Social Media Marketing for Sales Leaders</h1>
+            <p class="subtitle animate-in" style="animation-delay: 0.2s;">Session 2 of 2</p>
+            <div class="animate-in" style="animation-delay: 0.4s; margin-top: 40px;">
+                <p style="font-size: 22px; color: white;">Aditya V Jain · 16-May-2026</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Recap</div>
+            <h2 class="hero-content">Where <span class="hero-highlight">we left off</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="numbered-list">
+                    <li><strong>Attention reorganized</strong> from TV, to Search, to Social, to algorithmic short form video.</li>
+                    <li><strong>Trust decentralized</strong> from institutions to networks.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Orientation</div>
+            <h2 class="hero-content">How to <span class="hero-highlight">use today</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 24px; line-height: 1.6; margin-bottom: 30px;">Today is not a deck of answers. It's a deck of mental models and questions.</p>
+                <ul class="bullet-list">
+                    <li><strong>Mental models for how to think about channels, attribution, and demand creation.</strong> Frames to help you make better decisions.</li>
+                    <li><strong>The right questions to ask about your company's social media strategy.</strong></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Day 2</div>
+            <h2 class="hero-content">What <span class="hero-highlight">we are covering</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="framework-box">
+                    <div class="framework-item">
+                        <strong>Part 4 · Retail channels:</strong> <span>Retail stores and Q-commerce.</span>
+                    </div>
+                    <div class="framework-item">
+                        <strong>Part 5 · Expert channels:</strong> <span>Vets and breeders.</span>
+                    </div>
+                    <div class="framework-item">
+                        <strong>Part 6 · Measurement:</strong> <span>How to accurately measure impact of social media marketing.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Two questions <span class="hero-highlight">from between sessions</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="emphasis-box">
+                    <p>"How do offline stores apply learnings when Q-commerce is eating their sales?"</p>
+                </div>
+                <div class="emphasis-box">
+                    <p>"How do we get retailers to leverage WhatsApp to boost sales?"</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide module-slide">
+            <h1 class="hero-content">Part 4 · A: Retail</h1>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Three <span class="hero-highlight">retail surfaces</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 22px; margin-bottom: 30px;">A premium pet parent uses some combination in a typical year.</p>
+                <div class="framework-box">
+                    <div class="framework-item">
+                        <strong>Retail:</strong> <span>Considered decision, local relationship.</span>
+                    </div>
+                    <div class="framework-item">
+                        <strong>Q-commerce:</strong> <span>Urgent replenishment, discounts.</span>
+                    </div>
+                    <div class="framework-item">
+                        <strong>E-commerce:</strong> <span>Planned bulk purchases.</span>
+                    </div>
+                </div>
+                <p style="font-size: 22px; font-weight: 600; margin-top: 30px;">Today's focus: specialty retail and Q-commerce.</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Specialty Retail</div>
+            <h2 class="hero-content">First <span class="hero-highlight">discussion</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 24px; color: var(--dove-gray); margin-bottom: 25px; font-weight: 600;">Discussion · 10 minutes</p>
+                <p style="font-size: 22px; margin-bottom: 20px;">Pick one specialty pet store you know well.</p>
+                <ul class="numbered-list">
+                    <li>What does that store offer that Q-commerce structurally cannot replicate?</li>
+                    <li>For each of the above, is it actually being delivered, or a latent advantage going unused?</li>
+                    <li>Which two would you double down on first?</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Five moves for <span class="hero-highlight">specialty retailers</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="numbered-list" style="font-size: 20px;">
+                    <li><strong>Capture a robust pet profile at the counter:</strong> This becomes the basis of the retailer's Whatsapp strategy.</li>
+                    <li><strong>Send predictive WhatsApp messages using that profile:</strong> Refill reminders, stock alerts, breed-specific tips, vaccination reminders. Retailer's advantage comes from knowing a specific pet.</li>
+                    <li><strong>Build a local Instagram presence:</strong> Customers and their pets at the store, breed-specific tips in the local language.</li>
+                    <li><strong>Partner with one local nano-influencer.</strong> 5-8K-follower creator in a 2-3km catchment.</li>
+                    <li><strong>Run a WhatsApp Community for one breed or condition in your catchment.</strong> "Indiranagar Puppy Parents", "Bangalore Golden Retriever Owners", with content seeded by the brand.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Second <span class="hero-highlight">discussion</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 24px; color: var(--dove-gray); margin-bottom: 25px; font-weight: 600;">Discussion · 7 minutes</p>
+                <div class="emphasis-box">
+                    <p>A customer who used to walk into a specialty store now buys on Blinkit.</p>
+                </div>
+                <ul class="numbered-list" style="margin-top: 30px;">
+                    <li>What's actually driving that switch?</li>
+                    <li>What is the customer trying to avoid?</li>
+                    <li>If retailers could neutralize that, would the customer still switch?</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Fear of being <span class="hero-highlight">caught short</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 24px; font-weight: 600; margin-bottom: 25px;">Whoever predicts reorder wins the next purchase.</p>
+
+                <h3 style="margin-top: 30px;">Retailer's structural advantage:</h3>
+                <div class="framework-box">
+                    <ul class="bullet-list" style="margin-bottom: 0;">
+                        <li>Retailer knows what a customer feeds their pet, how much, at what daily rate.</li>
+                        <li>Retailer can predict stockout from a specific bag and a specific consumption rate.</li>
+                        <li>Q-commerce uses a generic 30-day default for everyone, while the retailer can be more accurate.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide module-slide">
+            <h1 class="hero-content">Part 4 · B: Building Retailer Equipment</h1>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Building retailer's Whatsapp stack</div>
+            <h2 class="hero-content">WhatsApp stack <span class="hero-highlight">for retailers</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="two-column">
+                    <div class="card-container">
+                        <h3 style="color: var(--iimk-blue); border-bottom: 2px solid var(--iimk-gold); padding-bottom: 10px;">Free WhatsApp Business App</h3>
+                        <div class="framework-item" style="margin-top: 20px;">
+                            <strong>Best Fit:</strong> <span>Single-store / small specialty pet retailer</span>
+                        </div>
+                        <div class="framework-item">
+                            <strong>Typical Stage:</strong> <span>Early-stage or relationship-led business</span>
+                        </div>
+                        <div class="framework-item">
+                            <strong>Monthly Cost:</strong> <span>Free</span>
+                        </div>
+                        <div class="framework-item">
+                            <strong>Team Support:</strong> <span>1–5 linked devices</span>
+                        </div>
+                        <div class="framework-item">
+                            <strong>Broadcast Marketing:</strong> <span>Basic and limited</span>
+                        </div>
+                        <div class="framework-item">
+                            <strong>Reorder Reminders:</strong> <span>Manual follow-up</span>
+                        </div>
+                    </div>
+
+                    <div class="card-container" style="background: var(--light-gold);">
+                        <h3 style="color: var(--iimk-blue); border-bottom: 2px solid var(--iimk-blue); padding-bottom: 10px;">WhatsApp Business API (Paid)</h3>
+                        <div class="framework-item" style="margin-top: 20px;">
+                            <strong>Best Fit:</strong> <span>Scaling omnichannel pet retailer</span>
+                        </div>
+                        <div class="framework-item">
+                            <strong>Typical Stage:</strong> <span>Growth-stage retention-driven business</span>
+                        </div>
+                        <div class="framework-item">
+                            <strong>Monthly Cost:</strong> <span>₹0.4 - ₹0.8 per msg. ₹1.5k–₹7.5k+ / month</span>
+                        </div>
+                        <div class="framework-item">
+                            <strong>Team Support:</strong> <span>Large multi-agent teams</span>
+                        </div>
+                        <div class="framework-item">
+                            <strong>Broadcast Marketing:</strong> <span>Scalable lifecycle campaigns</span>
+                        </div>
+                        <div class="framework-item">
+                            <strong>Reorder Reminders:</strong> <span>Automated replenishment nudges</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">WhatsApp stack <span class="hero-highlight">advanced features</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="framework-box">
+                    <h3 style="color: var(--iimk-blue); margin-bottom: 15px;">WhatsApp Communities</h3>
+                    <p>Helps organize customers into interest-based groups such as puppy owners, cat parents, breed clubs, or premium nutrition buyers.</p>
+                    <p style="margin-top: 10px;">Useful for sharing educational content, launch announcements, grooming tips, events, and localized engagement while keeping multiple groups under one umbrella.</p>
+                </div>
+
+                <div class="framework-box">
+                    <h3 style="color: var(--iimk-blue); margin-bottom: 15px;">WhatsApp Pay</h3>
+                    <p>Enables in-chat payments and faster checkout for repeat purchases, subscriptions, and quick reorders.</p>
+                    <p style="margin-top: 10px;">Reduces friction in conversational commerce by allowing customers to browse, confirm, and pay within WhatsApp itself.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Third <span class="hero-highlight">discussion</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 24px; color: var(--dove-gray); margin-bottom: 25px; font-weight: 600;">Discussion · 8 minutes</p>
+                <div class="emphasis-box">
+                    <p>A new customer walks in and buys her first bag of Royal Canin Maxi Adult.</p>
+                </div>
+                <ul class="numbered-list" style="margin-top: 30px;">
+                    <li>What should a retailer ask about her pet?</li>
+                    <li>What should a retailer record? List as many fields as you can.</li>
+                    <li>Which fields are most valuable in six months?</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Twelve-field <span class="hero-highlight">pet CRM</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="two-column">
+                    <div>
+                        <ul class="bullet-list">
+                            <li>Pet name</li>
+                            <li>Breed</li>
+                            <li>Age</li>
+                            <li>Weight</li>
+                            <li>Sterilized status</li>
+                            <li>Allergies and sensitivities</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <ul class="bullet-list">
+                            <li>Current diet (brand, SKU, daily quantity)</li>
+                            <li><strong>Monthly consumption rate</strong> · predicts when she runs out</li>
+                            <li>Birthday and adoption anniversary</li>
+                            <li>Vaccination dates</li>
+                            <li>Vet reference (name and clinic)</li>
+                            <li>Flagged conditions (renal, hepatic, dermatological, obesity)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Fourth <span class="hero-highlight">discussion</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 24px; color: var(--dove-gray); margin-bottom: 25px; font-weight: 600;">Discussion · 7 minutes</p>
+                <div class="emphasis-box">
+                    <p>You have a customer's WhatsApp number and her pet's profile. What do you send them?</p>
+                </div>
+                <ul class="numbered-list" style="margin-top: 30px;">
+                    <li>Five messages they would welcome and reply to.</li>
+                    <li>Three messages that would make her block your number within a week.</li>
+                    <li>What separates them?</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">WhatsApp Messaging <span class="hero-highlight">Strategy</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="two-column">
+                    <div class="card-container">
+                        <h3 style="color: var(--iimk-blue);">DOs</h3>
+                        <ul class="bullet-list" style="margin-top: 15px;">
+                            <li>Refill reminders, sent a week before predicted stockout</li>
+                            <li>Vet appointment reminders tied to vaccination calendar</li>
+                            <li>Stock alerts relevant to a registered pet</li>
+                            <li>Birthday and adoption-anniversary messages by name</li>
+                            <li>Breed or condition-specific educational mini-content</li>
+                        </ul>
+                    </div>
+                    <div class="card-container" style="background: #FFF0F0;">
+                        <h3 style="color: #990000;">DON'Ts</h3>
+                        <ul class="bullet-list" style="margin-top: 15px;">
+                            <li>Blanket promotional broadcasts</li>
+                            <li>Generic discount offers ("Flat 10% off pet food")</li>
+                            <li>Messages that don't reference a pet by name</li>
+                        </ul>
+                    </div>
+                </div>
+                <p style="font-size: 20px; font-style: italic; margin-top: 25px; text-align: center;">Message has to pass "would I send this to one specific customer." WhatsApp's spam thresholds throttle a number with high report rates inside two weeks.</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Predictive <span class="hero-highlight">reorder messaging</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="framework-box">
+                    <div class="framework-item">
+                        <strong>Day 3:</strong> <span>"How is Bruno adjusting to new food?" Open-ended. Most replies are positive, which builds trust.</span>
+                    </div>
+                    <div class="framework-item">
+                        <strong>Day 10:</strong> <span>"Any stool changes or appetite issues?" Catches problems before silent switching.</span>
+                    </div>
+                    <div class="framework-item">
+                        <strong>Day 25:</strong> <span>Refill reminder with one-tap reorder. Timed from consumption-rate field captured at first visit. <strong>Moment of truth.</strong> Whoever lands a relevant reminder first earns the next purchase.</span>
+                    </div>
+                    <div class="framework-item">
+                        <strong>Day 40:</strong> <span>Cross-sell. Supplements, treats, grooming. Advisory, not promotional.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Recap: Retailer <span class="hero-highlight">Whatsapp and social media toolkit</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 22px; font-style: italic; margin-bottom: 25px;">"How do offline stores apply learnings when Q-commerce is eating their sales?"</p>
+                <p style="font-size: 22px; font-weight: 600; margin-bottom: 20px;">Hand to a retailer in your territory:</p>
+
+                <div class="two-column">
+                    <ul class="bullet-list">
+                        <li>Twelve-field pet CRM</li>
+                        <li>WhatsApp Business app setup with catalog</li>
+                        <li>Day 3 / 10 / 25 / 40 cadence</li>
+                        <li>Monthly content kit by SKU and pet condition</li>
+                    </ul>
+                    <ul class="bullet-list">
+                        <li>Vernacular scripts in regional languages</li>
+                        <li>Co-funded local creator activations (70/30 brand-retailer)</li>
+                        <li>"Never an empty bowl" membership template</li>
+                        <li>Quarterly retail-staff training through Royal Canin Academy</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide module-slide">
+            <h1 class="hero-content">Part 4 · C: Q-Commerce</h1>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Q-commerce</div>
+            <h2 class="hero-content">Q-commerce, <span class="hero-highlight">four operational levers</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 22px; margin-bottom: 20px;">Four levers decide Q-commerce performance. None visible in a standard sales dashboard.</p>
+                <div class="framework-box">
+                    <div class="framework-item">
+                        <strong>Share of search:</strong> <span>A "Royal Canin" search on Blinkit should return Royal Canin SKUs first, not three competitors above. Won through listing hygiene, platform spend, keyword bidding.</span>
+                    </div>
+                    <div class="framework-item">
+                        <strong>Ratings velocity:</strong> <span>A bag with 47 reviews outperforms a bag with 4 reviews at the same star rating. Moved by post-purchase prompts: WhatsApp asks, in-pack QR cards, IG story templates.</span>
+                    </div>
+                    <div class="framework-item">
+                        <strong>Listing creative:</strong> <span>First image, bullet points, breed-specific naming, search keywords in title. A Reel becomes a listing image.</span>
+                    </div>
+                    <div class="framework-item">
+                        <strong>Bundles and AOV:</strong> <span>Platforms reward larger baskets. Dry kibble plus wet pouches. Multi-pet bundles. Refill packs sized to consumption rate.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Tying social to <span class="hero-highlight">Q-commerce sales</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 20px; margin-bottom: 20px;">Royal Canin runs social campaigns. Royal Canin sells through Q-commerce. Two streams operated separately means nobody can prove what social spend produced. Five mechanics close that gap.</p>
+                <ul class="numbered-list" style="font-size: 20px;">
+                    <li><strong>Campaign-specific promo codes:</strong> <em>"Use RC15LABRADOR on Blinkit."</em> on a social media campaign, traces back to campaign and creator.</li>
+                    <li><strong>Creator-specific promo codes:</strong> <em>"DEVANSHI15," "TANYA10."</em> Attributed to a specific creator. Shows which creator produced actual orders, not just views.</li>
+                    <li><strong>Platform-specific codes:</strong> <em>"BLINKIT20," "ZEPTO15."</em> Different code per platform. Tells you which platform produces better customer economics and repeat behavior.</li>
+                    <li><strong>Deep-linking:</strong> Click-to-Blinkit, Click-to-Zepto URLs inside Reels, IG ads, WhatsApp shares. Link carries campaign source through to platform listing. Useful even without a code.</li>
+                    <li><strong>QR codes on physical surfaces:</strong> Bag printing, in-store displays, in-clinic posters, breeder handover kits. Scan resolves to a platform listing with code or UTM baked in.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Tying social to <span class="hero-highlight">Q-commerce sales</span> (cont.)</h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 20px; margin-bottom: 20px;">Beyond codes, three pieces of infrastructure are worth knowing.</p>
+                <div class="framework-box" style="padding: 20px;">
+                    <div class="framework-item" style="margin-bottom: 15px;">
+                        <strong>Meta Conversion API (CAPI) and platform postbacks:</strong> <span>Historically Meta saw a click on a Reel ad but not a purchase that followed on Blinkit. Now Blinkit and Zepto can fire purchase events directly back to Meta's servers via CAPI. Meta sees an order and starts optimizing for buyers, not clickers.</span>
+                    </div>
+                    <div class="framework-item" style="margin-bottom: 15px;">
+                        <strong>Collaborative Ads (CPAS):</strong> <span>Meta's partnership format with retailers. Brand runs an ad, retailer's catalog and inventory feed into it, conversion data flows back. India's Q-commerce ecosystem is a fast-growing CPAS market.</span>
+                    </div>
+                    <div class="framework-item">
+                        <strong>What this changes in practice:</strong> <span>Q-commerce platforms are becoming media and attribution networks alongside retail. When a Reel ad with Click-to-Blinkit fires a conversion back to Meta, Meta learns who actually bought. Brand's social spend gets meaningfully more efficient over 60-90 days.</span>
+                    </div>
+                </div>
+                <p style="font-size: 18px; font-style: italic; color: var(--dove-gray);">Some of this is aspirational. Matching is still partly probabilistic. Data is sometimes delayed.</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Questions to ask your <span class="hero-highlight">agency and marketing team</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="two-column" style="gap: 20px;">
+                    <div class="card-container" style="padding: 20px;">
+                        <h3 style="font-size: 24px; color: var(--iimk-blue);">Ask your social media agency</h3>
+                        <ul class="numbered-list" style="margin-top: 15px; font-size: 16px;">
+                            <li style="font-size: 16px; margin-bottom: 10px;">Are we using campaign-specific promo codes for Q-commerce activations? Show me last quarter's redemption data.</li>
+                            <li style="font-size: 16px; margin-bottom: 10px;">Are we using creator-specific codes? Which creator produced most redemptions?</li>
+                            <li style="font-size: 16px; margin-bottom: 10px;">Are our Reel ads using Click-to-Blinkit/Zepto deep-links, or sending traffic to brand site?</li>
+                            <li style="font-size: 16px; margin-bottom: 10px;">Are we set up on Meta's Conversion API with at least one Q-commerce platform?</li>
+                            <li style="font-size: 16px; margin-bottom: 10px;">Are we running Collaborative Ads with any Q-commerce partner?</li>
+                            <li style="font-size: 16px;">What does cost-per-purchase look like across platforms?</li>
+                        </ul>
+                    </div>
+                    <div class="card-container" style="padding: 20px; background: var(--light-gold);">
+                        <h3 style="font-size: 24px; color: var(--iimk-blue);">Ask your marketing team</h3>
+                        <ul class="numbered-list" style="margin-top: 15px; font-size: 16px;">
+                            <li style="font-size: 16px; margin-bottom: 10px;">Have we ever run a geo holdout to measure actual lift of a social campaign?</li>
+                            <li style="font-size: 16px; margin-bottom: 10px;">For our biggest annual campaign, can you separate creating-demand spend from capturing-demand spend?</li>
+                            <li style="font-size: 16px; margin-bottom: 10px;">Of last year's high-ROAS activities, which would have happened anyway?</li>
+                            <li style="font-size: 16px; margin-bottom: 10px;">Are we tracking brand-specificity search volume on Blinkit and Zepto? Leading indicator of substitution risk.</li>
+                            <li style="font-size: 16px;">What share of our Q-commerce sales is traceable to specific upstream social activity? If "we don't know," fix that first.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Branding question <span class="hero-highlight">on Q-commerce</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 20px; margin-bottom: 20px;">Q-commerce platforms are loss-making and concentrated. They launch private brands in attractive categories, built on data collected from every transaction.</p>
+                <div class="two-column">
+                    <div>
+                        <h3 style="font-size: 26px;">Mechanism</h3>
+                        <ul class="bullet-list" style="font-size: 18px;">
+                            <li style="font-size: 18px;">Platforms hold first-party data on every purchase.</li>
+                            <li style="font-size: 18px;">Data flags high-margin, high-velocity, habitual categories. Premium pet food is all three.</li>
+                            <li style="font-size: 18px;">Options: launch private label, partner with smaller brand, or de-prioritize category leader.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 26px;">Examples</h3>
+                        <ul class="bullet-list" style="font-size: 18px;">
+                            <li style="font-size: 18px;">Swiggy launched <strong>Noice</strong> inside Instamart.</li>
+                            <li style="font-size: 18px;">Blinkit private labels in cleaning/grocery.</li>
+                            <li style="font-size: 18px;">Amazon Basics, Solimo; Flipkart's MarQ.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="emphasis-box" style="padding: 20px; margin-top: 20px;">
+                    <p style="font-size: 20px;">Defense is brand specificity. A customer searching "Royal Canin" by name is harder to substitute than a customer searching "premium dog food".</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide break-slide">
+            <h1 class="hero-content">BREAK</h1>
+            <p style="font-size: 32px; color: var(--iimk-blue); margin-top: 20px; font-weight: 600;">15 Minutes</p>
+        </div>
+
+        <div class="slide module-slide">
+            <h1 class="hero-content">Part 5 · Expert Channels</h1>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Part Five · Expert channels</div>
+            <h2 class="hero-content">Vets and <span class="hero-highlight">breeders</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="framework-box">
+                    <h3 style="font-size: 26px; color: var(--iimk-blue);">Why this channel is different</h3>
+                    <p>A vet or breeder's recommendation can anchor twelve years of feeding behavior. Customers register it as professional judgment, not a sales pitch. Mechanism is regulated speech, which is why a brand can't just buy these recommendations.</p>
+                </div>
+
+                <h3 style="margin-top: 25px; font-size: 26px;">What works</h3>
+                <ul class="bullet-list" style="margin-top: 15px;">
+                    <li>Scientific education, not direct promotion.</li>
+                    <li>Practitioner content in their own voice and dialect, using clinical or breeding examples.</li>
+                    <li>Equipment that removes friction: talking points (not scripts), pre-shot B-roll, vernacular caption templates, compliance pre-clearance, WhatsApp setup.</li>
+                </ul>
+
+                <div class="emphasis-box" style="padding: 20px; margin-top: 20px;">
+                    <p style="font-size: 20px;"><strong>Discussion:</strong> For your region, what tools does a vet or breeder need that would unlock the most content from them next quarter?</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide module-slide">
+            <h1 class="hero-content">Part 6 · Measurement</h1>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Pet-food <span class="hero-highlight">journey</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 24px; margin-bottom: 25px;">Customer we drew in Session 1:</p>
+                <ul class="bullet-list">
+                    <li>Watches a Labrador nutrition Reel on Instagram</li>
+                    <li>Saves and forwards it to a WhatsApp group</li>
+                    <li>Sees brand again through a pet creator two weeks later</li>
+                    <li>Asks her vet at next clinic visit</li>
+                    <li>Orders on Zepto after a reminder notification</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">What a dashboard sees, <span class="hero-highlight">and why</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 20px; margin-bottom: 20px;">Central marketing dashboard records Zepto transaction. Maybe the last ad impression. Four touchpoints that actually shaped the purchase don't appear.</p>
+
+                <div class="two-column">
+                    <div class="card-container">
+                        <h3 style="color: var(--iimk-blue);">Dashboard sees</h3>
+                        <ul class="bullet-list" style="margin-top: 15px;">
+                            <li>Zepto transaction</li>
+                            <li>Maybe last click</li>
+                            <li>Perhaps one ad impression</li>
+                        </ul>
+                    </div>
+                    <div class="card-container" style="background: var(--light-gold);">
+                        <h3 style="color: var(--iimk-gold);">Invisible</h3>
+                        <ul class="bullet-list" style="margin-top: 15px;">
+                            <li>Creator influence</li>
+                            <li>WhatsApp sharing</li>
+                            <li>Memory effects &amp; Vet endorsement</li>
+                            <li>Delayed consideration</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <ul class="bullet-list" style="margin-top: 25px; font-size: 18px;">
+                    <li style="font-size: 18px;">A specialty pet store sees a bag sold; not a Reel that walked customer in.</li>
+                    <li style="font-size: 18px;">A Q-commerce platform sees an order placed; not a creator who mentioned the brand.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Creating demand <span class="hero-highlight">versus capturing demand</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="two-column">
+                    <div class="framework-box" style="margin-top: 0;">
+                        <h3 style="color: var(--iimk-blue);">Creating demand</h3>
+                        <ul class="bullet-list" style="margin-top: 15px;">
+                            <li>Reels, YouTube long-form, creator partnerships, vet education, community events.</li>
+                            <li>Slow payoff, hard to measure, compounds over time.</li>
+                        </ul>
+                    </div>
+                    <div class="framework-box" style="margin-top: 0; border-color: var(--iimk-gold);">
+                        <h3 style="color: var(--iimk-gold);">Capturing demand</h3>
+                        <ul class="bullet-list" style="margin-top: 15px;">
+                            <li>Branded search, Q-commerce platform ads, retargeting, last-mile conversion ads.</li>
+                            <li>Immediate payoff, easy to measure, doesn't compound.</li>
+                            <li>Closes a customer who already wanted you.</li>
+                        </ul>
+                    </div>
+                </div>
+                <p style="font-size: 20px; margin-top: 20px; line-height: 1.6;">Both necessary. Dashboard sees capture clearly and creation barely. Budgets quietly shift toward capture, and creation engine starves. Eighteen months later growth flattens, and nobody knows why.</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">The Big <span class="hero-highlight">Question</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 24px; font-style: italic; margin-bottom: 25px;">Would this sale have happened anyway?</p>
+                <p style="font-size: 22px; margin-bottom: 20px;">Dashboard reports what happened. Doesn't tell you what caused it. Most useful question a sales leader can ask:</p>
+
+                <div class="emphasis-box">
+                    <p>"If we hadn't run that activity, would we still have made that sale?"</p>
+                </div>
+
+                <p style="font-size: 22px; margin-top: 25px; line-height: 1.6;">If the honest answer is "yes, probably," activity wasn't the cause. If the honest answer is "no," activity earned its budget.</p>
+                <p style="font-size: 22px; margin-top: 15px; font-weight: 600;">You can't always answer this precisely. Asking it out loud changes how a team thinks.</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Three rough ways to <span class="hero-highlight">get an honest answer</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="numbered-list">
+                    <li><strong>Test two similar markets.</strong> Run activity in Pune, hold Ahmedabad dark. After three months, compare sales across both, across all channels. The difference is roughly lift.</li>
+                    <li><strong>Look at the long view.</strong> Pull eighteen months of sales and overlay every major activity. Patterns emerge that no single-campaign dashboard shows.</li>
+                    <li><strong>Ask customers.</strong> "How did you hear about us?" in retailer's WhatsApp, at vet's first prescription, in a Q-commerce post-purchase ping. Imperfect, catches what dashboard cannot.</li>
+                </ul>
+                <div class="emphasis-box" style="padding: 20px; margin-top: 30px;">
+                    <p style="font-size: 22px;">Not a new measurement system. A new habit.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide module-slide">
+            <h1 class="hero-content">Thank you.</h1>
+            <div class="animate-in" style="animation-delay: 0.2s; margin-top: 30px;">
+                <p style="font-size: 28px; color: var(--dove-gray); font-style: italic;">Aditya V Jain</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const currentSlideElement = document.getElementById('current-slide');
+
+        document.getElementById('total-slides').textContent = totalSlides;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            currentSlideElement.textContent = currentSlide + 1;
+
+            const animatedElements = slides[currentSlide].querySelectorAll('.animate-in, .animate-scale, .hero-content');
+            animatedElements.forEach((el) => {
+                el.style.animation = 'none';
+                setTimeout(() => { el.style.animation = ''; }, 10);
+            });
+        }
+
+        function nextSlide() { showSlide(currentSlide + 1); }
+        function prevSlide() { showSlide(currentSlide - 1); }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                prevSlide();
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                showSlide(0);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                showSlide(totalSlides - 1);
+            }
+        });
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === ' ' && e.target === document.body) e.preventDefault();
+        });
+
+        showSlide(0);
+    </script>
+</body>
+</html>

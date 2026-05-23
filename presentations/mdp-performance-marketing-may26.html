@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Marketing · Aditya V Jain</title>
+    <meta name="description" content="Performance marketing as arbitrage: the Audience×Creative×Offer×Experience×Economics equation, Dollar Shave Club case study, attribution flaws, and incrementality testing. IIM Kozhikode MDP, May 2026.">
+    <link rel="canonical" href="https://adityavj.com/presentations/mdp-performance-marketing-may26.html">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://adityavj.com/presentations/mdp-performance-marketing-may26.html">
+    <meta property="og:title" content="Performance Marketing — IIM Kozhikode MDP">
+    <meta property="og:description" content="Performance marketing as arbitrage: the Audience×Creative×Offer×Experience×Economics equation, Dollar Shave Club case study, attribution flaws, and incrementality testing. IIM Kozhikode MDP, May 2026.">
+    <meta property="og:image" content="https://adityavj.com/aditya.png">
+    <meta property="og:site_name" content="adityavj.com">
+    <meta property="og:locale" content="en_IN">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Performance Marketing — IIM Kozhikode MDP">
+    <meta name="twitter:description" content="Performance marketing as arbitrage: the Audience×Creative×Offer×Experience×Economics equation, Dollar Shave Club case study, attribution flaws, and incrementality testing. IIM Kozhikode MDP, May 2026.">
+    <meta name="twitter:image" content="https://adityavj.com/aditya.png">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CreativeWork",
+      "name": "Performance Marketing",
+      "author": { "@type": "Person", "name": "Aditya V Jain", "url": "https://adityavj.com/" },
+      "url": "https://adityavj.com/presentations/mdp-performance-marketing-may26.html",
+      "description": "Performance marketing as arbitrage: the Audience×Creative×Offer×Experience×Economics equation, Dollar Shave Club case study, attribution flaws, and incrementality testing. IIM Kozhikode MDP, May 2026."
+    }
+    </script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-J91KSE4133"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-J91KSE4133');
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --iimk-blue: #003366;
+            --iimk-gold: #FFCC00;
+            --dove-gray: #666666;
+            --pure-white: #FFFFFF;
+            --pure-black: #000000;
+            --light-blue: #E6EEF5;
+            --light-gold: #FFF9E6;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--pure-white);
+            color: var(--pure-black);
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 1440px;
+            height: 932px;
+            margin: 0 auto;
+            position: relative;
+            background: var(--pure-white);
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            padding: 60px 80px 60px 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            overflow: hidden;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .slide-indicator {
+            position: fixed;
+            bottom: 30px;
+            right: 40px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            color: var(--dove-gray);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 16px;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        /* Typography */
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 64px;
+            font-weight: 700;
+            color: var(--iimk-blue);
+            margin-bottom: 30px;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 50px;
+            font-weight: 600;
+            color: var(--iimk-blue);
+            margin-bottom: 25px;
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--iimk-gold);
+            margin-bottom: 18px;
+        }
+
+        .subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 28px;
+            font-weight: 400;
+            color: var(--dove-gray);
+            margin-bottom: 40px;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .animate-in { animation: fadeInUp 0.6s ease forwards; }
+        .hero-content { animation: fadeInScale 0.8s ease forwards; position: relative; }
+
+        .hero-highlight {
+            display: inline-block;
+            background: linear-gradient(120deg, var(--light-gold) 0%, var(--light-gold) 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 40%;
+            background-position: 0 85%;
+            padding: 0 8px;
+        }
+
+        /* Content Sections */
+        .content-section { margin-bottom: 35px; margin-top: 20px; }
+
+        .bullet-list { list-style: none; margin-left: 0; }
+        .bullet-list li {
+            font-size: 22px; line-height: 1.7; margin-bottom: 20px;
+            padding-left: 40px; position: relative; color: var(--pure-black);
+        }
+        .bullet-list li:before {
+            content: ''; position: absolute; left: 0; top: 12px;
+            width: 10px; height: 10px; background: var(--iimk-gold); border-radius: 50%;
+        }
+
+        .numbered-list { list-style: none; counter-reset: item; margin-left: 0; }
+        .numbered-list li {
+            font-size: 22px; line-height: 1.7; margin-bottom: 20px;
+            padding-left: 50px; position: relative; color: var(--pure-black);
+        }
+        .numbered-list li:before {
+            content: counter(item); counter-increment: item; position: absolute; left: 0; top: 0;
+            width: 36px; height: 36px; background: var(--iimk-gold); color: var(--iimk-blue);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 20px;
+        }
+
+        /* Title Slide */
+        .title-slide {
+            background: linear-gradient(135deg, var(--iimk-blue) 0%, #004d99 100%);
+            color: white; justify-content: center; align-items: center; text-align: center;
+        }
+        .title-slide h1 { color: white; font-size: 68px; margin-bottom: 30px; }
+        .title-slide .subtitle { color: var(--iimk-gold); font-size: 32px; }
+
+        /* Module Title Slides */
+        .module-slide {
+            background: linear-gradient(135deg, var(--light-blue) 0%, var(--pure-white) 100%);
+            justify-content: center; align-items: center; text-align: center;
+        }
+        .module-slide h1 { font-size: 62px; }
+
+        /* Section Headers */
+        .section-header {
+            background: var(--iimk-blue); color: white; padding: 18px 30px;
+            margin: -60px -80px 35px -80px; font-family: 'Montserrat', sans-serif;
+            font-size: 20px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px;
+        }
+
+        /* Two Column Layout */
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 20px; }
+
+        /* Break Slide */
+        .break-slide {
+            background: linear-gradient(135deg, var(--iimk-gold) 0%, #FFD700 100%);
+            justify-content: center; align-items: center; text-align: center;
+        }
+        .break-slide h1 { color: var(--iimk-blue); font-size: 80px; }
+
+        /* Emphasis Box */
+        .emphasis-box {
+            background: var(--light-gold); border: 3px solid var(--iimk-gold);
+            border-radius: 12px; padding: 35px; margin: 30px 0; text-align: center;
+        }
+        .emphasis-box p { font-size: 24px; line-height: 1.7; color: var(--pure-black); font-weight: 500; }
+
+        /* Framework Box */
+        .framework-box {
+            background: white; border: 3px solid var(--iimk-blue);
+            border-radius: 12px; padding: 30px; margin: 25px 0;
+        }
+        .framework-item { margin-bottom: 22px; }
+        .framework-item strong { color: var(--iimk-blue); font-size: 22px; font-weight: 700; }
+        .framework-item span, .framework-item p { color: var(--pure-black); font-size: 19px; line-height: 1.6; }
+
+        .card-container {
+            background: var(--light-blue);
+            padding: 25px;
+            border-radius: 12px;
+            height: 100%;
+        }
+
+        /* Responsive scaling */
+        @media (max-width: 1440px) {
+            .presentation-container { transform: scale(0.9); transform-origin: top center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="slide-indicator">
+            <span id="current-slide">1</span> / <span id="total-slides">38</span>
+        </div>
+
+        <div class="slide active title-slide">
+            <h1 class="animate-in">Performance Marketing</h1>
+            <p class="subtitle animate-in" style="animation-delay: 0.2s;">IIM Kozhikode MDP | 23-May-2026</p>
+            <div class="animate-in" style="animation-delay: 0.4s; margin-top: 40px;">
+                <p style="font-size: 22px; color: white;">Aditya V Jain</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Orientation</div>
+            <h2 class="hero-content">Course Overview & The Performance <span class="hero-highlight">Mindset</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list">
+                    <li><strong>Performance Marketing is Arbitrage.</strong> Buying attention at price X to generate gross margin Y, where Y > X. This is a financial arbitrage engine, not a brand-awareness program.</li>
+                    <li><strong>The Death of the Traditional Funnel.</strong> Customers do not move linearly through Awareness → Consideration → Purchase. They wander, they leave, they return. Performance marketing catches them wherever they happen to be.</li>
+                    <li><strong>Data-Driven vs. Data-Blind.</strong> Intuition matters for creative hooks. Data dictates the budget allocation. Confusing those two leads to either irrational spending or boring creative.</li>
+                    <li><strong>Principle.</strong> If we cannot track it, measure it, or model its incrementality, it does not exist in this room.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Definition</div>
+            <h2 class="hero-content">Measurable Customer <span class="hero-highlight">Acquisition</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list" style="font-size: 20px;">
+                    <li><strong>You are buying intent, not demographics.</strong> "Urban Pet Owners" is a broad guess. "Actively searching for puppy weaning diets" is a transaction-ready behavioral signal — a person whose wallet is already out.</li>
+                    <li><strong>Acquisition becomes a math equation.</strong> You feed the platform data, it finds the exact user ready to transact, and you pay a predictable price for each new buyer.</li>
+                    <li><strong>CAC turns into a planning variable.</strong> If you know what it costs to acquire one customer, you can back-solve from a quarterly sales target to the exact budget required — and identify the campaigns that will deliver it.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Definition</div>
+            <h2 class="hero-content">Measurable <span class="hero-highlight">Retention</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list" style="font-size: 20px;">
+                    <li><strong>Acquisition is Rented; Retention is Owned.</strong> Acquiring a customer on Meta means you paid Mark Zuckerberg for an introduction. The customer doesn't belong to you yet.</li>
+                    <li><strong>First-purchase margins rarely cover digital acquisition cost in consumer goods.</strong> If CAC is ₹1,500 and first-order margin is ₹500, the customer is ₹1,000 underwater on day one.</li>
+                    <li><strong>Digital profitability lives in the second, third, and fourth purchases.</strong> Internal CRM systems — not Meta — are what force the customer to buy again without paying for another introduction.</li>
+                    <li><strong>The brand-economics consequence.</strong> The brand with the cheapest second purchase wins. CRM, packaging insert, post-purchase email, and reorder reminders are the levers that compound margin.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Definition</div>
+            <h2 class="hero-content">Scalable Distribution of <span class="hero-highlight">Demand</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <h3 style="color: var(--iimk-blue); margin-bottom: 20px;">The Infinite Tap vs. Linear Growth</h3>
+                <ul class="bullet-list">
+                    <li><strong>Physical distribution scales linearly.</strong> To double sales in a city, you add a store, a distributor, a sales rep. Each unit of growth requires a unit of capital infrastructure — quarters or years to build.</li>
+                    <li><strong>Digital demand scales exponentially.</strong> A profitable campaign can be scaled orders of magnitude overnight, reaching a national audience with no new warehouses, hires, or distributor negotiations.</li>
+                    <li><strong>The constraint is unit economics, not capacity.</strong> You scale until ROAS collapses, then stop.</li>
+                    <li style="font-style: italic; color: var(--dove-gray);">A veterinary clinic cannot double its footfall tomorrow morning. Meta spend can.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">The Framework</div>
+            <h2 class="hero-content">The Equation of <span class="hero-highlight">Digital Growth</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="emphasis-box" style="padding: 20px; border-width: 4px; margin-top: 10px;">
+                    <p style="font-size: 26px; color: var(--iimk-blue); font-weight: 700;">Audience × Creative × Offer × Experience × Economics = Scale</p>
+                </div>
+                <ul class="bullet-list" style="margin-top: 30px;">
+                    <li><strong>Multiplicative, not additive.</strong> If any single variable approaches zero, the entire output collapses regardless of how strong the others are. A perfect offer with a broken checkout is zero. A brilliant creative pointed at the wrong audience is zero.</li>
+                    <li><strong>Performance marketing is the orchestration of these five variables</strong> — not the mastery of any one of them in isolation.</li>
+                    <li><strong>Ads cannot fix bad products, poor pricing, or broken delivery mechanics. They only scale them.</strong> The equation is unforgiving in both directions: it amplifies what works, and it amplifies what doesn't.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Variable 1</div>
+            <h2 class="hero-content">Right Audience — <span class="hero-highlight">Beyond Demographics</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list" style="font-size: 20px;">
+                    <li><strong>Demographics describe people. Frustrations and behaviors describe customers.</strong> "Urban men 25–40" is a guess about who might buy. "People who abandon razor cartridge subscriptions every three months due to price" is a customer already in motion.</li>
+                    <li><strong>Behavioral signals beat demographic profiles</strong> because they describe what the person is actively doing — not who they statistically are. Search history, abandoned carts, repeat category purchases, and content engagement are far higher resolution than age and income.</li>
+                    <li><strong>The three high-resolution targeting inputs:</strong> unmet need, active intent, and articulated frustration. Each one tells you a person is ready to consider a switch — which is the only moment that matters for paid acquisition.</li>
+                    <li><strong>The targeting question is not "who are they?"</strong> It is "what problem are they trying to solve right now, and how do I show up at that exact moment?"</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Variable 2</div>
+            <h2 class="hero-content">Right Creative — <span class="hero-highlight">The New Targeting Layer</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list" style="font-size: 20px;">
+                    <li><strong>The first 3 seconds decide whether the ad runs again.</strong> In interruption-based media, weak hooks get suppressed by the algorithm before they reach scale. The platform punishes boring before any customer does.</li>
+                    <li><strong>Creative is the new targeting layer.</strong> Platforms find more customers like the ones who engaged — meaning the creative determines who the algorithm goes hunting for. Bad creative trains the algorithm on the wrong audience and silently destroys campaign performance.</li>
+                    <li><strong>Pattern interrupt, value prop, trust — in that order.</strong> Stop the scroll, deliver the proposition, signal credibility. All three within 15 seconds. Anything longer is for an audience that already wanted to listen.</li>
+                    <li><strong>Creative is the only lever where a small team can compete with a giant.</strong> Targeting is commoditized — the algorithm does it. Media buying is commoditized. Creative is where asymmetric returns still live.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Variable 3</div>
+            <h2 class="hero-content">Right Offer — <span class="hero-highlight">The One-Sentence Test</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list" style="font-size: 20px;">
+                    <li><strong>The offer is what the customer is being asked to say yes to.</strong> Not the brand. Not the product. Not the creative. The exact transaction proposition on the table at the moment of decision.</li>
+                    <li><strong>The one-sentence test.</strong> If your offer requires a paragraph to explain, the offer is the problem — not the ad, not the targeting, not the creative. Most failing campaigns die from offer ambiguity that the creative cannot rescue.</li>
+                    <li><strong>A great offer removes friction the customer did not realize they were tolerating</strong> — price friction, decision friction, logistics friction, commitment friction. Friction is the silent default; removing it feels like magic to the customer.</li>
+                    <li><strong>Marketing teams chronically over-invest in creative and under-invest in offer construction.</strong> A mediocre creative on a great offer outperforms a great creative on a mediocre offer. Every time.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Variable 4</div>
+            <h2 class="hero-content">Right Experience — <span class="hero-highlight">Everything After the Click</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list" style="font-size: 20px;">
+                    <li><strong>Experience is every interaction after the click</strong> — landing page, checkout, packaging, delivery, support, return policy. It is rarely owned by the marketing team, which is why it usually breaks at the seams between departments.</li>
+                    <li><strong>A great ad attached to a broken experience accelerates decline, not growth.</strong> You are paying to introduce more customers to a flawed product faster. Negative word-of-mouth scales as ruthlessly as positive.</li>
+                    <li><strong>Word-of-mouth either compounds growth or kills it.</strong> Product quality determines which. No amount of paid acquisition outruns a 2-star average review or a viral complaint thread.</li>
+                    <li><strong>Marketing's leverage stops at the click; the company's economics begin there.</strong> Cross-functional ownership of the post-click journey is non-negotiable for any company that runs paid media at scale.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Variable 5</div>
+            <h2 class="hero-content">Right Unit Economics — <span class="hero-highlight">The Math Constraint</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list" style="font-size: 20px;">
+                    <li><strong>Ads cannot fix bad unit economics. They only scale them.</strong> A campaign that loses money per customer loses more money when the budget doubles. The arithmetic is unforgiving.</li>
+                    <li><strong>The CAC payback window is the discipline.</strong> How many orders, and how many months, until acquisition cost is recovered? If the answer is "we'll figure it out from LTV later," the business is running on faith, not math.</li>
+                    <li><strong>Category structure determines feasible acquisition spend.</strong> Subscription, replenishment, and high-frequency categories permit aggressive paid acquisition because retention does the heavy lifting. One-time-purchase or low-margin categories don't — the math does not bend to ambition.</li>
+                    <li><strong>The variable that determines scale is not the budget; it is the contribution margin per customer.</strong> Fix that first. Then scale.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide module-slide">
+            <div class="section-header" style="background: var(--iimk-gold); color: var(--iimk-blue);">Case Study</div>
+            <h1 class="hero-content">DSC — A Worked Example of All Five</h1>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="framework-box" style="text-align: left; max-width: 900px; margin: 30px auto;">
+                    <div class="framework-item">
+                        <strong>2012:</strong> <span>A viral launch video drove 12,000 orders in 48 hours — from a brand nobody had heard of two days earlier.</span>
+                    </div>
+                    <div class="framework-item">
+                        <strong>2017:</strong> <span>Roughly 50% share of the US online razor market, acquired by Unilever for $1 billion.</span>
+                    </div>
+                    <p style="margin-top: 20px; font-weight: 500;">Dollar Shave Club executed all five variables with extreme discipline at launch. The next five slides walk through each deliberate choice.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">DSC Applied</div>
+            <h2 class="hero-content">Right <span class="hero-highlight">Audience</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list" style="font-size: 20px;">
+                    <li><strong>DSC did not target "Men 18–35."</strong> Plenty of men in that demographic were perfectly content buying Gillette every six weeks without complaint. Demographics would have wasted the budget.</li>
+                    <li><strong>DSC targeted three specific frustrations:</strong> (1) the $20+ price of multi-blade cartridges, (2) the locked plastic cabinet at the pharmacy that required a store employee to unlock, (3) feature inflation — the vibrating handle, the five-blade arms race, the obvious upselling.</li>
+                    <li><strong>Each frustration translated directly into a behavioral signal</strong> that could be targeted in advertising — and each one became a hook in the creative.</li>
+                    <li><strong>The frustration framing did the work of three departments at once.</strong> It defined the audience, scripted the creative, and shaped the offer. One insight cascaded into a complete go-to-market.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">DSC Applied</div>
+            <h2 class="hero-content">Right <span class="hero-highlight">Creative</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list" style="font-size: 20px;">
+                    <li><strong>Pattern Interrupt.</strong> Every razor ad before DSC was hyper-masculine, slow-motion, glossy. DSC opened with a deadpan founder in a warehouse holding a machete. The visual language broke the category's pattern within the first second.</li>
+                    <li><strong>Creative as Value Prop Delivery.</strong> Every joke in the 1:33 video was a value prop in disguise. "Do you think your razor needs a vibrating handle?" is a price objection wrapped in comedy. The humour was the medium; the economics were the message.</li>
+                    <li><strong>Founder-Led Trust.</strong> Michael Dubin was a trained improv comedian before he was a CEO. The delivery was the moat — competitors could copy the $1 price point, but not the comedic timing of a specific human standing in a specific warehouse.</li>
+                    <li><strong>The production was deliberately scrappy</strong> — a near-single-take shoot in the company's own warehouse, written and performed by the founder. The constraint forced craft over gloss; an unlimited production budget would likely have produced a worse ad.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">DSC Applied</div>
+            <h2 class="hero-content">Right <span class="hero-highlight">Offer</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 24px; margin-bottom: 25px;"><strong>DSC's offer in one sentence:</strong> "A great razor shipped to your door for $1 a month."</p>
+                <div class="framework-box">
+                    <h3 style="color: var(--iimk-blue); margin-bottom: 15px;">Three frictions removed simultaneously:</h3>
+                    <ul class="bullet-list" style="margin-bottom: 0;">
+                        <li><strong>Price friction</strong> — $1 vs. $20+ for branded cartridges.</li>
+                        <li><strong>Decision friction</strong> — no choice to make each time; the next month's blade just arrives.</li>
+                        <li><strong>Retail friction</strong> — no trip to the pharmacy, no locked cabinet, no waiting for an employee with a key.</li>
+                    </ul>
+                </div>
+                <p style="font-size: 22px; margin-top: 25px;"><strong>The price was not the offer; the convenience was.</strong> $1/month was the bait. Subscription was the financial engine. Removing the retail trip was the actual product.</p>
+                <p style="font-size: 20px; font-style: italic; color: var(--dove-gray); margin-top: 15px;">The offer was repeatable by any customer after watching the video once. That is the one-sentence test, passed.</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">DSC Applied</div>
+            <h2 class="hero-content">Right <span class="hero-highlight">Experience</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list" style="font-size: 20px;">
+                    <li><strong>The landing page was three-tier pricing, one CTA, no friction.</strong> Most subscription startups in 2012 had multi-page sign-up flows; DSC reduced the entire decision to a single screen.</li>
+                    <li><strong>The product was defensibly good.</strong> Blades were sourced from Dorco, a Korean OEM with decades of manufacturing experience. The blades were not the best on the market — but they were close enough that no customer felt cheated. "Good enough" was a deliberate, defensible choice.</li>
+                    <li><strong>The packaging and unboxing were deliberately under-designed</strong> — simple, masculine, in on the joke. This matched the creative voice, so the post-purchase experience reinforced the brand promise instead of contradicting it.</li>
+                    <li><strong>On-time monthly delivery was the actual product.</strong> Subscription consumer goods live or die on this metric. DSC executed it from launch.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">DSC Applied</div>
+            <h2 class="hero-content">Right Unit <span class="hero-highlight">Economics</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list" style="font-size: 20px;">
+                    <li><strong>$1/month was a customer acquisition price, not a profit-per-customer figure.</strong> The first shipment lost money on a unit basis. DSC was buying the relationship, not the transaction.</li>
+                    <li><strong>Subscription was the financial foundation that made aggressive paid acquisition mathematically defensible.</strong> Without auto-renewal, the model collapses. With it, every retained customer became a 12+ month annuity stream of margin.</li>
+                    <li><strong>The math was honest about retention.</strong> DSC obsessed over churn from day one — because the entire economic case hinged on customers staying past the month where contribution margin turned positive.</li>
+                    <li><strong>The Unilever exit at $1B in 2017</strong> validated the math. The asset Unilever bought was not the razors; it was the recurring revenue base built on those acquisition economics.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Metrics</div>
+            <h2 class="hero-content">The Core <span class="hero-highlight">Mathematics</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="two-column">
+                    <div class="card-container">
+                        <div class="framework-item">
+                            <strong>CPM (Cost Per Mille):</strong> <span>Cost per 1,000 impressions. The base cost of media real estate.</span>
+                        </div>
+                        <div class="framework-item">
+                            <strong>CTR (Click-Through Rate):</strong> <span>The gauge of creative resonance.</span>
+                        </div>
+                        <div class="framework-item">
+                            <strong>CPC (Cost Per Click):</strong> <span>The derivative of CPM and CTR.</span>
+                        </div>
+                        <div class="framework-item">
+                            <strong>CR (Conversion Rate):</strong> <span>The efficacy of your landing page or app checkout.</span>
+                        </div>
+                    </div>
+                    <div class="emphasis-box" style="margin-top: 0; display: flex; flex-direction: column; justify-content: center;">
+                        <h3 style="color: var(--iimk-blue); font-size: 24px; margin-bottom: 15px;">The compounding math</h3>
+                        <p style="font-size: 20px;">If CPM is ₹200 and CTR is 1%, CPC is ₹20.</p>
+                        <p style="font-size: 20px; margin-top: 15px;">Doubling CTR to 2% through a better creative hook <strong>halves the traffic cost</strong> without touching the budget.</p>
+                        <p style="font-size: 18px; color: var(--dove-gray); margin-top: 20px; font-style: italic;">Performance marketers spend their days manipulating these four levers.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Economics</div>
+            <h2 class="hero-content">The Unit Economics <span class="hero-highlight">Trap</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="framework-box" style="padding: 20px;">
+                    <div class="framework-item" style="margin-bottom: 15px;">
+                        <strong>CAC (Customer Acquisition Cost):</strong> <span>Total Marketing Spend ÷ New Customers Acquired. The price you paid to bring one new buyer into the funnel.</span>
+                    </div>
+                    <div class="framework-item" style="margin-bottom: 15px;">
+                        <strong>AOV (Average Order Value):</strong> <span>The immediate cushion against acquisition costs. If AOV is ₹1,200 and Cost of Goods is ₹600, contribution per order is ₹600.</span>
+                    </div>
+                    <div class="framework-item" style="margin-bottom: 0;">
+                        <strong>LTV (Lifetime Value):</strong> <span>The net present value of all margin earned from that customer across their lifespan.</span>
+                    </div>
+                </div>
+
+                <div class="emphasis-box" style="margin-top: 20px; padding: 20px;">
+                    <h3 style="color: #990000; font-size: 22px;">The Trap</h3>
+                    <p style="font-size: 19px;">If CAC is ₹1,000 and first-order contribution is ₹600, the customer is ₹400 underwater on day one. Relying on LTV to break even 12 months down the line requires heavy cash reserves.</p>
+                </div>
+                <p style="font-size: 20px; font-weight: 600; text-align: center; margin-top: 15px;">Aim for first-purchase contribution margin profitability wherever the category permits. LTV is generous in theory and dangerous in practice.</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">The Cost of a <span class="hero-highlight">Puppy</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 24px; color: var(--dove-gray); margin-bottom: 25px; font-weight: 600;">Discussion</p>
+                <div class="emphasis-box">
+                    <p><strong>Scenario:</strong> A localized digital campaign acquires a new Golden Retriever puppy owner. The CAC is ₹1,500. The margin on their first purchase of Maxi Puppy is ₹500.</p>
+                </div>
+                <div class="emphasis-box" style="background: var(--light-blue); border-color: var(--iimk-blue);">
+                    <p style="font-size: 32px; color: var(--iimk-blue);"><strong>Question:</strong> As the P&L owner, do you kill this campaign?</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Execution Velocity</div>
+            <h2 class="hero-content">Feedback Loops Are <span class="hero-highlight">Much Faster</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list" style="font-size: 20px;">
+                    <li><strong>Offline trade marketing takes months to measure effectiveness.</strong> Physical retail moves at the speed of logistics — sell-through reports come in weeks after the promotion ends, and you've already committed to the next quarter's plan.</li>
+                    <li><strong>Digital performance provides ruthless feedback in 48 hours.</strong> Digital moves at the speed of the algorithm. If an offer is bad, the market tells you immediately by not clicking. If it's working, the same loop tells you to scale.</li>
+                    <li><strong>Traditional quarterly planning cycles are too slow for digital execution.</strong> The window between "campaign launched" and "campaign judged" has collapsed from a quarter to a Tuesday afternoon.</li>
+                </ul>
+                <div class="emphasis-box" style="padding: 20px; margin-top: 30px;">
+                    <p style="font-size: 22px;">The cultural shift required is bigger than the technical one. Organizations used to quarterly reviews struggle to act on weekly signals.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Platform Incentives</div>
+            <h2 class="hero-content">Platforms Optimize for <span class="hero-highlight">Spend, Not Profitability</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list" style="font-size: 20px;">
+                    <li><strong>CPM Incentive.</strong> Platforms prefer charging per impression — they get paid for showing your ad whether it converts or not. The more impressions Meta and Google sell, the more revenue they earn.</li>
+                    <li><strong>CPA/CPT Incentive.</strong> You, the advertiser, only survive on Cost Per Acquisition or Cost Per Transaction. Your goal is profitable revenue; the platform's goal is to spend your daily budget. Those two objectives frequently collide.</li>
+                    <li><strong>The trust problem with "automated bidding."</strong> It works for the platform first and your P&L second. The black-box optimizes to whatever objective the platform's incentives reward — usually clicks and conversions claimed inside the platform's own attribution window.</li>
+                </ul>
+                <p style="font-size: 24px; font-weight: 600; margin-top: 30px; text-align: center; color: var(--iimk-blue);">You cannot blindly trust an agency that blindly trusts the algorithm.</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Scaling Dynamics</div>
+            <h2 class="hero-content">The Paradox of <span class="hero-highlight">Scale</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 24px; margin-bottom: 25px;">As daily ad budget increases, efficiency (ROAS) will almost certainly decline.</p>
+
+                <div class="two-column">
+                    <div class="card-container" style="background: var(--light-blue); text-align: center;">
+                        <h3 style="color: var(--iimk-blue);">Scenario A</h3>
+                        <p style="font-size: 22px; margin-top: 15px;">Spend <strong>₹10K</strong></p>
+                        <p style="font-size: 22px;">at 3.0x ROAS</p>
+                        <p style="font-size: 24px; font-weight: 700; color: var(--iimk-blue); margin-top: 15px;">= ₹30K Revenue</p>
+                        <p style="font-size: 20px; color: var(--dove-gray);">(₹20K Margin)</p>
+                    </div>
+                    <div class="card-container" style="background: var(--light-gold); text-align: center;">
+                        <h3 style="color: var(--iimk-gold);">Scenario B</h3>
+                        <p style="font-size: 22px; margin-top: 15px;">Spend <strong>₹100K</strong></p>
+                        <p style="font-size: 22px;">at 1.8x ROAS</p>
+                        <p style="font-size: 24px; font-weight: 700; color: var(--iimk-gold); margin-top: 15px;">= ₹180K Revenue</p>
+                        <p style="font-size: 20px; color: var(--dove-gray);">(₹80K Margin)</p>
+                    </div>
+                </div>
+
+                <ul class="bullet-list" style="margin-top: 30px; font-size: 20px;">
+                    <li><strong>The lesson:</strong> Absolute margin dollars quadrupled in Scenario B even though the ratio fell. You take margin dollars to the bank, not ratios.</li>
+                    <li>Senior executives often choke growth by demanding a fixed, high ROAS — protecting a vanity metric at the cost of cash profit.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Channel Shifts</div>
+            <h2 class="hero-content">Consumer Convenience is <span class="hero-highlight">Redefining Loyalty</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list" style="font-size: 22px;">
+                    <li><strong>Friction Kills Loyalty.</strong> Convenience is now a product feature, on equal footing with price, quality, and brand.</li>
+                    <li><strong>A 10-year relationship with a local retailer loses to a 10-minute Zepto delivery.</strong> A customer might love their neighborhood vet, but they will not drive in Bengaluru traffic at 8 PM for a commodity bag of kibble when a competitor brand is one tap away.</li>
+                    <li><strong>Consumers will switch brands if their primary brand is too hard to buy.</strong> Brand loyalty was the safety net of legacy CPG. Q-commerce has made it conditional on being available within ten minutes.</li>
+                </ul>
+                <div class="emphasis-box" style="padding: 20px; margin-top: 30px;">
+                    <p style="font-size: 24px; font-style: italic;">Convenience is a one-way ratchet. Once experienced, it cannot be un-experienced.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Power Dynamics</div>
+            <h2 class="hero-content">Traditional Trade is Losing Control <span class="hero-highlight">to Algorithms</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="framework-box">
+                    <div class="framework-item">
+                        <strong>Traditional.</strong> <span>Regional distributors gatekept access to the consumer. They dictated terms because they owned the geography — the route, the shop, the shelf placement.</span>
+                    </div>
+                    <div class="framework-item" style="margin-top: 20px;">
+                        <strong>Modern.</strong> <span>Aggregators and delivery apps own the final mile. The algorithm decides who appears at the top of the search results, regardless of what trade margin you paid.</span>
+                    </div>
+                </div>
+                <ul class="bullet-list" style="margin-top: 25px; font-size: 20px;">
+                    <li><strong>Digital shelf space is won by conversion rates and click-throughs.</strong> You cannot buy a permanent end-cap on Swiggy Instamart. The algorithm demotes any listing that doesn't convert — including yours.</li>
+                    <li style="font-weight: 600;">The hardest pill for traditional sales leaders: the algorithm does not care about a 30-year relationship.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">The Algorithmic <span class="hero-highlight">Shelf</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 24px; color: var(--dove-gray); margin-bottom: 25px; font-weight: 600;">Discussion</p>
+                <div class="emphasis-box">
+                    <p><strong>Scenario:</strong> You offer Blinkit a massive trade margin to list your product. A competitor bids aggressively on CPC ads for the exact search term "puppy food" inside the Blinkit app.</p>
+                </div>
+                <div class="emphasis-box" style="background: var(--light-blue); border-color: var(--iimk-blue);">
+                    <p style="font-size: 32px; color: var(--iimk-blue);"><strong>Question:</strong> Who actually owns the distribution in this scenario?</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Media Types</div>
+            <h2 class="hero-content">Google vs. Meta — <span class="hero-highlight">Intent vs. Interruption</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="two-column" style="gap: 20px;">
+                    <div class="card-container" style="padding: 25px;">
+                        <h3 style="color: var(--iimk-blue); font-size: 28px;">Intent-Based</h3>
+                        <p style="font-weight: 600; color: var(--dove-gray); margin-bottom: 15px;">Search / Google</p>
+                        <p style="font-size: 18px; line-height: 1.6;"><strong>Capturing existing demand.</strong> The customer has already decided they want something and typed it into the search bar.</p>
+                        <p style="font-size: 18px; line-height: 1.6; margin-top: 10px;">High conversion rates, but hard-capped by total search volume — you cannot grow past the number of people actually searching.</p>
+                    </div>
+                    <div class="card-container" style="background: var(--light-gold); padding: 25px;">
+                        <h3 style="color: var(--iimk-gold); font-size: 28px;">Interruption-Based</h3>
+                        <p style="font-weight: 600; color: var(--dove-gray); margin-bottom: 15px;">Social / Meta</p>
+                        <p style="font-size: 18px; line-height: 1.6;"><strong>Manufacturing new demand.</strong> The customer wasn't looking for anything; the ad interrupts their feed and creates the want.</p>
+                        <p style="font-size: 18px; line-height: 1.6; margin-top: 10px;">Highly scalable in absolute terms, but heavily reliant on creative pattern-interruption — a bland hook collapses the entire economics.</p>
+                    </div>
+                </div>
+                <div class="framework-box" style="padding: 20px; margin-top: 20px;">
+                    <p style="font-size: 20px;"><strong>The practical implication.</strong> Search captures the floor. Social builds the ceiling. To grow past your search ceiling, you must pivot to interruption-based media, and accept the higher creative risk that comes with it.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Retail Media</div>
+            <h2 class="hero-content">Amazon, Blinkit & Zepto — <span class="hero-highlight">The Digital Shelf</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list" style="font-size: 20px;">
+                    <li><strong>Marketplaces are no longer just distributors; they are advertising platforms.</strong> The platform makes money two ways now — a cut of every sale, and the ad spend brands pay to win visibility on the platform itself.</li>
+                    <li><strong>Bidding for the Final Mile.</strong> The user is already inside the "store" with their wallet out. Whoever wins the top slot for "puppy food" inside the Blinkit app wins the transaction — regardless of brand strength outside the app.</li>
+                    <li><strong>Bottom-of-funnel, high-intent conversion.</strong> Conversion rates on retail-media ads are dramatically higher than on Meta or Google because the intent is already present at click time.</li>
+                    <li><strong>The non-participation tax.</strong> If you do not buy ads on Blinkit, your competitor will buy the top slot for your own brand's search term. Free organic ranking on these platforms is collapsing.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="hero-content">Search <span class="hero-highlight">Cannibalization</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 24px; color: var(--dove-gray); margin-bottom: 25px; font-weight: 600;">Discussion</p>
+                <div class="emphasis-box">
+                    <p><strong>Scenario:</strong> We spend ₹2 Lakhs on Google Search ads bidding on our exact brand name "Royal Canin Maxi". The dashboard shows a 15x ROAS.</p>
+                </div>
+                <div class="emphasis-box" style="background: var(--light-blue); border-color: var(--iimk-blue);">
+                    <p style="font-size: 30px; color: var(--iimk-blue);"><strong>Question:</strong> Are we generating new business, or just taxing our own organic traffic?</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Collaborative Ads</div>
+            <h2 class="hero-content">Meta Collaborative Ads <span class="hero-highlight">(CPAS) Reality</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list" style="font-size: 20px;">
+                    <li><strong>How CPAS actually works.</strong> The brand funds the ad spend. The retail partner (Amazon, Blinkit, Zepto, etc.) provides the live catalog and the checkout. Meta serves the ad to a high-intent user; the click drives them directly into the retailer's app or product page.</li>
+                    <li><strong>Requires real-time API integration.</strong> A live product feed connecting brand inventory to retailer SKUs is mandatory. CPAS does not work for an independent neighborhood pet shop or a regional distributor without API capability.</li>
+                </ul>
+                <div class="emphasis-box" style="padding: 25px; margin-top: 30px;">
+                    <p style="font-size: 22px;"><strong>The strategic implication.</strong> Choosing to run CPAS is implicitly choosing to fund digital platforms over offline general trade. The budget conversation and the channel conflict conversation are now the same conversation.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Channel Evolution</div>
+            <h2 class="hero-content">Q-Commerce is the <span class="hero-highlight">New General Trade</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list" style="font-size: 20px;">
+                    <li><strong>The 10-Minute Expectation.</strong> Once a consumer in Bengaluru or Mumbai has experienced 10-minute delivery, the "I'll pick it up tomorrow from the kirana" mental model breaks. The expectation transfers to every other category, including pet food.</li>
+                    <li><strong>Platforms like Swiggy Instamart and Zepto are digitized local retail.</strong> Same role as the corner grocery store — geography-bound, fast, ranged for what locals actually buy — but with algorithmic shelf placement and aggregated demand data the kirana never had.</li>
+                    <li><strong>Stop treating Q-commerce as an "alternative" channel.</strong> For urban India, it is the primary channel for impulse and convenience purchases. Ten years ago, the battleground was shelf space in a physical store. Today, it is digital shelf space within a 10-minute delivery radius.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Friction Penalties</div>
+            <h2 class="hero-content">The Competitor <span class="hero-highlight">Tax</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list" style="font-size: 20px;">
+                    <li><strong>You cannot engineer consumer inconvenience.</strong> A customer who clicks your ad has expressed live intent. Whatever happens after the click decides the sale — and the only thing you control is where the click lands.</li>
+                    <li><strong>The trap of protecting offline distribution.</strong> If you force a customer to drive 1.5km to a physical retailer to protect an offline relationship, you are betting that the customer's loyalty is stronger than their phone screen. It usually isn't.</li>
+                    <li><strong>The competitor doesn't care about your channel politics.</strong> A competitor will offer a 10-minute Zepto delivery link directly below your ad. They capture the sale you generated demand for. You pay for the awareness; they collect the revenue.</li>
+                    <li><strong>Performance marketing must route intent to the path of least friction</strong> — or you lose the customer to someone who will.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">O2O Solutions</div>
+            <h2 class="hero-content">Bridging the <span class="hero-highlight">Offline Gap</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <div class="framework-box">
+                    <h3 style="color: var(--iimk-blue); margin-bottom: 15px; font-size: 24px;">Local Inventory Ads (LIAs)</h3>
+                    <p>Google Local Inventory Ads help retailers reach nearby shoppers searching on Google or Maps. Ads show product availability, price, and "In Stock" status for local stores. Retailers need to sync POS inventory with Google Merchant Center in real time. Clicking the ad opens a Google-hosted storefront with inventory details, store hours, and directions.</p>
+                </div>
+
+                <div class="framework-box">
+                    <h3 style="color: var(--iimk-blue); margin-bottom: 15px; font-size: 24px;">Closed-loop WhatsApp vouchers</h3>
+                    <p>Generate a unique code through a digital ad. The customer redeems it at the offline store. The QR scan closes the loop and proves the campaign drove the footfall.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Measurement</div>
+            <h2 class="hero-content">The Many Ways to Measure <span class="hero-highlight">ROI</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list" style="font-size: 18px; line-height: 1.5;">
+                    <li style="margin-bottom: 15px;"><strong>ROAS (Return on Ad Spend).</strong> Ad Revenue ÷ Ad Spend, reported by each platform inside its own dashboard. Useful for comparing creatives or audiences within a single platform. Structurally inflated: every platform claims credit for the same conversions.</li>
+                    <li style="margin-bottom: 15px;"><strong>MER (Media Efficiency Ratio).</strong> Total revenue ÷ total ad spend, calculated from your own P&L instead of platform dashboards. The corrective to platform self-reporting. MER ignores the credit fight and asks: how much revenue arrived, against how much ad spend went out, across the entire portfolio.</li>
+                    <li style="margin-bottom: 15px;"><strong>Incrementality Testing.</strong> Turn ad spend off in one geography, leave it on in a comparable one. Measure the actual revenue gap. The only method that answers the causal question: would this sale have happened anyway?</li>
+                    <li style="margin-bottom: 15px;"><strong>Marketing Mix Modeling (MMM).</strong> Top-down statistical analysis over 18–24 months of spend and revenue data. The standard at enterprise scale, where platform-level attribution becomes too noisy to trust.</li>
+                </ul>
+                <p style="font-style: italic; color: var(--dove-gray); font-size: 18px; text-align: center; margin-top: 15px;">The four methods answer progressively more honest questions — from "what does the platform claim?" to "what actually caused the purchase?"</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Attribution Flaws</div>
+            <h2 class="hero-content">Attribution Creates <span class="hero-highlight">Misleading Certainty</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list" style="font-size: 22px;">
+                    <li><strong>Dashboards provide exact decimal points that are often fictional.</strong> Digital marketing looks like perfect science because of how the data is displayed. It is not.</li>
+                    <li><strong>Meta and Google inherently want to take credit for organic sales.</strong> If a customer was already going to buy and happened to click a Google ad on the way to checkout, Google claims 100% of the revenue.</li>
+                    <li><strong>Last-click attribution ignores the actual customer journey.</strong> A real purchase decision involves brand awareness, word-of-mouth, repeated exposure, and finally a search. Last-click gives full credit to the final step and ignores everything that primed it.</li>
+                </ul>
+                <div class="emphasis-box" style="padding: 20px; margin-top: 30px;">
+                    <p style="font-size: 22px;">The dashboard reports what happened at the moment of click. It cannot tell you what caused the purchase.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">Double Counting</div>
+            <h2 class="hero-content">The Attribution Illusion & <span class="hero-highlight">Double Counting</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <p style="font-size: 22px; margin-bottom: 25px;"><strong>The Math Deficit.</strong> Every platform takes credit for the same conversion. A user who clicks a Meta ad, leaves, then searches Google to buy tomorrow appears as a sale in both Meta's and Google's dashboards.</p>
+
+                <div class="two-column">
+                    <div class="card-container" style="background: #FFF0F0;">
+                        <h3 style="color: #990000;">The reported math</h3>
+                        <p style="font-size: 18px; margin-top: 15px;">Meta claims 50</p>
+                        <p style="font-size: 18px;">+ Google claims 40</p>
+                        <p style="font-size: 18px;">+ Zepto Ads claims 30</p>
+                        <p style="font-size: 22px; font-weight: 700; margin-top: 10px;">= 120 reported sales</p>
+                    </div>
+                    <div class="card-container" style="background: var(--light-blue);">
+                        <h3 style="color: var(--iimk-blue);">The actual math</h3>
+                        <p style="font-size: 18px; margin-top: 15px;">Warehouse shipments</p>
+                        <p style="font-size: 22px; font-weight: 700; color: var(--iimk-blue); margin-top: 10px;">= 75 sales</p>
+                        <p style="font-size: 18px; margin-top: 15px; color: var(--dove-gray);">Reported revenue overstates reality by 60%.</p>
+                    </div>
+                </div>
+
+                <ul class="bullet-list" style="margin-top: 25px; font-size: 20px;">
+                    <li><strong>The 45-sale gap is structural double-counting.</strong> Each platform is incentivized to claim credit. None has incentive to reconcile.</li>
+                    <li>If you run the business off platform dashboards, you will go bankrupt while celebrating your ROAS.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-header">True Measurement</div>
+            <h2 class="hero-content">Testing Methodology — <span class="hero-highlight">Incrementality</span></h2>
+            <div class="content-section animate-in" style="animation-delay: 0.2s;">
+                <ul class="bullet-list" style="font-size: 20px;">
+                    <li><strong>The only question that matters.</strong> "Would this sale have happened anyway?" If the customer was going to buy regardless of the ad, the ad spend is not driving incremental revenue — it is buying credit for a sale you would have got for free.</li>
+                    <li><strong>Why platform A/B tests fall short.</strong> They measure correlation, not causation. The platform splits an audience and tells you which creative performed better — but cannot tell you whether either group would have bought anyway.</li>
+                    <li><strong>Geo-Lift Testing.</strong> Turn ad spend off in one isolated geography (Pune) and double down in a comparable one (Hyderabad). Two weeks later, compare total company revenue in each region. The gap is the true incremental lift, untainted by attribution credit fights.</li>
+                </ul>
+                <div class="emphasis-box" style="padding: 20px; margin-top: 25px;">
+                    <p style="font-size: 22px;"><strong>Incrementality is the honest measure</strong> of whether marketing spend is creating value.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide module-slide">
+            <div class="section-header" style="background: var(--pure-white); color: var(--iimk-blue);">Macro Measurement</div>
+            <h1 class="hero-content" style="font-size: 52px; margin-bottom: 40px;">Marketing Mix Modeling (MMM)</h1>
+            <div class="content-section animate-in" style="text-align: left; max-width: 1000px; margin: 0 auto;" style="animation-delay: 0.2s;">
+                <ul class="bullet-list" style="font-size: 18px; line-height: 1.6;">
+                    <li style="margin-bottom: 15px;"><strong>High-scale enterprise tracking.</strong> When ad spend crosses a certain threshold — typically tens of crores per year — pixel-level tracking becomes both noisy and insufficient. MMM is the standard solution at that scale.</li>
+                    <li style="margin-bottom: 15px;"><strong>Top-down statistical analysis.</strong> Regression models estimate the impact of each marketing input — TV, print, search, social, q-commerce — on total revenue. The model is built on aggregated spend data, pricing, promotion timing, and seasonality. No cookies, no pixels, no platform self-reporting.</li>
+                    <li style="margin-bottom: 15px;"><strong>The 24-month view.</strong> MMM looks at the mathematical relationship between historical spend patterns (e.g., a Meta spend spike in October) and total revenue movement (e.g., the November sales lift). It surfaces the channels actually driving the P&L versus the channels claiming credit.</li>
+                </ul>
+                <div class="emphasis-box" style="padding: 20px; border-width: 2px;">
+                    <p style="font-size: 20px;"><strong>MMM is slower, less granular, and far more honest</strong> than platform attribution.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const currentSlideElement = document.getElementById('current-slide');
+
+        document.getElementById('total-slides').textContent = totalSlides;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            currentSlideElement.textContent = currentSlide + 1;
+
+            const animatedElements = slides[currentSlide].querySelectorAll('.animate-in, .animate-scale, .hero-content');
+            animatedElements.forEach((el) => {
+                el.style.animation = 'none';
+                setTimeout(() => { el.style.animation = ''; }, 10);
+            });
+        }
+
+        function nextSlide() { showSlide(currentSlide + 1); }
+        function prevSlide() { showSlide(currentSlide - 1); }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                prevSlide();
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                showSlide(0);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                showSlide(totalSlides - 1);
+            }
+        });
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === ' ' && e.target === document.body) e.preventDefault();
+        });
+
+        showSlide(0);
+    </script>
+</body>
+</html>
