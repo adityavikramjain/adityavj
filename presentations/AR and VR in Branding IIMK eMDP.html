@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AR & VR in Branding: Strategic Frameworks</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Playfair+Display:wght@700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          'canvas': '#FAFAFA',
+          'canvas-dark': '#1A1A1A',
+          'ink': {
+            primary: '#1A1A2E',
+            secondary: '#5A5A6A',
+            tertiary: '#8A8A9A',
+            inverse: '#FAFAFA',
+          },
+          'accent': '#FF4500',
+        },
+        fontFamily: {
+          'display': ['"Playfair Display"', 'serif'],
+          'body': ['Satoshi', 'sans-serif'],
+          'mono': ['"JetBrains Mono"', 'monospace'],
+          'numeric': ['"Space Grotesk"', 'sans-serif'],
+        },
+        fontSize: {
+          'title-dark': ['72px', { lineHeight: '1.1', fontWeight: '700' }],
+          'title-light': ['48px', { lineHeight: '1.2', fontWeight: '700' }],
+          'subtitle': ['22px', { lineHeight: '1.4', fontWeight: '500' }],
+          'body': ['19px', { lineHeight: '1.6', fontWeight: '500' }],
+          'tile-heading': ['20px', { lineHeight: '1.3', fontWeight: '600' }],
+          'prompt': ['17px', { lineHeight: '1.5', fontWeight: '400' }],
+          'watermark': ['16px', { lineHeight: '1', fontWeight: '600' }],
+          'section-num': ['14px', { lineHeight: '1', fontWeight: '700' }],
+        },
+        spacing: {
+          'header-top': '64px',
+          'header-height': '96px',
+          'content-top': '176px',
+          'safe-bottom': '10vh',
+        },
+        borderRadius: {
+          'tile': '20px',
+          'badge': '12px',
+        },
+        boxShadow: {
+          'glass': '0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06), 0 24px 48px rgba(0,0,0,0.04)',
+          'accent-glow': '0 0 6px rgba(255,69,0,0.35), 0 0 12px rgba(255,69,0,0.15)',
+          'accent-triple': '0 0 8px rgba(255,69,0,0.5), 0 0 16px rgba(255,69,0,0.3), 0 0 24px rgba(255,69,0,0.15)',
+        },
+      }
+    }
+  }
+  </script>
+  
+  <style>
+    .glow-bullet {
+      position: relative;
+      padding-left: 24px;
+    }
+    .glow-bullet::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.55em;
+      width: 0.45em;
+      height: 0.45em;
+      background: #FF4500;
+      border-radius: 50%;
+      box-shadow: 0 0 6px rgba(255,69,0,0.35), 0 0 12px rgba(255,69,0,0.15);
+    }
+    
+    .bg-atmosphere-light {
+      background: 
+        radial-gradient(ellipse 80% 60% at 75% 20%, rgba(200,200,210,0.15), transparent),
+        linear-gradient(135deg, #FAFAFA 0%, #F5F5F7 100%);
+    }
+    
+    .bg-atmosphere-dark {
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 40%, rgba(60,60,60,0.8), transparent),
+        radial-gradient(ellipse 100% 100% at 50% 50%, transparent 40%, rgba(20,20,20,0.5) 100%),
+        radial-gradient(ellipse 50% 40% at 20% 80%, rgba(255,69,0,0.08), transparent),
+        #1A1A1A;
+    }
+
+    .copy-btn {
+      opacity: 0.7;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover {
+      opacity: 1;
+      color: #FF4500;
+    }
+  </style>
+</head>
+<body class="bg-canvas-dark overflow-hidden text-ink-primary">
+
+  <section class="hidden flex-col bg-atmosphere-dark min-h-screen items-center justify-center text-center px-[10%]">
+    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-badge border border-accent/30 bg-accent/10 mb-8">
+      <span class="font-numeric text-section-num text-accent tracking-wider uppercase">IIM Kozhikode eMDP</span>
+    </div>
+    <h1 class="font-display text-title-dark text-ink-inverse mb-4">AR & VR in Branding</h1>
+    <p class="font-body text-subtitle text-ink-inverse/70 max-w-2xl mb-8">Strategic Frameworks for New Age Business</p>
+    <div class="flex flex-col items-center gap-2 text-ink-inverse/50 mt-8">
+      <span class="font-body text-body">Marketing and Brand Management for New Age Business</span>
+      <span class="font-body text-sm">Facilitator: Aditya V. Jain</span>
+    </div>
+  </section>
+
+  <section class="hidden flex-col bg-atmosphere-light min-h-screen px-[10%] pt-header-top pb-safe-bottom">
+    <header class="h-header-height flex items-end">
+      <h1 class="font-display text-title-light text-ink-primary">Defining the Landscape</h1>
+    </header>
+    <div class="flex-1 flex flex-col items-stretch justify-start gap-6 mt-8">
+      <div class="grid grid-cols-2 gap-6">
+        <div class="bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-7">
+          <h3 class="font-body text-tile-heading text-ink-primary mb-4">Augmented Reality (AR)</h3>
+          <ul class="space-y-3">
+            <li class="glow-bullet font-body text-body text-ink-primary">Overlaying digital information on the physical world</li>
+            <li class="glow-bullet font-body text-body text-ink-primary">Primary Device: Smartphone (High Accessibility)</li>
+            <li class="glow-bullet font-body text-body text-ink-primary">Core Utility: Contextual Information / Visualization</li>
+          </ul>
+        </div>
+        <div class="bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-7">
+          <h3 class="font-body text-tile-heading text-ink-primary mb-4">Virtual Reality (VR)</h3>
+          <ul class="space-y-3">
+            <li class="glow-bullet font-body text-body text-ink-primary">Replacing the physical world with a simulated environment</li>
+            <li class="glow-bullet font-body text-body text-ink-primary">Primary Device: Headset (High Immersion)</li>
+            <li class="glow-bullet font-body text-body text-ink-primary">Core Utility: Training / Simulation / Remote Presence</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hidden flex-col bg-atmosphere-light min-h-screen px-[10%] pt-header-top pb-safe-bottom">
+    <header class="h-header-height flex items-end">
+      <h1 class="font-display text-title-light text-ink-primary">The Core Challenge: The Visualization Gap</h1>
+    </header>
+    <div class="flex-1 flex flex-col items-center justify-center gap-6 mt-8">
+      <div class="bg-white/80 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-10 max-w-4xl w-full">
+        <h3 class="font-body text-tile-heading text-ink-primary mb-6">The Mental Model</h3>
+        <p class="font-body text-[24px] leading-relaxed text-ink-primary mb-8">In digital channels, there is often a gap between the 'Asset' (image/video) and the 'Context' (where the product will live).</p>
+        <div class="w-full h-[1px] bg-ink-primary/10 mb-8"></div>
+        <p class="font-display text-[28px] font-bold text-ink-primary italic text-center">AR is one method to close this gap.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="hidden flex-col bg-atmosphere-light min-h-screen px-[10%] pt-header-top pb-safe-bottom">
+    <header class="h-header-height flex items-end">
+      <h1 class="font-display text-title-light text-ink-primary">Framework: Reducing Buyer Friction</h1>
+    </header>
+    <div class="flex-1 flex flex-col items-stretch justify-center gap-6 mt-8">
+      <div class="grid grid-cols-3 gap-6">
+        <div class="bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-7">
+          <span class="font-numeric text-sm text-accent tracking-wider uppercase mb-2 block">Nissan / Toyota</span>
+          <h3 class="font-body text-tile-heading text-ink-primary mb-4">Accessory Visualization</h3>
+          <p class="font-body text-body text-ink-primary mb-2"><strong>Function:</strong> Post-purchase upsell.</p>
+          <p class="font-body text-body text-ink-secondary"><strong>Value:</strong> Reduces hesitation by showing fit on the specific vehicle.</p>
+        </div>
+        <div class="bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-7">
+          <span class="font-numeric text-sm text-accent tracking-wider uppercase mb-2 block">Kajaria / Watertec</span>
+          <h3 class="font-body text-tile-heading text-ink-primary mb-4">Contextual Placement</h3>
+          <p class="font-body text-body text-ink-primary mb-2"><strong>Function:</strong> Pre-purchase validation.</p>
+          <p class="font-body text-body text-ink-secondary"><strong>Value:</strong> Mitigates the risk of aesthetic mismatch in home improvement.</p>
+        </div>
+        <div class="bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-7">
+          <span class="font-numeric text-sm text-accent tracking-wider uppercase mb-2 block">Coca-Cola B2B</span>
+          <h3 class="font-body text-tile-heading text-ink-primary mb-4">B2B Space Planning</h3>
+          <p class="font-body text-body text-ink-primary mb-2"><strong>Function:</strong> Trade negotiation.</p>
+          <p class="font-body text-body text-ink-secondary"><strong>Value:</strong> Demonstrates spatial feasibility to retail partners instantly.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hidden flex-col bg-atmosphere-light min-h-screen px-[10%] pt-header-top pb-safe-bottom">
+    <header class="h-header-height flex items-end">
+      <h1 class="font-display text-title-light text-ink-primary">Framework: Enhancing Product Utility</h1>
+    </header>
+    <div class="flex-1 flex flex-col items-stretch justify-center gap-6 mt-8">
+      <div class="grid grid-cols-3 gap-6">
+        <div class="bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-7">
+          <span class="font-numeric text-sm text-accent tracking-wider uppercase mb-2 block">Lenskart / Sephora</span>
+          <h3 class="font-body text-tile-heading text-ink-primary mb-4">Fit Validation</h3>
+          <p class="font-body text-body text-ink-primary mb-2"><strong>Function:</strong> Personalization.</p>
+          <p class="font-body text-body text-ink-secondary"><strong>Value:</strong> Addresses the #1 cause of e-commerce returns: Fit/Style mismatch.</p>
+        </div>
+        <div class="bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-7">
+          <span class="font-numeric text-sm text-accent tracking-wider uppercase mb-2 block">Dyson CleanTrace</span>
+          <h3 class="font-body text-tile-heading text-ink-primary mb-4">Task Verification</h3>
+          <p class="font-body text-body text-ink-primary mb-2"><strong>Function:</strong> Operational Efficiency.</p>
+          <p class="font-body text-body text-ink-secondary"><strong>Value:</strong> Visualizes the 'clean path' in real-time to prevent missed spots.</p>
+        </div>
+        <div class="bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-7">
+          <span class="font-numeric text-sm text-accent tracking-wider uppercase mb-2 block">IKEA Kreativ</span>
+          <h3 class="font-body text-tile-heading text-ink-primary mb-4">Reality Editing</h3>
+          <p class="font-body text-body text-ink-primary mb-2"><strong>Function:</strong> Contextual Visualization.</p>
+          <p class="font-body text-body text-ink-secondary"><strong>Value:</strong> 'Erases' existing furniture to provide a blank canvas for new products.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hidden flex-col bg-atmosphere-dark min-h-screen items-center justify-center text-center px-[10%]">
+    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-badge border border-accent/30 bg-accent/10 mb-6">
+      <span class="font-numeric text-section-num text-accent tracking-wider uppercase">Section 02</span>
+    </div>
+    <h1 class="font-display text-title-dark text-ink-inverse mb-4">Strategic Implementation</h1>
+    <p class="font-body text-subtitle text-ink-inverse/70 max-w-2xl mb-8">CASE STUDY: Camera IQ — Business Model Analysis</p>
+    <div class="w-[120px] h-[5px] bg-accent rounded-sm shadow-accent-triple"></div>
+  </section>
+
+  <section class="hidden flex-col bg-atmosphere-light min-h-screen px-[10%] pt-header-top pb-safe-bottom">
+    <header class="h-header-height flex items-end">
+      <h1 class="font-display text-title-light text-ink-primary">The Situation: Camera IQ (Sept 2020)</h1>
+    </header>
+    <div class="flex-1 flex flex-col items-stretch justify-start gap-6 mt-8">
+      <div class="grid grid-cols-2 gap-6">
+        <div class="bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-7">
+          <h3 class="font-body text-tile-heading text-ink-primary mb-4">The Company</h3>
+          <ul class="space-y-3">
+            <li class="glow-bullet font-body text-body text-ink-primary">Founded 2016 by Allison Ferenci & Sonia Tsao</li>
+            <li class="glow-bullet font-body text-body text-ink-primary">Mission: 'Democratize the Camera'</li>
+          </ul>
+        </div>
+        <div class="bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-7">
+          <h3 class="font-body text-tile-heading text-ink-primary mb-4">The Status (Series A)</h3>
+          <ul class="space-y-3">
+            <li class="glow-bullet font-body text-body text-ink-primary">$5M raised (Total $14M)</li>
+            <li class="glow-bullet font-body text-body text-ink-primary">35 B2B Customers</li>
+            <li class="glow-bullet font-body text-body text-ink-primary">$1M ARR (Doubling YoY)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hidden flex-col bg-atmosphere-light min-h-screen px-[10%] pt-header-top pb-safe-bottom">
+    <header class="h-header-height flex items-end">
+      <h1 class="font-display text-title-light text-ink-primary">The 'Why': AR Outperforms Static Media</h1>
+    </header>
+    <div class="flex-1 flex flex-col items-stretch justify-center gap-6 mt-8">
+      <div class="grid grid-cols-3 gap-6">
+        <div class="bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-7 text-center">
+          <span class="font-numeric text-4xl text-accent font-bold block mb-2">10s</span>
+          <span class="font-body text-body text-ink-secondary block mb-4">vs 1.7s (Feed Ads)</span>
+          <h3 class="font-body text-tile-heading text-ink-primary">Attention Span</h3>
+        </div>
+        <div class="bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-7 text-center">
+          <span class="font-numeric text-4xl text-accent font-bold block mb-2">11x</span>
+          <span class="font-body text-body text-ink-secondary block mb-4">vs Traditional Social</span>
+          <h3 class="font-body text-tile-heading text-ink-primary">Purchase Intent</h3>
+        </div>
+        <div class="bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-7 text-center">
+          <span class="font-numeric text-4xl text-accent font-bold block mb-2">-50%</span>
+          <span class="font-body text-body text-ink-secondary block mb-4">Engagement Cost</span>
+          <h3 class="font-body text-tile-heading text-ink-primary">CPE Reduction</h3>
+        </div>
+      </div>
+      <div class="mt-8 text-center max-w-4xl mx-auto">
+        <p class="font-display text-2xl text-ink-primary italic">"In what other business can you fail to engage 95% of your audience and be considered a success?" — Ferenci</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="hidden flex-col bg-atmosphere-light min-h-screen px-[10%] pt-header-top pb-safe-bottom">
+    <header class="h-header-height flex items-end">
+      <h1 class="font-display text-title-light text-ink-primary">The Friction: Why Everyone Wasn't Doing It</h1>
+    </header>
+    <div class="flex-1 flex flex-col items-stretch justify-start gap-6 mt-8">
+      <div class="grid grid-cols-2 gap-6">
+        <div class="bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-7">
+          <h3 class="font-body text-tile-heading text-ink-primary mb-4">Traditional Agency Model</h3>
+          <ul class="space-y-3">
+            <li class="glow-bullet font-body text-body text-ink-primary"><strong>Cost:</strong> $5,000 - $50,000 per experience</li>
+            <li class="glow-bullet font-body text-body text-ink-primary"><strong>Time:</strong> Weeks of development</li>
+            <li class="glow-bullet font-body text-body text-ink-primary"><strong>Scalability:</strong> Zero. (Different code for Snap, FB, IG)</li>
+          </ul>
+        </div>
+        <div class="bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-7">
+          <h3 class="font-body text-tile-heading text-ink-primary mb-4">The Camera IQ Solution</h3>
+          <ul class="space-y-3">
+            <li class="glow-bullet font-body text-body text-ink-primary"><strong>No Code:</strong> Drag-and-drop design tools.</li>
+            <li class="glow-bullet font-body text-body text-ink-primary"><strong>Scalable:</strong> 'Create once, deploy everywhere'.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hidden flex-col bg-atmosphere-light min-h-screen px-[10%] pt-header-top pb-safe-bottom">
+    <header class="h-header-height flex items-end">
+      <h1 class="font-display text-title-light text-ink-primary">The Strategic Dilemma</h1>
+    </header>
+    <div class="flex-1 flex flex-col items-stretch justify-center gap-6 mt-8">
+      <h2 class="font-body text-2xl text-ink-secondary mb-4 text-center">Where do we allocate limited resources?</h2>
+      <div class="grid grid-cols-2 gap-6">
+        <div class="bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-12 flex items-center justify-center text-center hover:scale-[1.02] transition-transform duration-300">
+          <h3 class="font-display text-[32px] font-bold text-ink-primary">1. Go Broad:<br>SMBs (High Volume)</h3>
+        </div>
+        <div class="bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-12 flex items-center justify-center text-center hover:scale-[1.02] transition-transform duration-300">
+          <h3 class="font-display text-[32px] font-bold text-ink-primary">2. Go Deep:<br>Enterprise (High Value)</h3>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hidden flex-col bg-atmosphere-light min-h-screen px-[10%] pt-header-top pb-safe-bottom">
+    <header class="h-header-height flex items-end">
+      <h1 class="font-display text-title-light text-ink-primary">Analyzing the Unit Economics</h1>
+    </header>
+    <div class="flex-1 flex flex-col items-stretch justify-start gap-6 mt-8">
+      <div class="grid grid-cols-2 gap-6">
+        <div class="bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-7">
+          <h3 class="font-body text-tile-heading text-ink-primary mb-4">SMB Segment</h3>
+          <div class="space-y-4">
+             <div class="p-3 bg-red-50 border border-red-100 rounded-badge">
+               <span class="font-body text-sm text-ink-secondary block">CAC</span>
+               <span class="font-numeric text-xl font-bold text-ink-primary">~$15,000</span>
+             </div>
+             <div class="p-3 bg-red-50 border border-red-100 rounded-badge">
+               <span class="font-body text-sm text-ink-secondary block">Churn</span>
+               <span class="font-numeric text-xl font-bold text-red-600">4.3% / mo</span>
+             </div>
+             <p class="font-body text-body text-ink-primary">Sales Cycle: Fast</p>
+          </div>
+        </div>
+        <div class="bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-7">
+          <h3 class="font-body text-tile-heading text-ink-primary mb-4">Enterprise Segment</h3>
+           <div class="space-y-4">
+             <div class="p-3 bg-green-50 border border-green-100 rounded-badge">
+               <span class="font-body text-sm text-ink-secondary block">CAC</span>
+               <span class="font-numeric text-xl font-bold text-ink-primary">~$40,000</span>
+             </div>
+             <div class="p-3 bg-green-50 border border-green-100 rounded-badge">
+               <span class="font-body text-sm text-ink-secondary block">Churn</span>
+               <span class="font-numeric text-xl font-bold text-green-700">1.6% / mo</span>
+             </div>
+             <p class="font-body text-body text-ink-primary">Sales Cycle: Slow</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-accent/5 border border-accent/20 rounded-tile p-6">
+        <span class="font-numeric text-section-num text-accent tracking-wider uppercase mb-2 block">Key Insight</span>
+        <ul class="list-disc pl-5 font-body text-body text-ink-primary">
+          <li><strong>Volume vs. Value:</strong> 100k Potential SMBs vs 5k Enterprises.</li>
+          <li><strong>Retention Risk:</strong> SMB churn is nearly 3x higher than Enterprise.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="hidden flex-col bg-atmosphere-light min-h-screen px-[10%] pt-header-top pb-safe-bottom">
+    <header class="h-header-height flex items-end">
+      <h1 class="font-display text-title-light text-ink-primary">Discussion: The Case for SMBs</h1>
+    </header>
+    <div class="flex-1 flex items-center justify-center">
+      <div class="bg-white/80 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-10 max-w-3xl w-full text-center">
+        <span class="font-numeric text-section-num text-accent tracking-wider uppercase mb-4 block">Discussion Prompt</span>
+        <p class="font-display text-[32px] font-bold text-ink-primary mb-6">Why might a company choose the SMB path despite high churn?</p>
+        <p class="font-body text-body text-ink-secondary italic">Factors to consider: Market speed, learning loops, cash flow velocity.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="hidden flex-col bg-atmosphere-light min-h-screen px-[10%] pt-header-top pb-safe-bottom">
+    <header class="h-header-height flex items-end">
+      <h1 class="font-display text-title-light text-ink-primary">Discussion: The Case for Enterprise</h1>
+    </header>
+    <div class="flex-1 flex items-center justify-center">
+      <div class="bg-white/80 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-10 max-w-3xl w-full text-center">
+        <span class="font-numeric text-section-num text-accent tracking-wider uppercase mb-4 block">Discussion Prompt</span>
+        <p class="font-display text-[32px] font-bold text-ink-primary mb-6">Why might the Enterprise path be safer despite the high CAC?</p>
+        <p class="font-body text-body text-ink-secondary italic">Factors to consider: Customer Lifetime Value (LTV), Credibility, Integration depth.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="hidden flex-col bg-atmosphere-light min-h-screen px-[10%] pt-header-top pb-safe-bottom">
+    <header class="h-header-height flex items-end">
+      <h1 class="font-display text-title-light text-ink-primary">The Impact of Churn on Valuation</h1>
+    </header>
+    <div class="flex-1 flex flex-col items-center justify-center gap-8">
+      <div class="bg-white/80 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-10 max-w-4xl w-full">
+        <h2 class="font-display text-3xl font-bold text-ink-primary mb-8 text-center">Retention drives Long-Term Value.</h2>
+        <div class="grid grid-cols-2 gap-8 mb-8">
+          <div class="p-6 bg-canvas rounded-badge text-center">
+            <span class="block font-numeric text-red-600 text-3xl font-bold mb-2">&lt; 2 Years</span>
+            <span class="block font-body text-ink-secondary">Average SMB Life (4.3% Churn)</span>
+          </div>
+          <div class="p-6 bg-canvas rounded-badge text-center">
+            <span class="block font-numeric text-green-700 text-3xl font-bold mb-2">&gt; 5 Years</span>
+            <span class="block font-body text-ink-secondary">Average Enterprise Life (1.6% Churn)</span>
+          </div>
+        </div>
+        <p class="font-body text-body text-ink-tertiary italic text-center">Discussion: Does the 'Emerging' nature of AR make long contracts riskier or more valuable?</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="hidden flex-col bg-atmosphere-dark min-h-screen px-[10%] items-center justify-center text-center">
+    <h1 class="font-display text-title-dark text-ink-inverse mb-8">Leadership Decision</h1>
+    <div class="bg-white/10 backdrop-blur-[24px] border border-white/20 rounded-tile p-10 max-w-3xl w-full shadow-accent-glow">
+      <h2 class="font-display text-3xl text-ink-inverse mb-4">If you were the CEO...</h2>
+      <p class="font-body text-xl text-ink-inverse/80">Given 18 months of runway, which strategy do you fund?</p>
+    </div>
+  </section>
+
+  <section class="hidden flex-col bg-atmosphere-light min-h-screen px-[10%] pt-header-top pb-safe-bottom">
+    <header class="h-header-height flex items-end">
+      <h1 class="font-display text-title-light text-ink-primary">Framework: Choosing Your Lane</h1>
+    </header>
+    <div class="flex-1 flex flex-col items-stretch justify-start gap-6 mt-8">
+      <div class="grid grid-cols-2 gap-6">
+        <div class="bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-7">
+          <h3 class="font-body text-tile-heading text-ink-primary mb-4">SMB Strategy Fits When...</h3>
+          <ul class="space-y-3">
+            <li class="glow-bullet font-body text-body text-ink-primary">Product needs rapid iteration</li>
+            <li class="glow-bullet font-body text-body text-ink-primary">Market education is low</li>
+            <li class="glow-bullet font-body text-body text-ink-primary">Solution is 'Plug and Play'</li>
+          </ul>
+        </div>
+        <div class="bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-7">
+          <h3 class="font-body text-tile-heading text-ink-primary mb-4">Enterprise Strategy Fits When...</h3>
+          <ul class="space-y-3">
+            <li class="glow-bullet font-body text-body text-ink-primary">Integration is complex</li>
+            <li class="glow-bullet font-body text-body text-ink-primary">Brand safety is paramount</li>
+            <li class="glow-bullet font-body text-body text-ink-primary">Reliability > Novelty</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hidden flex-col bg-atmosphere-light min-h-screen px-[10%] pt-header-top pb-safe-bottom">
+    <header class="h-header-height flex items-end">
+      <h1 class="font-display text-title-light text-ink-primary">Vertical Analysis: Engagement vs. Commerce</h1>
+    </header>
+    <div class="flex-1 flex flex-col items-stretch justify-start gap-6 mt-8">
+      <div class="grid grid-cols-2 gap-6">
+        <div class="bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-7">
+          <h3 class="font-body text-tile-heading text-ink-primary mb-4">Gaming/Entertainment</h3>
+          <p class="font-body text-body text-ink-primary">High Engagement, Low Churn.</p>
+          <span class="inline-block mt-2 px-3 py-1 bg-accent/10 rounded-full text-sm font-bold text-accent">Engagement Focus</span>
+        </div>
+        <div class="bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-7">
+          <h3 class="font-body text-tile-heading text-ink-primary mb-4">Beauty/CPG</h3>
+          <p class="font-body text-body text-ink-primary">Direct Commerce Link.</p>
+          <span class="inline-block mt-2 px-3 py-1 bg-accent/10 rounded-full text-sm font-bold text-accent">Transaction Focus</span>
+        </div>
+      </div>
+      <div class="bg-accent/5 border border-accent/20 rounded-tile p-6 text-center">
+        <p class="font-body text-xl text-ink-primary font-semibold">Strategic Question: Do we sell 'Attention' or 'Conversion'?</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="hidden flex-col bg-atmosphere-light min-h-screen px-[10%] pt-header-top pb-safe-bottom">
+    <header class="h-header-height flex items-end">
+      <h1 class="font-display text-title-light text-ink-primary">Balancing Exploration and Exploitation</h1>
+    </header>
+    <div class="flex-1 flex flex-col items-stretch justify-start gap-6 mt-8">
+      <div class="grid grid-cols-2 gap-6">
+        <div class="bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-7">
+          <h3 class="font-body text-tile-heading text-ink-primary mb-4">Exploit (Gaming)</h3>
+          <p class="font-body text-body text-ink-primary">Capitalize on known strengths and existing behavior.</p>
+        </div>
+        <div class="bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-7">
+          <h3 class="font-body text-tile-heading text-ink-primary mb-4">Explore (Beauty/CPG)</h3>
+          <p class="font-body text-body text-ink-primary">Invest in new capabilities for larger future markets.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hidden flex-col bg-atmosphere-dark min-h-screen items-center justify-center text-center px-[10%]">
+    <h1 class="font-display text-title-dark text-ink-inverse mb-4">5 Minute Break</h1>
+    <p class="font-body text-subtitle text-ink-inverse/70">We will resume shortly.</p>
+  </section>
+
+  <section class="hidden flex-col bg-atmosphere-dark min-h-screen items-center justify-center text-center px-[10%]">
+    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-badge border border-accent/30 bg-accent/10 mb-6">
+      <span class="font-numeric text-section-num text-accent tracking-wider uppercase">Section 03</span>
+    </div>
+    <h1 class="font-display text-title-dark text-ink-inverse mb-4">A Menu of Capabilities</h1>
+    <p class="font-body text-subtitle text-ink-inverse/70 max-w-2xl mb-8">Acquisition, Conversion, and Retention</p>
+    <div class="w-[120px] h-[5px] bg-accent rounded-sm shadow-accent-triple"></div>
+  </section>
+
+  <section class="hidden flex-col bg-atmosphere-light min-h-screen px-[10%] pt-header-top pb-safe-bottom">
+    <header class="h-header-height flex items-end">
+      <h1 class="font-display text-title-light text-ink-primary">Mapping AR to Business Objectives</h1>
+    </header>
+    <div class="flex-1 flex flex-col items-stretch justify-center gap-6 mt-8">
+      <div class="grid grid-cols-3 gap-6">
+        <div class="bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-7">
+          <h3 class="font-body text-tile-heading text-ink-primary mb-4">Acquisition (Awareness)</h3>
+          <ul class="space-y-3">
+            <li class="glow-bullet font-body text-body text-ink-primary">Gamified Packaging</li>
+            <li class="glow-bullet font-body text-body text-ink-primary">Interactive OOH</li>
+          </ul>
+        </div>
+        <div class="bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-7">
+          <h3 class="font-body text-tile-heading text-ink-primary mb-4">Conversion (Decision)</h3>
+          <ul class="space-y-3">
+            <li class="glow-bullet font-body text-body text-ink-primary">Visualizing Fit (Home/Fashion)</li>
+            <li class="glow-bullet font-body text-body text-ink-primary">B2B Simulation</li>
+          </ul>
+        </div>
+        <div class="bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-7">
+          <h3 class="font-body text-tile-heading text-ink-primary mb-4">Retention (Engagement)</h3>
+          <ul class="space-y-3">
+            <li class="glow-bullet font-body text-body text-ink-primary">Post-Purchase Content</li>
+            <li class="glow-bullet font-body text-body text-ink-primary">Loyalty Rewards</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hidden flex-col bg-atmosphere-dark min-h-screen items-center justify-center text-center px-[10%]">
+    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-badge border border-accent/30 bg-accent/10 mb-6">
+      <span class="font-numeric text-section-num text-accent tracking-wider uppercase">Section 04</span>
+    </div>
+    <h1 class="font-display text-title-dark text-ink-inverse mb-4">Rapid Prototyping</h1>
+    <p class="font-body text-subtitle text-ink-inverse/70 max-w-2xl mb-8">Low-Resource Exploration: GenAI</p>
+    <div class="w-[120px] h-[5px] bg-accent rounded-sm shadow-accent-triple"></div>
+  </section>
+
+  <section class="hidden flex-col bg-atmosphere-light min-h-screen px-[10%] pt-header-top pb-safe-bottom">
+    <header class="h-header-height flex items-end">
+      <h1 class="font-display text-title-light text-ink-primary">Prototyping with GenAI</h1>
+    </header>
+    <div class="flex-1 flex flex-col items-center justify-center gap-6 mt-8">
+      <div class="bg-white/80 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-10 max-w-3xl w-full">
+        <h2 class="font-body text-2xl font-bold text-ink-primary mb-4">Reducing the Cost of Experimentation</h2>
+        <p class="font-body text-body text-ink-primary mb-6">Using Generative AI to visualize AR concepts for internal stakeholder alignment.</p>
+        <div class="p-4 bg-accent/10 rounded-badge border border-accent/20 text-center">
+          <span class="font-mono text-accent font-bold">Demo: Concept Generation</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hidden flex-col bg-atmosphere-dark min-h-screen items-center justify-center text-center px-[10%]">
+    <h1 class="font-display text-title-dark text-ink-inverse mb-6">Summary & Q&A</h1>
+    <h2 class="font-body text-3xl font-bold text-ink-inverse mb-6">The Goal: Right-Sized Innovation</h2>
+    <p class="font-body text-subtitle text-ink-inverse/70 max-w-2xl mb-12">Evaluate AR/VR not as a 'must-have,' but as a capability to solve specific friction points in your value chain.</p>
+    <div class="flex items-center gap-4 text-ink-inverse/50">
+      <span class="font-body text-body">Thank You</span>
+      <span class="text-accent">•</span>
+      <span class="font-body text-body">Aditya V. Jain</span>
+    </div>
+  </section>
+
+  <section class="hidden flex-col bg-atmosphere-light min-h-screen px-[10%] pt-header-top pb-safe-bottom">
+    <header class="h-header-height flex items-end">
+      <h1 class="font-display text-title-light text-ink-primary">Backup: GenAI Demo Output</h1>
+    </header>
+    <div class="flex-1 flex items-center justify-center gap-8">
+      <div class="w-[540px] rounded-tile overflow-hidden shadow-glass">
+        <div class="bg-canvas-dark px-5 py-3 flex items-center justify-between">
+          <span class="font-numeric text-section-num text-accent tracking-wider uppercase">PROMPT</span>
+          <button class="copy-btn font-body text-sm text-ink-inverse/70 hover:text-ink-inverse transition-colors" data-target="prompt-backup">Copy</button>
+        </div>
+        <div class="bg-white/65 backdrop-blur-[24px] p-5">
+          <pre id="prompt-backup" class="font-mono text-prompt text-ink-primary whitespace-pre-wrap">Photorealistic image of a modern living room with Italian marble flooring and a blue velvet sofa, cinematic lighting.</pre>
+        </div>
+      </div>
+      <div class="w-[540px] bg-white/65 backdrop-blur-[24px] border border-white/70 rounded-tile shadow-glass p-6">
+        <span class="font-numeric text-section-num text-accent tracking-wider uppercase mb-3 block">NOTE</span>
+        <p class="font-body text-body text-ink-primary">This slide serves as a backup visual reference for the live demo.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="fixed bottom-0 left-0 right-0 h-12 bg-canvas-dark/90 backdrop-blur-sm flex items-center justify-between px-6 z-50">
+    <div class="w-20"></div>
+    <div class="flex-1 mx-8 h-1 bg-ink-inverse/20 rounded-full overflow-hidden">
+      <div id="progress-bar" class="h-full bg-accent shadow-[0_0_8px_rgba(255,69,0,0.4)] transition-all duration-300" style="width: 0%"></div>
+    </div>
+    <div class="flex items-center gap-6">
+      <span id="slide-counter" class="font-numeric text-watermark text-ink-inverse/70">1 / 24</span>
+      <a href="https://adityavj.com" target="_blank" class="font-numeric text-watermark text-accent hover:text-accent/80 transition-colors">adityavj.com</a>
+    </div>
+  </div>
+
+  <script>
+  (function() {
+    const slides = document.querySelectorAll('section');
+    const progressBar = document.getElementById('progress-bar');
+    const counter = document.getElementById('slide-counter');
+    let current = 0;
+    
+    function showSlide(index) {
+      if (index < 0) index = 0;
+      if (index >= slides.length) index = slides.length - 1;
+      
+      slides.forEach((s, i) => {
+        if (i === index) {
+          s.classList.remove('hidden');
+          if (!s.classList.contains('diagram-slide')) {
+            s.classList.add('flex');
+          }
+        } else {
+          s.classList.add('hidden');
+          s.classList.remove('flex');
+        }
+      });
+      
+      current = index;
+      progressBar.style.width = ((current + 1) / slides.length * 100) + '%';
+      counter.textContent = (current + 1) + ' / ' + slides.length;
+    }
+    
+    function next() { showSlide(current + 1); }
+    function prev() { showSlide(current - 1); }
+    
+    document.addEventListener('keydown', (e) => {
+      if (['ArrowRight', ' ', 'Enter'].includes(e.key)) { e.preventDefault(); next(); }
+      if (['ArrowLeft', 'Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
+      if (e.key === 'Home') { e.preventDefault(); showSlide(0); }
+      if (e.key === 'End') { e.preventDefault(); showSlide(slides.length - 1); }
+    });
+    
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('a, button')) return;
+      const x = e.clientX, w = window.innerWidth;
+      if (x < w * 0.1) { prev(); return; }
+      if (x > w * 0.9) { next(); return; }
+      if (!slides[current].classList.contains('diagram-slide')) {
+        x > w / 2 ? next() : prev();
+      }
+    });
+    
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const target = document.getElementById(btn.dataset.target);
+        if (target) {
+          await navigator.clipboard.writeText(target.textContent);
+          btn.textContent = 'Copied!';
+          setTimeout(() => btn.textContent = 'Copy', 1500);
+        }
+      });
+    });
+    
+    showSlide(0);
+  })();
+  </script>
+</body>
+</html>
