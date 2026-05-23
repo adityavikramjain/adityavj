@@ -1,6 +1,18 @@
 {
     "sessions": [
         {
+            "id": "epgp-pm-lecture-may26",
+            "title": "The Actual Organizational Function of a Product Manager",
+            "institution": "IIM Kozhikode",
+            "program": "EPGP DPM",
+            "cohort": "May 2026",
+            "url": "presentations/pm-lecture-iimk.html",
+            "viewerUrl": "presentations/pm-lecture-iimk.html",
+            "desc": "The lived reality of product management — how PMs are perceived versus what they actually do, scenario planning, vectors, the rules of the role, and an AI addendum for the modern PM.",
+            "tags": ["Product Management"],
+            "featured": true
+        },
+        {
             "id": "mdp-ar-vr-branding-jan26",
             "title": "AR & VR in Branding: Strategic Frameworks",
             "institution": "IIM Kozhikode",
