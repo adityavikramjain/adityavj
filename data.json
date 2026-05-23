@@ -1,6 +1,18 @@
 {
     "sessions": [
         {
+            "id": "mdp-ar-vr-branding-jan26",
+            "title": "AR & VR in Branding: Strategic Frameworks",
+            "institution": "IIM Kozhikode",
+            "program": "eMDP",
+            "cohort": "Jan 2026",
+            "url": "presentations/mdp-ar-vr-branding-jan26.html",
+            "viewerUrl": "presentations/mdp-ar-vr-branding-jan26.html",
+            "desc": "How AR and VR are reshaping brand experience — immersive retail, virtual try-on, spatial storytelling, and the strategic frameworks for deploying extended reality in consumer brands.",
+            "tags": ["Marketing", "AR/VR", "Branding"],
+            "featured": true
+        },
+        {
             "id": "mdp-performance-marketing-may26",
             "title": "Performance Marketing",
             "institution": "IIM Kozhikode",
